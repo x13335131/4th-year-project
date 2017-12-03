@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "933389681681",
+    "firebase_url": "https://mymentalhealthtracker.firebaseio.com",
+    "project_id": "mymentalhealthtracker",
+    "storage_bucket": "mymentalhealthtracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933389681681:android:ef3719db6501e2ce",
+        "android_client_info": {
+          "package_name": "com.example.louis.prototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "933389681681-9vfhfape3uq4dse8o82ue7hie028d8jl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.louis.prototype",
+            "certificate_hash": "27ac7cc2c46cd7e0d5e61583ca8ebbd7467ed13e"
+          }
+        },
+        {
+          "client_id": "933389681681-g83a4ehfbl1gq2smdjs4tgqdcc044bea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaPLtIs4J4YDQKSs-cVN6sDBni3w4xM-k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933389681681-g83a4ehfbl1gq2smdjs4tgqdcc044bea.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

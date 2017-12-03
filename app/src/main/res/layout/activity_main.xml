@@ -205,10 +205,9 @@
         android:id="@+id/button11"
         android:layout_width="250dp"
         android:layout_height="253dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="35dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
         android:background="@drawable/panicbutton"
         android:text="PANIC BUTTON  "
         android:textAlignment="center"
@@ -219,6 +218,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintTop_toTopOf="@+id/textView"
+        android:layout_marginTop="8dp" />
 
 </android.support.constraint.ConstraintLayout>

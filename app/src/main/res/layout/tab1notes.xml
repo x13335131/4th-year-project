@@ -14,30 +14,28 @@
         android:layout_height="wrap_content"
         android:text="@string/section_label" />
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/section_label"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:hint="@string/editText"
-        android:inputType="textMultiLine" />
-
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="77dp"
+        android:layout_marginBottom="76dp"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
         android:text="@string/button2"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/editText10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/section_label"
+        android:layout_alignRight="@+id/section_label"
+        android:layout_below="@+id/section_label"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:hint="write here"
+        android:inputType="textMultiLine" />
 
 </RelativeLayout>

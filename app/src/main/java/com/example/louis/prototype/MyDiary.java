@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class MyDiary extends AppCompatActivity {
 
@@ -30,7 +32,8 @@ public class MyDiary extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-
+    EditText editTextNote;
+    Button buttonSave;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +72,7 @@ public class MyDiary extends AppCompatActivity {
                                    }
                                }
         );
+
     }
 
 
