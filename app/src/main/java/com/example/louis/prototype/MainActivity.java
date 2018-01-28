@@ -6,28 +6,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+    //private TextView tv;
+    TextView tv;
+    private static Timer myTimer;
+    int secondsPassed = 0;
 
-    int secondsPassed =0;
-    Timer myTimer = new Timer();
-    TimerTask task = new TimerTask() {
-        public void run() {
-            secondsPassed++;
-            System.out.println("Seconds passed " + secondsPassed);
-        }
-    };
-    public void start(){
-        myTimer.scheduleAtFixedRate(task, 1000,1000);
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        tv= (TextView)findViewById(R.id.textView35);
         Button b1 = (Button)findViewById(R.id.button6); //diary button
         Button b2 = (Button)findViewById(R.id.button7); //calendar button
         Button b3 = (Button)findViewById(R.id.button8); //chart button
@@ -75,33 +69,52 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if (panicButton.isShown()) {
+                if (panicButton.isShown()) {//if clicked and panic button is already showing, make it disappear
                     panicButton.setVisibility(View.GONE);
+                    tv.setVisibility(View.GONE);
 
                 } else {
                     panicButton.setVisibility(View.VISIBLE);
-
+                    tv.setVisibility(View.VISIBLE);
                 }
 
-               // panicButton.setVisibility(View.VISIBLE);
             }
         });
 
-        panicButton.setOnClickListener(new View.OnClickListener(){
+       panicButton.setOnClickListener(new View.OnClickListener(){
             boolean pressed=true;
+
+           //Timer  myTimer = new Timer();
             @Override
             public void onClick(View v) {
-
+                //if clicked
                 if(pressed==true){
-                    start();
+                    System.out.println("starting timer");
+                    start(); //start timer
                     pressed=false;
+                    tv.setText("testing1");
                 }
                 else{
-                    myTimer.cancel();
+                    System.out.println("ending timer");
+                    end();
+                    pressed=true;
                 }
 
-
             }
-        });
+
+           public void start(){
+               myTimer = new Timer();
+               TimerTask task = new TimerTask() {
+                   public void run() {
+                       secondsPassed++;
+                       System.out.println("Seconds passed " + secondsPassed);
+                       tv.setText("Seconds Passed: " + String.valueOf(secondsPassed));
+
+                   }
+               };
+               myTimer.scheduleAtFixedRate(task, 1000,1000);
+           }
+           public void end(){secondsPassed=0; myTimer.cancel(); tv.setText("testing2");}
+       });
     }
 }

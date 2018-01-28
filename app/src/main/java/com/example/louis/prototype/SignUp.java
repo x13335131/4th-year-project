@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SignUp extends AppCompatActivity {
+public class SignUp extends AppCompatActivity{
     private EditText et_name,et_email, et_password, et_cpassword;
     private String displayName, email, password, cpassword;
     Button regBtn;
@@ -31,7 +31,7 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         mAuth = FirebaseAuth.getInstance();
-        et_name = (EditText) findViewById(R.id.editText10);
+       // et_name = (EditText) findViewById(R.id.editText10);
         et_email = (EditText) findViewById(R.id.editText14);
         et_password = (EditText) findViewById(R.id.editText11);
         et_cpassword = (EditText) findViewById(R.id.editText12);
@@ -80,10 +80,10 @@ public class SignUp extends AppCompatActivity {
         boolean valid = true;
         errorList.clear();
 
-        if(displayName.isEmpty()||displayName.length()>32){
+       /* if(displayName.isEmpty()||displayName.length()>32){
             et_name.setError("Please Enter valid name");
             valid=false;
-        }
+        }*/
         if(email.isEmpty()||!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             et_email.setError("Please enter valid email address");
             valid = false;
@@ -119,13 +119,15 @@ public class SignUp extends AppCompatActivity {
         /*for (String error : errorList) {
             set_password.setError(error);
         }*/
-        et_password.setError("Password must have at least "+errorList.toString());
+        //et_password.setError("Password must have at least "+errorList.toString());
         return valid;
     }
     public void initialize(){
-        displayName = et_name.getText().toString().trim();
+      //  displayName = et_name.getText().toString().trim();
         email = et_email.getText().toString().trim();
         password = et_password.getText().toString().trim();
         cpassword = et_cpassword.getText().toString().trim();
     }
+
+
 }
