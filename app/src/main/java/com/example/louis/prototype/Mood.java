@@ -13,6 +13,8 @@ public class Mood {
     Boolean checkBox3;
     Boolean checkBox4;
     Boolean checkBox5;
+    Boolean checkBox6;
+    Boolean checkBox7;
     String symptomDate;
     String userID;
 
@@ -20,13 +22,15 @@ public class Mood {
 
     }
 
-    public Mood(String moodID, Boolean checkBox1, Boolean checkBox2, Boolean checkBox3, Boolean checkBox4, Boolean checkBox5, String symptomDate, String userID) {
+    public Mood(String moodID, Boolean checkBox1, Boolean checkBox2, Boolean checkBox3, Boolean checkBox4, Boolean checkBox5, Boolean checkBox6, Boolean checkBox7, String symptomDate, String userID) {
         this.moodID = moodID;
         this.checkBox1 = checkBox1;
         this.checkBox2 = checkBox2;
         this.checkBox3 = checkBox3;
         this.checkBox4 = checkBox4;
         this.checkBox5 = checkBox5;
+        this.checkBox6 = checkBox6;
+        this.checkBox7 = checkBox7;
         this.symptomDate = symptomDate;
         this.userID = userID;
     }
@@ -53,6 +57,14 @@ public class Mood {
 
     public Boolean getCheckBox5() {
         return checkBox5;
+    }
+
+    public Boolean getCheckBox6() {
+        return checkBox6;
+    }
+
+    public Boolean getCheckBox7() {
+        return checkBox7;
     }
 
     public String getSymptomDate() {

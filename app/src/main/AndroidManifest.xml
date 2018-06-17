@@ -22,7 +22,7 @@
         <activity android:name=".Calendar" />
         <activity android:name=".Chart" />
         <activity android:name=".Social" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
         <activity android:name=".SignUp" />
         <activity android:name=".SplashScreen">
             <intent-filter>
@@ -31,7 +31,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".QandA"></activity>
+        <activity android:name=".QandA" />
+        <activity android:name=".Odsis" />
+        <activity android:name=".Oasis"></activity>
     </application>
 
 </manifest>

@@ -51,6 +51,8 @@ public class Tab3Moods extends Fragment {
     private boolean checkbox3Value;
     private boolean checkbox4Value;
     private boolean checkbox5Value;
+    private boolean checkbox6Value;
+    private boolean checkbox7Value;
     private Button buttonSave3;
     DatabaseReference databaseMoods;
 
@@ -87,6 +89,8 @@ public class Tab3Moods extends Fragment {
         checkbox3Value = false;
         checkbox4Value = false;
         checkbox5Value = false;
+        checkbox6Value = false;
+        checkbox7Value = false;
 
         return rootView;
     }
@@ -122,10 +126,17 @@ public class Tab3Moods extends Fragment {
                 if(checkBox5.isChecked()){
                     checkbox5Value=true;
                 }
+                if(checkBox6.isChecked()){
+                    checkbox6Value=true;
+                }
+                if(checkBox7.isChecked()){
+                    checkbox7Value=true;
+                }
+
 
 
                 String id= databaseMoods.push().getKey();
-                Mood myMood = new Mood(id, checkbox1Value, checkbox2Value, checkbox3Value, checkbox4Value, checkbox5Value, todaysDate, userID);
+                Mood myMood = new Mood(id, checkbox1Value, checkbox2Value, checkbox3Value, checkbox4Value, checkbox5Value, checkbox6Value, checkbox7Value, todaysDate, userID);
                 databaseMoods.child(id).setValue(myMood);
                 Toast.makeText(Tab3Moods.this.getActivity() ,"moods added", Toast.LENGTH_LONG).show();
             }
