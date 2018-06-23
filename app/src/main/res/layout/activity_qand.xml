@@ -4,99 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:design="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.louis.prototype.QandA">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="22dp"
-        android:ems="10"
-        android:hint="Enter Question here"
-        android:inputType="textPersonName"
-        app:layout_constraintHorizontal_bias="0.281"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView36" />
-
-    <TextView
-        android:id="@+id/textView36"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="46dp"
-        android:text="Ask a question"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.172"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button15"
-        android:layout_width="86dp"
-        android:layout_height="36dp"
-        android:layout_marginLeft="51dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="20dp"
         android:background="@color/colorPrimary"
-        android:text="Submit"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/textView38"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_post_btn"
+        android:layout_width="64dp"
+        android:layout_height="61dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="24dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_input_add" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="51dp"
-        android:layout_marginTop="25dp"
-        android:text="User1"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button15" />
+        android:layout_gravity="start"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        design:menu="@menu/bottom_nav_items" />
 
-    <TextView
-        android:id="@+id/textView40"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="51dp"
-        android:layout_marginTop="19dp"
-        android:text="Question 1"
-        android:textSize="18sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView38" />
+    <FrameLayout
+        android:id="@+id/main_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
 
-    <EditText
-        android:id="@+id/editText13"
-        android:layout_width="206dp"
-        android:layout_height="33dp"
-        android:layout_marginLeft="51dp"
-        android:layout_marginTop="12dp"
-        android:ems="10"
-        android:hint="reply..."
-        android:inputType="textPersonName"
-        android:textSize="14sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView40" />
-
-    <Button
-        android:id="@+id/button20"
-        android:layout_width="76dp"
-        android:layout_height="34dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="287dp"
-        android:text="submit"
-        android:textSize="12sp"
-        app:layout_constraintHorizontal_bias="0.457"
-        app:layout_constraintLeft_toRightOf="@+id/editText13"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>

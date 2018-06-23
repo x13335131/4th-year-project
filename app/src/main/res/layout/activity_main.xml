@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.louis.prototype.MainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </android.support.v7.widget.Toolbar>
     <Button
         android:id="@+id/button"
         android:layout_width="91dp"
@@ -81,7 +92,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="390dp"
-        android:layout_height="351dp"
+        android:layout_height="294dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/hill"
@@ -89,8 +100,7 @@
         app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
         android:id="@+id/textView2"
@@ -158,24 +168,23 @@
         android:id="@+id/switch2"
         android:layout_width="52dp"
         android:layout_height="36dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
         android:checked="false"
         android:switchMinWidth="50dp"
         android:textColor="@android:color/holo_red_dark"
         android:thumbTint="@color/colorPrimary"
         android:trackTint="@android:color/holo_green_dark"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
         tools:checked="false" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="40dp"
         android:layout_height="31dp"
-        android:layout_marginTop="16dp"
         android:background="@drawable/infobtn"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
 
     <TextView
         android:id="@+id/textView6"
@@ -183,7 +192,6 @@
         android:layout_height="33dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
         android:text="@string/textView6"
         android:textColor="@color/colorPrimary"
         android:textSize="24sp"
@@ -191,7 +199,7 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="@+id/button4"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
 
     <Button
         android:id="@+id/button11"
@@ -235,11 +243,10 @@
         android:id="@+id/textView37"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
-        android:layout_marginTop="28dp"
         android:text="panic switch"
         android:textColor="@color/colorPrimary"
         app:layout_constraintEnd_toStartOf="@+id/switch2"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
 
     <Button
         android:id="@+id/survayBtn"
@@ -249,6 +256,7 @@
         android:layout_marginTop="16dp"
         android:text="Take Survay"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button4" />
+        app:layout_constraintTop_toBottomOf="@+id/button4"
+        android:layout_marginLeft="16dp" />
 
 </android.support.constraint.ConstraintLayout>

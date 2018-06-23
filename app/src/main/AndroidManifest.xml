@@ -14,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MyDiary"
             android:label="@string/title_activity_my_diary"
@@ -31,9 +33,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".QandA" />
+        <activity
+            android:name=".QandA"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Odsis" />
-        <activity android:name=".Oasis"></activity>
+        <activity android:name=".Oasis" />
+        <activity
+            android:name=".SetupActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NewPostActivity"
+            android:theme="@style/AppTheme.NoActionBar" ></activity>
     </application>
 
 </manifest>

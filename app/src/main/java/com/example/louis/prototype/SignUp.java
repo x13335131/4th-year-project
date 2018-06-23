@@ -33,6 +33,7 @@ public class SignUp extends AppCompatActivity{
         mAuth = FirebaseAuth.getInstance();
        // et_name = (EditText) findViewById(R.id.editText10);
         et_email = (EditText) findViewById(R.id.editText14);
+        et_email.requestFocus();
         et_password = (EditText) findViewById(R.id.editText11);
         et_cpassword = (EditText) findViewById(R.id.editText12);
         regBtn = (Button) findViewById(R.id.button18);
@@ -53,7 +54,10 @@ public class SignUp extends AppCompatActivity{
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
-                        onSignupSuccess();
+                        Intent setupIntent = new Intent(SignUp.this, SetupActivity.class);
+                        startActivity(setupIntent);
+                        finish();
+                        //onSignupSuccess();
                     }else{
                         if(task.getException() instanceof FirebaseAuthUserCollisionException){
                             Toast.makeText(getApplicationContext(),"You Are Already Registered", Toast.LENGTH_SHORT).show();

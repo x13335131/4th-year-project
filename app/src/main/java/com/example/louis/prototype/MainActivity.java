@@ -2,8 +2,12 @@ package com.example.louis.prototype;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
@@ -42,18 +46,26 @@ public class MainActivity extends AppCompatActivity {
     String userID;
     String value;
     float daysBetween;
+    private FirebaseAuth mAuth;
+
+    private Toolbar mainToolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
         tv= (TextView)findViewById(R.id.textView35);
         Button b1 = (Button)findViewById(R.id.button6); //diary button
         Button b2 = (Button)findViewById(R.id.button7); //calendar button
         Button b3 = (Button)findViewById(R.id.button8); //chart button
         Button b4 = (Button)findViewById(R.id.button); //social button
         final Button survay = (Button)findViewById(R.id.survayBtn); //to oasis and odsis
+        mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mainToolbar);
 
+        getSupportActionBar().setTitle("My Mental Health");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         userID= currentFirebaseUser.getUid();
@@ -86,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        //int days = Days.daysBetween(date1, date2).getDays();
                         if( daysBetween < 7.0){ //it has been less than 7 days since user took odsis survay then set button to invisible
                             System.out.println("survay set to invisible ");
                             survay.setVisibility(View.INVISIBLE);
@@ -309,5 +320,39 @@ public class MainActivity extends AppCompatActivity {
            });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_logout_btn:
+                logOut();
+                return true;
+
+            case R.id.action_settings_btn:
+                Intent settingsIntent = new Intent(MainActivity.this, SetupActivity.class);
+                startActivity(settingsIntent);
+
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void logOut() {
+        mAuth.signOut();
+        sendToLogin();
+    }
+
+    private void sendToLogin() {
+        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
+        finish();
+    }
 
 }
