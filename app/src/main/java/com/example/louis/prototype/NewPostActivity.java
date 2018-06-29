@@ -35,47 +35,57 @@ public class NewPostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_post);
+
+            setContentView(R.layout.activity_new_post);
+            firebaseAuth = FirebaseAuth.getInstance();
+
+            userid = firebaseAuth.getCurrentUser().getUid();
+
+            databasePost = FirebaseDatabase.getInstance().getReference("post");
+            newPostToolbar = (Toolbar) findViewById(R.id.new_post_toolbar);
+            setSupportActionBar(newPostToolbar);
+
+            getSupportActionBar().setTitle("Add new post");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            newPostText = (EditText) findViewById(R.id.new_post_text);
+            newPostBtn = (Button) findViewById(R.id.post_btn);
 
 
-        firebaseAuth = FirebaseAuth.getInstance();
+            newPostBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String postText = newPostText.getText().toString();
 
-        userid = firebaseAuth.getCurrentUser().getUid();
+                    if (!TextUtils.isEmpty(postText)) {
+                        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                        String currentuser = currentFirebaseUser.getUid();
 
-        databasePost = FirebaseDatabase.getInstance().getReference("post");
-        newPostToolbar = (Toolbar) findViewById(R.id.new_post_toolbar);
-        setSupportActionBar(newPostToolbar);
+                        String id = databasePost.push().getKey();
+                        Map<String, Object> userMap = new HashMap<>();
+                        userMap.put("post", postText);
+                        userMap.put("userID", currentuser);
+                        userMap.put("timestamp", ServerValue.TIMESTAMP);
+                        databasePost.child(id).setValue(userMap);
 
-        getSupportActionBar().setTitle("Add new post");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                        Toast.makeText(NewPostActivity.this, "post added", Toast.LENGTH_LONG).show();
+                        Intent forumIntent = new Intent(getApplicationContext(), QandA.class);
+                        startActivity(forumIntent);
+                    }
 
-        newPostText = (EditText) findViewById(R.id.new_post_text);
-        newPostBtn = (Button) findViewById(R.id.post_btn);
-
-
-        newPostBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String postText = newPostText.getText().toString();
-
-                if(!TextUtils.isEmpty(postText)){
-                    FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    String currentuser = currentFirebaseUser.getUid();
-
-                    String id= databasePost.push().getKey();
-                    Map<String, Object> userMap = new HashMap<>();
-                    userMap.put("post", postText);
-                    userMap.put("userID", currentuser);
-                    userMap.put("timestamp", ServerValue.TIMESTAMP);
-                    databasePost.child(id).setValue(userMap);
-
-                    Toast.makeText(NewPostActivity.this ,"post added", Toast.LENGTH_LONG).show();
-                    Intent forumIntent = new Intent(getApplicationContext(), QandA.class);
-                    startActivity(forumIntent);
                 }
+            });
+         /*   newPostToolbar.Toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new         Intent(getApplicationContext(),MainActivity.class));
+                }
+            });*/
 
-            }
-        });
+        }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
-
 }

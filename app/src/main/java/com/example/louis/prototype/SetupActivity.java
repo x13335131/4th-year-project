@@ -31,26 +31,28 @@ public class SetupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setup);
 
-        Toolbar setupToolbar = (Toolbar) findViewById(R.id.setupToolbar);
-        setSupportActionBar(setupToolbar);
-        getSupportActionBar().setTitle("Account Settings");
+            setContentView(R.layout.activity_setup);
+            Toolbar setupToolbar = (Toolbar) findViewById(R.id.setupToolbar);
+            setSupportActionBar(setupToolbar);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Account Settings");
 
-        userid = firebaseAuth.getCurrentUser().getUid();
+            firebaseAuth = FirebaseAuth.getInstance();
 
-        databaseUsername = FirebaseDatabase.getInstance().getReference("username");
-        setupName = (EditText) findViewById(R.id.setup_name);
-        setupBtn = (Button) findViewById(R.id.setup_btn);
+            userid = firebaseAuth.getCurrentUser().getUid();
+
+            databaseUsername = FirebaseDatabase.getInstance().getReference("username");
+            setupName = (EditText) findViewById(R.id.setup_name);
+            setupBtn = (Button) findViewById(R.id.setup_btn);
 
 
-        final Query userQuery = databaseUsername.orderByChild("userID").equalTo(userid);
+            final Query userQuery = databaseUsername.orderByChild("userID").equalTo(userid);
 
-        userQuery.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            userQuery.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
              /*   if(dataSnapshot.exists()){
                     Toast.makeText(SetupActivity.this, "Data exists", Toast.LENGTH_LONG).show();
 
@@ -62,11 +64,11 @@ public class SetupActivity extends AppCompatActivity {
                /* for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String key = child.getKey().toString();
                     String value = child.getValue().toString();*/
-                    if(dataSnapshot.exists()){
+                    if (dataSnapshot.exists()) {
                         String value = dataSnapshot.child("username").getValue().toString();
                         setupName.setText(value);
                         Toast.makeText(SetupActivity.this, "Data exists", Toast.LENGTH_LONG).show();
-                    }else{
+                    } else {
 
                         Toast.makeText(SetupActivity.this, "Data doesn't exist", Toast.LENGTH_LONG).show();
                     }
@@ -75,51 +77,53 @@ public class SetupActivity extends AppCompatActivity {
                     }*/
 
                 }
-           // }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                // }
 
-            }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-        setupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String user_name = setupName.getText().toString();
-
-                if(!TextUtils.isEmpty(user_name)){
-
-                    FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                    String currentuser = currentFirebaseUser.getUid();
-
-                    String id= databaseUsername.push().getKey();
-                    Map<String, String> userMap = new HashMap<>();
-                    userMap.put("username", user_name);
-                    userMap.put("userID", currentuser);
-                    databaseUsername.child(id).setValue(userMap);
-
-                    Toast.makeText(SetupActivity.this ,"username added", Toast.LENGTH_LONG).show();
-                    Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(mainIntent);
                 }
-            }
-        });
-    }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+            setupBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String user_name = setupName.getText().toString();
+
+                    if (!TextUtils.isEmpty(user_name)) {
+
+                        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                        String currentuser = currentFirebaseUser.getUid();
+
+                        String id = databaseUsername.push().getKey();
+                        Map<String, String> userMap = new HashMap<>();
+                        userMap.put("username", user_name);
+                        userMap.put("userID", currentuser);
+                        databaseUsername.child(id).setValue(userMap);
+
+                        Toast.makeText(SetupActivity.this, "username added", Toast.LENGTH_LONG).show();
+                        Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(mainIntent);
+                    }
+                }
+            });
+        }
+
 }

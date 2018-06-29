@@ -7,15 +7,19 @@ package com.example.louis.prototype;
 public class PanicButton {
     int length;
     String panicDate;
+    double latitude, longitude;
+    String location;
     String userID;
-
 
     public PanicButton() {
 
     }
-    public PanicButton(int length, String panicDate, String userID) {
+    public PanicButton(int length, String panicDate, double latitude, double longitude, String location, String userID) {
         this.length = length;
         this.panicDate = panicDate;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.location = location;
         this.userID = userID;
     }
 
@@ -33,6 +37,30 @@ public class PanicButton {
 
     public void setPanicDate(String panicDate) {
         this.panicDate = panicDate;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getUserID() {

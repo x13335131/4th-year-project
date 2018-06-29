@@ -13,6 +13,7 @@ import android.view.View;
 import android.support.design.widget.BottomNavigationView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class QandA extends AppCompatActivity {
     private android.support.v7.widget.Toolbar mainToolbar;
@@ -28,56 +29,64 @@ public class QandA extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_qand);
 
-        mainToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(mainToolbar);
+            setContentView(R.layout.activity_qand);
+            mainToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.main_toolbar);
+            setSupportActionBar(mainToolbar);
 
-        getSupportActionBar().setTitle("forum");
+            getSupportActionBar().setTitle("forum");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mBottomNav = (BottomNavigationView) findViewById(R.id.navigation);
+            mBottomNav = (BottomNavigationView) findViewById(R.id.navigation);
 
-        //fragments
-        homeFragment = new HomeFragment();
-        notificationFragment = new NotificationFragment();
-        accountFragment = new AccountFragment();
+            //fragments
+            homeFragment = new HomeFragment();
+            notificationFragment = new NotificationFragment();
+            accountFragment = new AccountFragment();
 
-        mAuth = FirebaseAuth.getInstance();
 
-        addPostBtn = (FloatingActionButton) findViewById(R.id.add_post_btn);
-        addPostBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent newPostIntent = new Intent(QandA.this, NewPostActivity.class);
-                startActivity(newPostIntent);
+            replaceFragment(homeFragment);
 
-            }
-        });
-        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // handle desired action here
-                // One possibility of action is to replace the contents above the nav bar
-                // return true if you want the item to be displayed as the selected item
-                switch(item.getItemId()){
-                    case R.id.menu_home :
-                        replaceFragment(homeFragment);
-                        return true;
-                    case R.id.menu_notifications :
-                        replaceFragment(notificationFragment);
-                        return true;
-                    case R.id.menu_account :
-                        replaceFragment(accountFragment);
-                        return true;
+            mAuth = FirebaseAuth.getInstance();
 
-                    default:
-                        return false;
+            addPostBtn = (FloatingActionButton) findViewById(R.id.add_post_btn);
+            addPostBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent newPostIntent = new Intent(QandA.this, NewPostActivity.class);
+                    startActivity(newPostIntent);
+
                 }
-            }
-        });
+            });
+            mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    // handle desired action here
+                    // One possibility of action is to replace the contents above the nav bar
+                    // return true if you want the item to be displayed as the selected item
+                    switch (item.getItemId()) {
+                        case R.id.menu_home:
+                            replaceFragment(homeFragment);
+                            return true;
+                        case R.id.menu_notifications:
+                            replaceFragment(notificationFragment);
+                            return true;
+                        case R.id.menu_account:
+                            replaceFragment(accountFragment);
+                            return true;
+
+                        default:
+                            return false;
+                    }
+                }
+            });
+        }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

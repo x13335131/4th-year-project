@@ -1,11 +1,20 @@
 package com.example.louis.prototype;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,21 +31,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-    //private TextView tv;
+    //private TextView secondsTv;
     DatabaseReference OdsisDb;
-    TextView tv;
+    TextView secondsTv;
     private static Timer myTimer;
     int secondsPassed = 0;
     int secondsCaptured;
@@ -49,65 +59,116 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private Toolbar mainToolbar;
-
+    private Button diaryBtn, calBtn, chartBtn, socialBtn;
+    private Button survey;
+    private Button panicButton;
+    private Thread thread;
+    private static final int REQUEST_LOCATION = 1;
+    LocationManager locationManager;
+    String latitude, longitude;
+    TextView locationTv;
+    Geocoder geocoder;
+    List<Address> addresses;
+    String address;
+    String location;
+    double latti, longi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         setContentView(R.layout.activity_main);
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
+
+        geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+
         mAuth = FirebaseAuth.getInstance();
-        tv= (TextView)findViewById(R.id.textView35);
-        Button b1 = (Button)findViewById(R.id.button6); //diary button
-        Button b2 = (Button)findViewById(R.id.button7); //calendar button
-        Button b3 = (Button)findViewById(R.id.button8); //chart button
-        Button b4 = (Button)findViewById(R.id.button); //social button
-        final Button survay = (Button)findViewById(R.id.survayBtn); //to oasis and odsis
+        thread = new Thread() {
+
+            @Override
+            public void run() {
+
+                try {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                            // Stuff that updates the UI
+
+                            getSupportActionBar().setTitle("My Mental Health");
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+        secondsTv = (TextView) findViewById(R.id.seconds_tv);
+        locationTv = (TextView) findViewById(R.id.text_location);
+        diaryBtn = (Button) findViewById(R.id.diary_btn); //diary button
+        calBtn = (Button) findViewById(R.id.calendar_btn); //calendar button
+        chartBtn = (Button) findViewById(R.id.charts_btn); //chart button
+        socialBtn = (Button) findViewById(R.id.social_btn); //social button
+
+        // Stuff that updates the UI
+        Switch s = (Switch) findViewById(R.id.panic_btn_switch);
+        databasePanic = FirebaseDatabase.getInstance().getReference("panic");
+        panicButton = (Button) findViewById(R.id.panic_btn);
+        panicList = new ArrayList<>();
+
+        survey = (Button) findViewById(R.id.surveyBtn); //to oasis and odsis
         mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
 
-        getSupportActionBar().setTitle("My Mental Health");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        userID= currentFirebaseUser.getUid();
+        userID = currentFirebaseUser.getUid();
 
-        OdsisDb= database.getReference("odsis");
+        OdsisDb = database.getReference("odsis");
 
         Query lastQuery = OdsisDb.orderByChild("user").equalTo(userID).limitToLast(1);//.orderByKey().limitToLast(1);
         lastQuery.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String key = child.getKey().toString();
                     value = child.getValue().toString();
                     if (key.equals("todaysDate")) {
                         System.out.println("key " + key + " Value " + value);
                         SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-                        String dateBeforeString =  value;
-                        String dateAfterString =new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
-                        System.out.println("Date Before String: "+dateBeforeString);
-                        System.out.println("Date After String: "+dateAfterString);
+                        String dateBeforeString = value;
+                        String dateAfterString = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
+                        System.out.println("Date Before String: " + dateBeforeString);
+                        System.out.println("Date After String: " + dateAfterString);
                         try {
                             Date dateBefore = myFormat.parse(dateBeforeString);
                             Date dateAfter = myFormat.parse(dateAfterString);
 
                             long difference = dateAfter.getTime() - dateBefore.getTime();
-                            daysBetween = (difference / (1000*60*60*24));
+                            daysBetween = (difference / (1000 * 60 * 60 * 24));
 
-                            System.out.println("Number of Days between dates: "+daysBetween);
+                            System.out.println("Number of Days between dates: " + daysBetween);
 
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        if( daysBetween < 7.0){ //it has been less than 7 days since user took odsis survay then set button to invisible
-                            System.out.println("survay set to invisible ");
-                            survay.setVisibility(View.INVISIBLE);
-                        }else { //it has been more than 7 days than they may take survay
+                        if (daysBetween < 7.0) { //it has been less than 7 days since user took odsis survey then set button to invisible
+                            System.out.println("survey set to invisible ");
+                            survey.setVisibility(View.INVISIBLE);
+                        } else { //it has been more than 7 days than they may take survey
                             System.out.println("Survay set to visible ");
-                            survay.setVisibility(View.VISIBLE);
+                            survey.setVisibility(View.VISIBLE);
                         }
                     }
 
                 }
+
             }
 
             @Override
@@ -131,169 +192,207 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Switch s = (Switch)findViewById(R.id.switch2);
-        databasePanic = FirebaseDatabase.getInstance().getReference("panic");
-        final Button panicButton = (Button) findViewById(R.id.button11);
-        panicList = new ArrayList<>();
-        b1.setOnClickListener(new View.OnClickListener(){
+        panicButton.setOnClickListener(new View.OnClickListener() {
 
-                                  @Override
-                                  public void onClick(View v) {
-                                      Intent i1 = new Intent(getApplicationContext(), MyDiary.class);
-                                      startActivity(i1);
-                                  }
-                              }
-        );
-        b2.setOnClickListener(new View.OnClickListener(){
 
-                                  @Override
-                                  public void onClick(View v) {
-                                      Intent i2 = new Intent(getApplicationContext(), Calendar.class);
-                                      startActivity(i2);
-                                  }
-                              }
-        );
-        b3.setOnClickListener(new View.OnClickListener(){
+            boolean pressed = true;
 
-                                  @Override
-                                  public void onClick(View v) {
-                                      Intent i3 = new Intent(getApplicationContext(), Chart.class);
-                                      startActivity(i3);
-                                  }
-                              }
-        );
-        b4.setOnClickListener(new View.OnClickListener(){
-
-                                  @Override
-                                  public void onClick(View v) {
-                                      Intent i4 = new Intent(getApplicationContext(), Social.class);
-                                      startActivity(i4);
-                                  }
-                              }
-        );
-        survay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i5 = new Intent(getApplicationContext(), Oasis.class);
-                startActivity(i5);
-            }
-        });
-        s.setOnClickListener(new View.OnClickListener(){
-
+            //Timer  myTimer = new Timer();
             @Override
             public void onClick(View v) {
-                if (panicButton.isShown()) {//if clicked and panic button is already showing, make it disappear
-                    //myTimer = new Timer();
-                    secondsPassed=0;
-                   // myTimer.cancel();
+//if clicked
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-                    panicButton.setVisibility(View.GONE);
-                    tv.setVisibility(View.GONE);
-
-                } else {
-                    panicButton.setVisibility(View.VISIBLE);
-                    tv.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
-
-       panicButton.setOnClickListener(new View.OnClickListener(){
-            boolean pressed=true;
-           //Timer  myTimer = new Timer();
-            @Override
-            public void onClick(View v) {
-                //if clicked
-                if(pressed==true){
+                if (pressed == true) {
+                    if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        buildAlertMessageNoGps();
+                    } else if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                        getLocation();
                     System.out.println("starting timer");
                     start(); //start timer
-                    pressed=false;
-                    tv.setText("Timer Start");
-                }
-                else{
+                    pressed = false;
+                    secondsTv.setText("Timer Start");
+                } else {
                     System.out.println("ending timer");
                     end();
-                    pressed=true;
+                    pressed = true;
+                }
+
+
+            }
+
+            private void getLocation() {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+                } else {
+                    Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+                    Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                    Location location2 = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+
+                    if (location != null) {
+                        latti = location.getLatitude();
+                        longi = location.getLongitude();
+                        latitude = String.valueOf(latti);
+                        longitude = String.valueOf(longi);
+
+                        try {
+                            addresses = geocoder.getFromLocation(latti, longi, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                            address = addresses.get(0).getAddressLine(0);
+                            locationTv.setText("address: " + address);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("Latitude: " + latitude + " longitude: " + longitude);
+                            /*locationTv.setText("Your current location is"+ "\n" + "Lattitude = " + latitude
+                                    + "\n" + "Longitude = " + longitude);*/
+
+                    } else if (location1 != null) {
+                        latti = location1.getLatitude();
+                        longi = location1.getLongitude();
+                        latitude = String.valueOf(latti);
+                        longitude = String.valueOf(longi);
+
+                        try {
+                            addresses = geocoder.getFromLocation(latti, longi, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                            address = addresses.get(0).getAddressLine(0);
+                            locationTv.setText("address: " + address);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        System.out.println("Latitude: " + latitude + " longitude: " + longitude);
+                            /*
+                            locationTv.setText("Your current location is"+ "\n" + "Lattitude = " + latitude
+                                    + "\n" + "Longitude = " + longitude);*/
+
+
+                    } else if (location2 != null) {
+                        latti = location2.getLatitude();
+                        longi = location2.getLongitude();
+                        latitude = String.valueOf(latti);
+                        longitude = String.valueOf(longi);
+
+                        try {
+                            addresses = geocoder.getFromLocation(latti, longi, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                            address = addresses.get(0).getAddressLine(0);
+                            locationTv.setText("address: " + address);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        System.out.println("Latitude: " + latitude + " longitude: " + longitude);
+                            /*
+                            locationTv.setText("Your current location is"+ "\n" + "Lattitude = " + latitude
+                                    + "\n" + "Longitude = " + longitude);*/
+
+                    } else {
+
+                        Toast.makeText(MainActivity.this, "Unble to Trace your location", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
             }
 
+            protected void buildAlertMessageNoGps() {
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Please Turn ON your GPS Connection")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
+            }
+
+
             //start timer
-           public void start(){
-               myTimer = new Timer();
-               TimerTask task = new TimerTask() {
-                   public void run() {
-                       secondsPassed++;
-                       System.out.println("Seconds passed " + secondsPassed);
-                       tv.setText("Seconds Passed: " + String.valueOf(secondsPassed));
+            public void start() {
 
-                   }
-               };
-               myTimer.scheduleAtFixedRate(task, 1000,1000);
-           }
+                secondsTv.setVisibility(View.VISIBLE);
+                locationTv.setVisibility(View.VISIBLE);
+                thread = new Thread() {
+                    @Override
+                    public void run() {
+                        // Stuff that updates the UI
+                        try {
+                            myTimer = new Timer();
+                            TimerTask task = new TimerTask() {
+                                public void run() {
+                                    secondsPassed++;
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            System.out.println("Seconds passed " + secondsPassed);
+                                            secondsTv.setText("Seconds Passed: " + String.valueOf(secondsPassed));
 
-           //end timer
-           public void end(){
-               addPanicToDiary();
-               getUserData();
-               //a = tv.getText().toString();
-               secondsPassed=0;
-               myTimer.cancel();
-               tv.setText("Timer Stopped"+secondsCaptured);
-           }
-           public void addPanicToDiary(){
-               secondsCaptured = secondsPassed;
-               DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-               java.util.Calendar cal = java.util.Calendar.getInstance();
-               String todaysDate = df.format(cal.getTime());
+                                        }
+                                    });
+                                }
+                            };
+                            myTimer.scheduleAtFixedRate(task, 1000, 1000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                thread.start();
+            }
 
-               FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-               userID= currentFirebaseUser.getUid();
+            //end timer
+            public void end() {
+                addPanicToDiary();
+                getUserData();
+                //a = secondsTv.getText().toString();
+                secondsPassed = 0;
+                myTimer.cancel();
+                secondsTv.setText("Timer Stopped" + secondsCaptured);
+            }
 
-                   String id= databasePanic.push().getKey();
-                   PanicButton panic = new PanicButton(secondsCaptured, todaysDate, userID);
-                   databasePanic.child(id).setValue(panic);
-                   Toast.makeText(MainActivity.this ,"panic attack added", Toast.LENGTH_LONG).show();
-           }
-            public void getUserData(){
+            public void addPanicToDiary() {
+                secondsCaptured = secondsPassed;
+                location = address;
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                String todaysDate = df.format(cal.getTime());
+
+                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                userID = currentFirebaseUser.getUid();
+
+                String id = databasePanic.push().getKey();
+                PanicButton panic = new PanicButton(secondsCaptured, todaysDate, longi, latti, location, userID);
+                databasePanic.child(id).setValue(panic);
+                Toast.makeText(MainActivity.this, "panic attack added", Toast.LENGTH_LONG).show();
+            }
+
+            public void getUserData() {
                 // Read from the database
                 //ordering output by length
-               // final Query userQuery = databasePanic.orderByChild("length");
+                // final Query userQuery = databasePanic.orderByChild("length");
                 final Query userQuery = databasePanic.orderByChild("userID").equalTo(userID);
                 userQuery.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                       // map.clear();
+                        // map.clear();
                         //Get the node from the datasnapshot
-                        String myParentNode = dataSnapshot.getKey();
-                        for (DataSnapshot child: dataSnapshot.getChildren())
-                        {
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
                             String key = child.getKey().toString();
                             String value = child.getValue().toString();
                             //map.put(key,value);
-                            System.out.println("key "+key+" Value "+value);
+                            System.out.println("key " + key + " Value " + value);
                         }
 
-               /* databasePanic.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // This method is called once with the initial value and again
-                        // whenever data at this location is updated.
-                        for(DataSnapshot panicSnapshot : dataSnapshot.getChildren()){
-                            PanicButton p = panicSnapshot.getValue(PanicButton.class);
-                            System.out.print("length of panic button pressed"+ p.getLength());
-                        }
-
-                        //String value = dataSnapshot.getValue(String.class);
-                        //Log.d(TAG, "Value is: " + value);
                     }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-                        Log.w(TAG, "Failed to read value.", error.toException());
-                    }
-                });*/
-            }
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -316,8 +415,74 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-    }
-           });
+            }
+        });
+
+
+        diaryBtn.setOnClickListener(new View.OnClickListener() {
+
+                                  @Override
+                                  public void onClick(View v) {
+                                      Intent i1 = new Intent(getApplicationContext(), MyDiary.class);
+                                      startActivity(i1);
+                                  }
+                              }
+        );
+        calBtn.setOnClickListener(new View.OnClickListener() {
+
+                                  @Override
+                                  public void onClick(View v) {
+                                      Intent i2 = new Intent(getApplicationContext(), Calendar.class);
+                                      startActivity(i2);
+                                  }
+                              }
+        );
+        chartBtn.setOnClickListener(new View.OnClickListener() {
+
+                                  @Override
+                                  public void onClick(View v) {
+                                      Intent i3 = new Intent(getApplicationContext(), Chart.class);
+                                      startActivity(i3);
+                                  }
+                              }
+        );
+        socialBtn.setOnClickListener(new View.OnClickListener() {
+
+                                  @Override
+                                  public void onClick(View v) {
+                                      Intent i4 = new Intent(getApplicationContext(), Social.class);
+                                      startActivity(i4);
+                                  }
+                              }
+        );
+        survey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i5 = new Intent(getApplicationContext(), Oasis.class);
+                startActivity(i5);
+            }
+        });
+        s.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (panicButton.isShown()) {//if clicked and panic button is already showing, make it disappear
+                    //myTimer = new Timer();
+                    secondsPassed = 0;
+                    // myTimer.cancel();
+
+                    panicButton.setVisibility(View.GONE);
+                    secondsTv.setVisibility(View.GONE);
+                    locationTv.setVisibility(View.GONE);
+
+                } else {
+                    panicButton.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+
     }
 
     @Override
