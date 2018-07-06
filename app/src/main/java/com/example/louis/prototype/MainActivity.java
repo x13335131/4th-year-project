@@ -432,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
 
                                   @Override
                                   public void onClick(View v) {
-                                      Intent i2 = new Intent(getApplicationContext(), Calendar.class);
+                                      Intent i2 = new Intent(getApplicationContext(), CalendarActivity.class);
                                       startActivity(i2);
                                   }
                               }
