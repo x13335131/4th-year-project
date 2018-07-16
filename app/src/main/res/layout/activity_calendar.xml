@@ -50,8 +50,8 @@
         android:id="@+id/textView18"
         android:layout_width="32dp"
         android:layout_height="24dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="4dp"
         android:background="@color/colorAccent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/positiveTvGreen" />
@@ -59,9 +59,9 @@
     <TextView
         android:id="@+id/averageTvOrange"
         android:layout_width="32dp"
-        android:layout_height="18dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="4dp"
         android:background="@android:color/holo_orange_dark"
         app:layout_constraintStart_toEndOf="@+id/todaysTv"
         app:layout_constraintTop_toBottomOf="@+id/negativeTvRed" />
@@ -80,14 +80,14 @@
         app:layout_constraintHorizontal_bias="0.736"
         app:layout_constraintStart_toEndOf="@+id/positiveTv"
         app:layout_constraintTop_toBottomOf="@+id/compactcalendar_view"
-        app:layout_constraintVertical_bias="0.962" />
+        app:layout_constraintVertical_bias="0.296" />
 
     <TextView
         android:id="@+id/positiveTvGreen"
         android:layout_width="32dp"
         android:layout_height="19dp"
-        android:layout_marginBottom="208dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="224dp"
+        android:layout_marginLeft="28dp"
         android:background="@android:color/holo_green_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
@@ -96,8 +96,8 @@
         android:id="@+id/negativeTv"
         android:layout_width="wrap_content"
         android:layout_height="23dp"
-        android:layout_marginBottom="208dp"
-        android:layout_marginRight="44dp"
+        android:layout_marginBottom="224dp"
+        android:layout_marginRight="48dp"
         android:text="negative day"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -106,8 +106,8 @@
         android:id="@+id/todaysTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
         android:text="todays date"
         app:layout_constraintStart_toEndOf="@+id/textView18"
         app:layout_constraintTop_toBottomOf="@+id/positiveTv" />
@@ -128,16 +128,16 @@
         android:id="@+id/positiveTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="212dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="224dp"
+        android:layout_marginLeft="20dp"
         android:text="positive day"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/positiveTvGreen" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/displayDataTv"
         android:layout_width="248dp"
-        android:layout_height="34dp"
+        android:layout_height="168dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="84dp"
         android:layout_marginStart="8dp"

@@ -18,79 +18,107 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static com.example.louis.prototype.R.id.checkBox;
 
 /**
  * Created by louis on 01/11/2017.
  */
 
 public class Tab3Moods extends Fragment {
-    private CheckBox checkBox1;
-    private CheckBox checkBox2;
-    private CheckBox checkBox3;
-    private CheckBox checkBox4;
-    private CheckBox checkBox5;
-    private CheckBox checkBox6;
-    private CheckBox checkBox7;
-    private CheckBox checkBox8;
-    private CheckBox checkBox9;
-    private CheckBox checkBox10;
-    private CheckBox checkBox11;
-    private CheckBox checkBox12;
-    private CheckBox checkBox13;
-    private CheckBox checkBox14;
-    private CheckBox checkBox15;
-    private CheckBox checkBox16;
-    private CheckBox checkBox17;
-    private CheckBox checkBox18;
-    private CheckBox checkBox19;
-    private CheckBox checkBox20;
-    private CheckBox checkBox21;
-    private boolean checkbox1Value;
-    private boolean checkbox2Value;
-    private boolean checkbox3Value;
-    private boolean checkbox4Value;
-    private boolean checkbox5Value;
-    private boolean checkbox6Value;
-    private boolean checkbox7Value;
-    private Button buttonSave3;
+    private CheckBox afraidCb;
+    private CheckBox aggrevatedCb;
+    private CheckBox angryCb;
+    private CheckBox anxiousCb;
+    private CheckBox awkwardCb;
+    private CheckBox braveCb;
+    private CheckBox calmCb;
+    private CheckBox confindentCb;
+    private CheckBox contentCb;
+    private CheckBox depressedCb;
+    private CheckBox discouragedCb;
+    private CheckBox distantCb;
+    private CheckBox energizedCb;
+    private CheckBox fatiguedCb;
+    private CheckBox gloomyCb;
+    private CheckBox grumpyCb;
+    private CheckBox grouchyCb;
+    private CheckBox happyCb;
+    private CheckBox hesitantCb;
+    private CheckBox impatientCb;
+    private CheckBox insecureCb;
+    private boolean afraidCbValue;
+    private boolean aggrevatedCbValue;
+    private boolean angryCbValue;
+    private boolean anxiousCbValue;
+    private boolean awkwardCbValue;
+    private boolean braveCbValue;
+    private boolean calmCbValue;
+    private boolean confidentCbValue;
+    private boolean contentCbValue;
+    private boolean depressedCbValue;
+    private boolean discouragedCbValue;
+    private boolean distantCbValue;
+    private boolean energizedCbValue;
+    private boolean fatiguedCbValue;
+    private boolean gloomyCbValue;
+    private boolean grumpyCbValue;
+    private boolean grouchyCbValue;
+    private boolean happyCbValue;
+    private boolean hesitantCbValue;
+    private boolean impatientCbValue;
+    private boolean insecureCbValue;
+
+    private Button saveBtn;
     DatabaseReference databaseMoods;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab3moods, container, false);
-        buttonSave3 = (Button) rootView.findViewById(R.id.button5);
-        buttonSave3.setOnClickListener(getButton2OnClickListener());
+        saveBtn = (Button) rootView.findViewById(R.id.submitBtn);
+        saveBtn.setOnClickListener(getButton2OnClickListener());
         databaseMoods = FirebaseDatabase.getInstance().getReference("moods");
-        checkBox1 = (CheckBox) rootView.findViewById(R.id.checkBox2);
-        checkBox2= (CheckBox) rootView.findViewById(R.id.checkBox3);
-        checkBox3= (CheckBox) rootView.findViewById(checkBox);
-        checkBox4= (CheckBox) rootView.findViewById(R.id.checkBox4);
-        checkBox5= (CheckBox) rootView.findViewById(R.id.checkBox5);
-        checkBox6= (CheckBox) rootView.findViewById(R.id.checkBox6);
-        checkBox7= (CheckBox) rootView.findViewById(R.id.checkBox7);
-        checkBox8= (CheckBox) rootView.findViewById(R.id.checkBox11);
-        checkBox9= (CheckBox) rootView.findViewById(R.id.checkBox9);
-        checkBox10= (CheckBox) rootView.findViewById(R.id.checkBox10);
-        checkBox11 = (CheckBox) rootView.findViewById(R.id.checkBox8);
-        checkBox12= (CheckBox) rootView.findViewById(R.id.checkBox16);
-        checkBox13= (CheckBox) rootView.findViewById(R.id.checkBox14);
-        checkBox14= (CheckBox) rootView.findViewById(R.id.checkBox17);
-        checkBox15= (CheckBox) rootView.findViewById(R.id.checkBox13);
-        checkBox16= (CheckBox) rootView.findViewById(R.id.checkBox18);
-        checkBox17= (CheckBox) rootView.findViewById(R.id.checkBox19);
-        checkBox18= (CheckBox) rootView.findViewById(R.id.checkBox20);
-        checkBox19= (CheckBox) rootView.findViewById(R.id.checkBox21);
-        checkBox20= (CheckBox) rootView.findViewById(R.id.checkBox22);
-        checkBox21= (CheckBox) rootView.findViewById(R.id.checkBox24);
-        checkbox1Value = false;
-        checkbox2Value = false;
-        checkbox3Value = false;
-        checkbox4Value = false;
-        checkbox5Value = false;
-        checkbox6Value = false;
-        checkbox7Value = false;
+        afraidCb = (CheckBox) rootView.findViewById(R.id.afraidCb);
+        aggrevatedCb = (CheckBox) rootView.findViewById(R.id.aggrevatedCb);
+        angryCb = (CheckBox) rootView.findViewById(R.id.angryCb);
+        anxiousCb = (CheckBox) rootView.findViewById(R.id.anxiousCb);
+        awkwardCb = (CheckBox) rootView.findViewById(R.id.awkwardCb);
+        braveCb = (CheckBox) rootView.findViewById(R.id.braveCb);
+        calmCb = (CheckBox) rootView.findViewById(R.id.calmCb);
+        confindentCb = (CheckBox) rootView.findViewById(R.id.confidentCb);
+        contentCb = (CheckBox) rootView.findViewById(R.id.contentCb);
+        depressedCb = (CheckBox) rootView.findViewById(R.id.depressedCb);
+        discouragedCb = (CheckBox) rootView.findViewById(R.id.discouragedCb);
+        distantCb = (CheckBox) rootView.findViewById(R.id.distantCb);
+        energizedCb = (CheckBox) rootView.findViewById(R.id.energizedCb);
+        fatiguedCb = (CheckBox) rootView.findViewById(R.id.fatiguedCb);
+        gloomyCb = (CheckBox) rootView.findViewById(R.id.gloomyCb);
+        grumpyCb = (CheckBox) rootView.findViewById(R.id.grumpyCb);
+        grouchyCb = (CheckBox) rootView.findViewById(R.id.grouchyCb);
+        happyCb = (CheckBox) rootView.findViewById(R.id.happyCb);
+        hesitantCb = (CheckBox) rootView.findViewById(R.id.hesitantCb);
+        impatientCb = (CheckBox) rootView.findViewById(R.id.impatientCb);
+        insecureCb = (CheckBox) rootView.findViewById(R.id.insecureCb);
+        afraidCbValue = false;
+        aggrevatedCbValue = false;
+        angryCbValue = false;
+        anxiousCbValue = false;
+        awkwardCbValue = false;
+        braveCbValue = false;
+        calmCbValue = false;
+        confidentCbValue = false;
+        contentCbValue=false;;
+        depressedCbValue= false;
+       discouragedCbValue= false;
+        distantCbValue= false;
+        energizedCbValue= false;
+       fatiguedCbValue= false;
+       gloomyCbValue= false;
+        grumpyCbValue= false;
+       grouchyCbValue= false;
+        happyCbValue= false;
+        hesitantCbValue= false;
+        impatientCbValue= false;
+       insecureCbValue= false;
 
         return rootView;
     }
@@ -111,32 +139,76 @@ public class Tab3Moods extends Fragment {
                 FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 String userID= currentFirebaseUser.getUid();
 
-                if(checkBox1.isChecked()){
-                    checkbox1Value=true;
+                if(afraidCb.isChecked()){
+                    afraidCbValue =true;
                 }
-                if(checkBox2.isChecked()){
-                    checkbox2Value=true;
+                if(aggrevatedCb.isChecked()){
+                    aggrevatedCbValue =true;
                 }
-                if(checkBox3.isChecked()){
-                    checkbox3Value=true;
+                if(angryCb.isChecked()){
+                    angryCbValue =true;
                 }
-                if(checkBox4.isChecked()){
-                    checkbox4Value=true;
+                if(anxiousCb.isChecked()){
+                    anxiousCbValue =true;
                 }
-                if(checkBox5.isChecked()){
-                    checkbox5Value=true;
+                if(awkwardCb.isChecked()){
+                    awkwardCbValue =true;
                 }
-                if(checkBox6.isChecked()){
-                    checkbox6Value=true;
+                if(braveCb.isChecked()){
+                    braveCbValue =true;
                 }
-                if(checkBox7.isChecked()){
-                    checkbox7Value=true;
+                if(calmCb.isChecked()){
+                    calmCbValue =true;
                 }
-
+                if(confindentCb.isChecked()){
+                    confidentCbValue =true;
+                }
+                if(contentCb.isChecked()){
+                    contentCbValue = true;
+                }
+                if(depressedCb.isChecked()){
+                    depressedCbValue = true;
+                }
+                if(discouragedCb.isChecked()){
+                    discouragedCbValue=true;
+                }
+                if(distantCb.isChecked()){
+                    distantCbValue=true;
+                }
+                if(energizedCb.isChecked()){
+                    energizedCbValue=true;
+                }
+                if(fatiguedCb.isChecked()){
+                    fatiguedCbValue=true;
+                }
+                if(gloomyCb.isChecked()){
+                    gloomyCbValue=true;
+                }
+                if(grumpyCb.isChecked()){
+                    grumpyCbValue=true;
+                }
+                if(grouchyCb.isChecked()){
+                    grouchyCbValue=true;
+                }
+                if(happyCb.isChecked()){
+                    happyCbValue=true;
+                }
+                if(hesitantCb.isChecked()){
+                    hesitantCbValue =true;
+                }
+                if(impatientCb.isChecked()){
+                    impatientCbValue=true;
+                }
+                if(insecureCb.isChecked()){
+                    insecureCbValue=true;
+                }
 
 
                 String id= databaseMoods.push().getKey();
-                Mood myMood = new Mood(id, checkbox1Value, checkbox2Value, checkbox3Value, checkbox4Value, checkbox5Value, checkbox6Value, checkbox7Value, todaysDate, userID);
+                Mood myMood = new Mood(id, afraidCbValue, aggrevatedCbValue, angryCbValue, anxiousCbValue, awkwardCbValue, braveCbValue, calmCbValue,
+                        confidentCbValue,contentCbValue, depressedCbValue, discouragedCbValue,
+                        distantCbValue, energizedCbValue, fatiguedCbValue, gloomyCbValue, grumpyCbValue, grouchyCbValue, happyCbValue, hesitantCbValue,
+                        impatientCbValue, insecureCbValue, todaysDate, userID);
                 databaseMoods.child(id).setValue(myMood);
                 Toast.makeText(Tab3Moods.this.getActivity() ,"moods added", Toast.LENGTH_LONG).show();
             }

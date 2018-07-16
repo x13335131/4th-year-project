@@ -17,7 +17,7 @@
     <string name="checkBox13">Gloomy</string>
     <string name="checkBox24">Insecure</string>
     <string name="checkbox24">Insecure</string>
-    <string name="checkBox5">Awkward</string>
+    <string name="awkwardCb">Awkward</string>
     <string name="button11">Panic Button</string>
     <string name="title_activity_login">Sign in</string>
 

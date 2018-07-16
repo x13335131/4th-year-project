@@ -8,70 +8,254 @@ public class Mood {
 
 
     String moodID;
-    Boolean checkBox1;
-    Boolean checkBox2;
-    Boolean checkBox3;
-    Boolean checkBox4;
-    Boolean checkBox5;
-    Boolean checkBox6;
-    Boolean checkBox7;
+    Boolean afraidCb;
+    Boolean aggrevatedCb;
+    Boolean angryCb;
+    Boolean anxiousCb;
+    Boolean awkwardCb;
+    Boolean braveCb;
+    Boolean calmCb;
+    Boolean confidentCb;
+    Boolean contentCb;
+    Boolean depressedCb;
+    Boolean discouragedCb;
+    Boolean distantCb;
+    Boolean energizedCb;
+    Boolean fatiguedCb;
+    Boolean gloomyCb;
+    Boolean grumpyCb;
+    Boolean grouchyCb;
+    Boolean happyCb;
+    Boolean hesitantCb;
+    Boolean impatientCb;
+    Boolean insecureCb;
     String symptomDate;
     String userID;
+
+
+    public Mood(String moodID, Boolean afraidCb, Boolean aggrevatedCb, Boolean angryCb, Boolean anxiousCb, Boolean awkwardCb, Boolean braveCb, Boolean calmCb, Boolean confidentCb, Boolean contentCb, Boolean depressedCb, Boolean discouragedCb, Boolean distantCb, Boolean energizedCb, Boolean fatiguedCb, Boolean gloomyCb, Boolean grumpyCb, Boolean grouchyCb, Boolean happyCb, Boolean hesitantCb, Boolean impatientCb, Boolean insecureCb, String symptomDate, String userID) {
+        this.moodID = moodID;
+        this.afraidCb = afraidCb;
+        this.aggrevatedCb = aggrevatedCb;
+        this.angryCb = angryCb;
+        this.anxiousCb = anxiousCb;
+        this.awkwardCb = awkwardCb;
+        this.braveCb = braveCb;
+        this.calmCb = calmCb;
+        this.confidentCb = confidentCb;
+        this.contentCb = contentCb;
+        this.depressedCb = depressedCb;
+        this.discouragedCb = discouragedCb;
+        this.distantCb = distantCb;
+        this.energizedCb = energizedCb;
+        this.fatiguedCb = fatiguedCb;
+        this.gloomyCb = gloomyCb;
+        this.grumpyCb = grumpyCb;
+        this.grouchyCb = grouchyCb;
+        this.happyCb = happyCb;
+        this.hesitantCb = hesitantCb;
+        this.impatientCb = impatientCb;
+        this.insecureCb = insecureCb;
+        this.symptomDate = symptomDate;
+        this.userID = userID;
+    }
 
     public Mood(){
 
     }
 
-    public Mood(String moodID, Boolean checkBox1, Boolean checkBox2, Boolean checkBox3, Boolean checkBox4, Boolean checkBox5, Boolean checkBox6, Boolean checkBox7, String symptomDate, String userID) {
-        this.moodID = moodID;
-        this.checkBox1 = checkBox1;
-        this.checkBox2 = checkBox2;
-        this.checkBox3 = checkBox3;
-        this.checkBox4 = checkBox4;
-        this.checkBox5 = checkBox5;
-        this.checkBox6 = checkBox6;
-        this.checkBox7 = checkBox7;
-        this.symptomDate = symptomDate;
-        this.userID = userID;
-    }
 
     public String getMoodID() {
         return moodID;
     }
 
-    public Boolean getCheckBox1() {
-        return checkBox1;
+    public void setMoodID(String moodID) {
+        this.moodID = moodID;
     }
 
-    public Boolean getCheckBox2() {
-        return checkBox2;
+    public Boolean getAfraidCb() {
+        return afraidCb;
     }
 
-    public Boolean getCheckBox3() {
-        return checkBox3;
+    public void setAfraidCb(Boolean afraidCb) {
+        this.afraidCb = afraidCb;
     }
 
-    public Boolean getCheckBox4() {
-        return checkBox4;
+    public Boolean getAggrevatedCb() {
+        return aggrevatedCb;
     }
 
-    public Boolean getCheckBox5() {
-        return checkBox5;
+    public void setAggrevatedCb(Boolean aggrevatedCb) {
+        this.aggrevatedCb = aggrevatedCb;
     }
 
-    public Boolean getCheckBox6() {
-        return checkBox6;
+    public Boolean getAngryCb() {
+        return angryCb;
     }
 
-    public Boolean getCheckBox7() {
-        return checkBox7;
+    public void setAngryCb(Boolean angryCb) {
+        this.angryCb = angryCb;
+    }
+
+    public Boolean getAnxiousCb() {
+        return anxiousCb;
+    }
+
+    public void setAnxiousCb(Boolean anxiousCb) {
+        this.anxiousCb = anxiousCb;
+    }
+
+    public Boolean getAwkwardCb() {
+        return awkwardCb;
+    }
+
+    public void setAwkwardCb(Boolean awkwardCb) {
+        this.awkwardCb = awkwardCb;
+    }
+
+    public Boolean getBraveCb() {
+        return braveCb;
+    }
+
+    public void setBraveCb(Boolean braveCb) {
+        this.braveCb = braveCb;
+    }
+
+    public Boolean getCalmCb() {
+        return calmCb;
+    }
+
+    public void setCalmCb(Boolean calmCb) {
+        this.calmCb = calmCb;
+    }
+
+    public Boolean getConfidentCb() {
+        return confidentCb;
+    }
+
+    public void setConfidentCb(Boolean confidentCb) {
+        this.confidentCb = confidentCb;
+    }
+
+    public Boolean getContentCb() {
+        return contentCb;
+    }
+
+    public void setContentCb(Boolean contentCb) {
+        this.contentCb = contentCb;
+    }
+
+    public Boolean getDepressedCb() {
+        return depressedCb;
+    }
+
+    public void setDepressedCb(Boolean depressedCb) {
+        this.depressedCb = depressedCb;
+    }
+
+    public Boolean getDiscouragedCb() {
+        return discouragedCb;
+    }
+
+    public void setDiscouragedCb(Boolean discouragedCb) {
+        this.discouragedCb = discouragedCb;
+    }
+
+    public Boolean getDistantCb() {
+        return distantCb;
+    }
+
+    public void setDistantCb(Boolean distantCb) {
+        this.distantCb = distantCb;
+    }
+
+    public Boolean getEnergizedCb() {
+        return energizedCb;
+    }
+
+    public void setEnergizedCb(Boolean energizedCb) {
+        this.energizedCb = energizedCb;
+    }
+
+    public Boolean getFatiguedCb() {
+        return fatiguedCb;
+    }
+
+    public void setFatiguedCb(Boolean fatiguedCb) {
+        this.fatiguedCb = fatiguedCb;
+    }
+
+    public Boolean getGloomyCb() {
+        return gloomyCb;
+    }
+
+    public void setGloomyCb(Boolean gloomyCb) {
+        this.gloomyCb = gloomyCb;
+    }
+
+    public Boolean getGrumpyCb() {
+        return grumpyCb;
+    }
+
+    public void setGrumpyCb(Boolean grumpyCb) {
+        this.grumpyCb = grumpyCb;
+    }
+
+    public Boolean getGrouchyCb() {
+        return grouchyCb;
+    }
+
+    public void setGrouchyCb(Boolean grouchyCb) {
+        this.grouchyCb = grouchyCb;
+    }
+
+    public Boolean getHappyCb() {
+        return happyCb;
+    }
+
+    public void setHappyCb(Boolean happyCb) {
+        this.happyCb = happyCb;
+    }
+
+    public Boolean getHesitantCb() {
+        return hesitantCb;
+    }
+
+    public void setHesitantCb(Boolean hesitantCb) {
+        this.hesitantCb = hesitantCb;
+    }
+
+    public Boolean getImpatientCb() {
+        return impatientCb;
+    }
+
+    public void setImpatientCb(Boolean impatientCb) {
+        this.impatientCb = impatientCb;
+    }
+
+    public Boolean getInsecureCb() {
+        return insecureCb;
+    }
+
+    public void setInsecureCb(Boolean insecureCb) {
+        this.insecureCb = insecureCb;
     }
 
     public String getSymptomDate() {
         return symptomDate;
     }
 
+    public void setSymptomDate(String symptomDate) {
+        this.symptomDate = symptomDate;
+    }
+
     public String getUserID() {
         return userID;
     }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+
 }

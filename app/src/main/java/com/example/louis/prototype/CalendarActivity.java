@@ -34,7 +34,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public class CalendarActivity extends AppCompatActivity {
-    private TextView theDate;
     CompactCalendarView compactCalendarView;
    // private CalendarView mCalendarView;
     DatabaseReference panicAttackDb;
@@ -48,7 +47,13 @@ public class CalendarActivity extends AppCompatActivity {
     String string_date;
     String formatedEventDate;
     Event event;
-
+    Event currentEvent;
+    int panicCount=0;
+    int panicLength;
+    String locLength="";
+    boolean panicBool;
+    boolean noteBool;
+    private TextView displayDataTv;
     ArrayList<Event> events;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +66,8 @@ public class CalendarActivity extends AppCompatActivity {
 
         //current user id~access specific info
         userID = currentFirebaseUser.getUid();
-
-        //assigning variables to objects
-        theDate = (TextView) findViewById(R.id.textView);
-        //mCalendarView = (CalendarView) findViewById(R.id.calendarView);
+        displayDataTv = (TextView) findViewById(R.id.displayDataTv);
+        displayDataTv.setText("");
 
         //referencing databases being used in graphs
         panicAttackDb = database.getReference("panic");
@@ -125,10 +128,11 @@ public class CalendarActivity extends AppCompatActivity {
 
                 //finished formatting clicked date to match date in db
 
-                boolean panicBool = false;
-                int panicCount=0;
+                panicBool = false;
+                noteBool=false;
                 //iterating through array
                 for(Event ev : events){
+
                     long t = ev.getTimeInMillis();
 
                     //convert back out of milliseconds
@@ -154,22 +158,39 @@ public class CalendarActivity extends AppCompatActivity {
                     formatedEventDate = dd+ "/" + mm+ "/" +  mYear;
                     System.out.println("FORMATTED EVENT DATE: "+formatedEventDate);
                     System.out.println("FORMATTED CLICKED DATE "+formatedDate);
+
+                    System.out.println("DATA FROM CURRENT EVENT UP: "+event.getData().toString());
                     //OUTPUT TO USER
-                    if (formatedEventDate.contains(formatedDate)) {
+                    //if date in events == to date clicked
+                    if (formatedEventDate.equals(formatedDate)) {
+                        System.out.println("IN IF FORMATTED EVENT DATE: "+formatedEventDate);
+                        System.out.println("FORMATTED CLICKED DATE "+formatedDate);
+
                        panicBool = true;
+                        System.out.println("BOOL "+panicBool);
                        panicCount=panicCount+1;
+                        System.out.println("panic count "+panicCount);
+                        System.out.println("TESTINGGGGG-getdata "+ ev.getData());
+                        currentEvent = ev;
                     }
 
                 }
-                System.out.println("size of array list"+events.size());
-                System.out.println("panic boolean is: "+panicBool);
+               // System.out.println("size of array list"+events.size());
+              //  System.out.println("panic boolean is: "+panicBool);
                     if(panicBool==true){
-                         Toast.makeText(context, event.getData().toString()+" count: "+panicCount, Toast.LENGTH_SHORT).show();
-                         panicCount=0;
-                    }else {
-                         Toast.makeText(context, "No Events Planned for that day", Toast.LENGTH_SHORT).show();
-                    }
 
+                        // Toast.makeText(context,  panicCount+" panic attacks(s)have been recorded. "+currentEvent.getData().toString(), Toast.LENGTH_LONG).show();
+                        displayDataTv.setText(panicCount+" panic attacks(s) have been recorded.\n"+currentEvent.getData().toString());
+                        panicBool=false;
+                        panicCount=0;
+                    }if(noteBool==true){
+                    displayDataTv.setText("notes");
+                    noteBool=false;
+                }
+                    else {
+                         Toast.makeText(context, "No Events Planned for that day", Toast.LENGTH_SHORT).show();
+                         displayDataTv.setText("");
+                    }
             }
 
             @Override
@@ -211,6 +232,11 @@ public class CalendarActivity extends AppCompatActivity {
                         String key = child.getKey().toString();
                         String value = child.getValue().toString();
 
+                        if (key.equals("length")) {
+                            String pl = child.getValue().toString();
+                            panicLength = Integer.parseInt(pl);
+
+                        }
                         if(key.equals("location")){
                             loc= child.getValue().toString();
                         }
@@ -236,14 +262,18 @@ public class CalendarActivity extends AppCompatActivity {
                             System.out.println("no matches ");
                         }
 
-                        if(!loc.isEmpty()& milliseconds!=0) {
-                            System.out.println("Panic Date "+ panicDate+" Milliseconds:: " + milliseconds + " location " + loc);
-                            event = new Event(Color.RED, milliseconds, "Panic attack: " + loc);
+                        if(panicLength!=0 & !loc.isEmpty() & milliseconds!=0) {
+                            System.out.println("Panic Date "+ panicDate+" Milliseconds:: " + milliseconds + " location " + loc + " length: "+panicLength);
+                            locLength = loc+" Length: "+panicLength;
+                            //System.out.println("locLength "+locLength);
+                            event = new Event(Color.RED, milliseconds, locLength);
                             compactCalendarView.addEvent(event);
                             //adding event to array list of events
                             events.add(event);
                             loc="";
+                            panicLength=0;
                             milliseconds=0;
+                            panicLength=0;
                             System.out.println("size of arraylist " + events.size());
                             System.out.println("array to string " + events.toString());
                         }

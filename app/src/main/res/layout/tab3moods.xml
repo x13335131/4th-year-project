@@ -1,13 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.louis.prototype.MyDiary$PlaceholderFragment">
-
+    android:paddingTop="@dimen/activity_vertical_margin">
+<!--
+    tools:context="com.example.louis.prototype.MyDiary$PlaceholderFragment" -->
     <TextView
         android:id="@+id/section_label"
         android:layout_width="wrap_content"
@@ -15,26 +15,26 @@
         android:text="Check the boxes that describe how you felt today:"/>
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/afraidCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Angry"
-        android:layout_alignBaseline="@+id/checkBox3"
-        android:layout_alignBottom="@+id/checkBox3"
-        android:layout_alignLeft="@+id/checkBox6"
-        android:layout_alignStart="@+id/checkBox6" />
+        android:layout_alignBaseline="@+id/aggrevatedCb"
+        android:layout_alignBottom="@+id/aggrevatedCb"
+        android:layout_alignLeft="@+id/braveCb"
+        android:layout_alignStart="@+id/braveCb"
+        android:text="Afraid" />
 
     <CheckBox
-        android:id="@+id/checkBox3"
+        android:id="@+id/aggrevatedCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/checkBox2"
-        android:layout_alignBottom="@+id/checkBox2"
+        android:layout_alignBaseline="@+id/angryCb"
+        android:layout_alignBottom="@+id/angryCb"
         android:layout_centerHorizontal="true"
         android:text="Aggrevated" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/angryCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -43,204 +43,195 @@
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="43dp"
-        android:text="Afraid" />
+        android:text="Angry" />
 
     <CheckBox
-        android:id="@+id/checkBox4"
+        android:id="@+id/anxiousCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/checkBox5"
-        android:layout_alignBottom="@+id/checkBox5"
-        android:layout_alignLeft="@+id/checkBox2"
-        android:layout_alignStart="@+id/checkBox2"
+        android:layout_alignBaseline="@+id/awkwardCb"
+        android:layout_alignBottom="@+id/awkwardCb"
+        android:layout_alignLeft="@+id/angryCb"
+        android:layout_alignStart="@+id/angryCb"
         android:text="Anxious" />
 
     <CheckBox
-        android:id="@+id/checkBox7"
+        android:id="@+id/calmCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/checkBox9"
-        android:layout_alignBottom="@+id/checkBox9"
-        android:layout_alignLeft="@+id/checkBox4"
-        android:layout_alignStart="@+id/checkBox4"
+        android:layout_alignBaseline="@+id/contentCb"
+        android:layout_alignBottom="@+id/contentCb"
+        android:layout_alignLeft="@+id/anxiousCb"
+        android:layout_alignStart="@+id/anxiousCb"
         android:text="Calm" />
 
     <CheckBox
-        android:id="@+id/checkBox10"
+        android:id="@+id/depressedCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox7"
-        android:layout_alignStart="@+id/checkBox7"
-        android:layout_below="@+id/checkBox7"
+        android:layout_alignLeft="@+id/calmCb"
+        android:layout_alignStart="@+id/calmCb"
+        android:layout_below="@+id/calmCb"
         android:layout_marginTop="16dp"
         android:text="Depressed" />
 
     <CheckBox
-        android:id="@+id/checkBox14"
+        android:id="@+id/energizedCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox10"
-        android:layout_alignStart="@+id/checkBox10"
-        android:layout_below="@+id/checkBox10"
+        android:layout_alignLeft="@+id/depressedCb"
+        android:layout_alignStart="@+id/depressedCb"
+        android:layout_below="@+id/depressedCb"
         android:layout_marginTop="13dp"
         android:text="Energized" />
 
     <CheckBox
-        android:id="@+id/checkBox18"
+        android:id="@+id/grumpyCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox14"
-        android:layout_alignStart="@+id/checkBox14"
-        android:layout_below="@+id/checkBox14"
+        android:layout_alignLeft="@+id/energizedCb"
+        android:layout_alignStart="@+id/energizedCb"
+        android:layout_below="@+id/energizedCb"
         android:layout_marginTop="12dp"
         android:text="Grumpy" />
 
     <CheckBox
-        android:id="@+id/checkBox21"
+        android:id="@+id/hesitantCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox18"
-        android:layout_alignStart="@+id/checkBox18"
-        android:layout_below="@+id/checkBox18"
+        android:layout_alignLeft="@+id/grumpyCb"
+        android:layout_alignStart="@+id/grumpyCb"
+        android:layout_below="@+id/grumpyCb"
         android:layout_marginTop="13dp"
         android:text="Hesitant" />
 
     <CheckBox
-        android:id="@+id/checkBox22"
+        android:id="@+id/impatientCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Impatient"
-        android:layout_alignBaseline="@+id/checkBox21"
-        android:layout_alignBottom="@+id/checkBox21"
-        android:layout_alignLeft="@+id/checkBox19"
-        android:layout_alignStart="@+id/checkBox19" />
+        android:layout_alignBaseline="@+id/hesitantCb"
+        android:layout_alignBottom="@+id/hesitantCb"
+        android:layout_alignLeft="@+id/grouchyCb"
+        android:layout_alignStart="@+id/grouchyCb" />
 
     <CheckBox
-        android:id="@+id/checkBox19"
+        android:id="@+id/grouchyCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Grouchy"
-        android:layout_above="@+id/checkBox21"
-        android:layout_alignLeft="@+id/checkBox17"
-        android:layout_alignStart="@+id/checkBox17" />
+        android:layout_above="@+id/hesitantCb"
+        android:layout_alignLeft="@+id/fatiguedCb"
+        android:layout_alignStart="@+id/fatiguedCb" />
 
     <CheckBox
-        android:id="@+id/checkBox20"
+        android:id="@+id/happyCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Happy"
-        android:layout_alignBaseline="@+id/checkBox19"
-        android:layout_alignBottom="@+id/checkBox19"
-        android:layout_alignLeft="@+id/checkBox24"
-        android:layout_alignStart="@+id/checkBox24" />
+        android:layout_alignBaseline="@+id/grouchyCb"
+        android:layout_alignBottom="@+id/grouchyCb"
+        android:layout_alignLeft="@+id/insecureCb"
+        android:layout_alignStart="@+id/insecureCb"
+        android:text="Happy" />
 
     <CheckBox
-        android:id="@+id/checkBox24"
+        android:id="@+id/insecureCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/checkbox24"
-        android:layout_alignBaseline="@+id/checkBox22"
-        android:layout_alignBottom="@+id/checkBox22"
-        android:layout_alignLeft="@+id/checkBox13"
-        android:layout_alignStart="@+id/checkBox13" />
+        android:layout_alignBaseline="@+id/impatientCb"
+        android:layout_alignBottom="@+id/impatientCb"
+        android:layout_alignLeft="@+id/gloomyCb"
+        android:layout_alignStart="@+id/gloomyCb" />
 
     <CheckBox
-        android:id="@+id/checkBox16"
+        android:id="@+id/distantCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/checkBox8"
-        android:layout_alignBottom="@+id/checkBox8"
-        android:layout_alignLeft="@+id/checkBox12"
-        android:layout_alignStart="@+id/checkBox12"
+        android:layout_alignBaseline="@+id/discouragedCb"
+        android:layout_alignBottom="@+id/discouragedCb"
+        android:layout_alignLeft="@+id/contentCb"
+        android:layout_alignStart="@+id/contentCb"
         android:text="Distant" />
 
     <CheckBox
-        android:id="@+id/checkBox11"
+        android:id="@+id/confidentCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/checkBox7"
-        android:layout_alignBottom="@+id/checkBox7"
-        android:layout_alignLeft="@+id/checkBox5"
-        android:layout_alignStart="@+id/checkBox5"
+        android:layout_alignBaseline="@+id/calmCb"
+        android:layout_alignBottom="@+id/calmCb"
+        android:layout_alignLeft="@+id/awkwardCb"
+        android:layout_alignStart="@+id/awkwardCb"
         android:text="Confident" />
 
     <CheckBox
-        android:id="@+id/checkBox12"
+        android:id="@+id/contentCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox6"
-        android:layout_alignStart="@+id/checkBox6"
-        android:layout_below="@+id/checkBox6"
+        android:layout_alignLeft="@+id/braveCb"
+        android:layout_alignStart="@+id/braveCb"
+        android:layout_below="@+id/braveCb"
         android:layout_marginTop="20dp"
         android:text="Content" />
 
     <CheckBox
-        android:id="@+id/checkBox8"
+        android:id="@+id/discouragedCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/checkBox10"
-        android:layout_alignLeft="@+id/checkBox5"
-        android:layout_alignStart="@+id/checkBox5"
+        android:layout_alignBottom="@+id/depressedCb"
+        android:layout_alignLeft="@+id/awkwardCb"
+        android:layout_alignStart="@+id/awkwardCb"
         android:text="Discouraged" />
 
     <CheckBox
-        android:id="@+id/checkBox17"
+        android:id="@+id/fatiguedCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/checkBox14"
-        android:layout_alignBottom="@+id/checkBox14"
-        android:layout_alignLeft="@+id/checkBox8"
-        android:layout_alignStart="@+id/checkBox8"
+        android:layout_alignBaseline="@+id/energizedCb"
+        android:layout_alignBottom="@+id/energizedCb"
+        android:layout_alignLeft="@+id/discouragedCb"
+        android:layout_alignStart="@+id/discouragedCb"
         android:text="Fatigued" />
 
-    <CheckBox
-        android:id="@+id/checkBox9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Content"
-        android:layout_alignBaseline="@+id/checkBox12"
-        android:layout_alignBottom="@+id/checkBox12"
-        android:layout_alignLeft="@+id/checkBox12"
-        android:layout_alignStart="@+id/checkBox12" />
 
     <CheckBox
-        android:id="@+id/checkBox13"
+        android:id="@+id/gloomyCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/checkBox13"
-        android:layout_alignBaseline="@+id/checkBox17"
-        android:layout_alignBottom="@+id/checkBox17"
-        android:layout_alignLeft="@+id/checkBox16"
-        android:layout_alignStart="@+id/checkBox16" />
+        android:layout_alignBaseline="@+id/fatiguedCb"
+        android:layout_alignBottom="@+id/fatiguedCb"
+        android:layout_alignLeft="@+id/distantCb"
+        android:layout_alignStart="@+id/distantCb" />
 
     <CheckBox
-        android:id="@+id/checkBox5"
+        android:id="@+id/awkwardCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox3"
-        android:layout_alignStart="@+id/checkBox3"
-        android:layout_below="@+id/checkBox3"
+        android:layout_alignLeft="@+id/aggrevatedCb"
+        android:layout_alignStart="@+id/aggrevatedCb"
+        android:layout_below="@+id/aggrevatedCb"
         android:layout_marginTop="22dp"
-        android:text="@string/checkBox5" />
+        android:text="@string/awkwardCb" />
 
     <CheckBox
-        android:id="@+id/checkBox6"
+        android:id="@+id/braveCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Brave"
-        android:layout_alignBaseline="@+id/checkBox5"
-        android:layout_alignBottom="@+id/checkBox5"
+        android:layout_alignBaseline="@+id/awkwardCb"
+        android:layout_alignBottom="@+id/awkwardCb"
         android:layout_alignRight="@+id/section_label"
         android:layout_alignEnd="@+id/section_label" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/submitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/hesitantCb"
+        android:layout_alignStart="@+id/hesitantCb"
+        android:layout_below="@+id/hesitantCb"
         android:background="@color/colorPrimary"
-        android:text="Submit"
-        android:layout_below="@+id/checkBox21"
-        android:layout_alignLeft="@+id/checkBox21"
-        android:layout_alignStart="@+id/checkBox21" />
+        android:text="Submit" />
 
 </RelativeLayout>

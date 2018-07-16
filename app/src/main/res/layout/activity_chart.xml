@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:text="My Progress"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
@@ -64,37 +64,24 @@
         android:layout_centerVertical="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="112dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:nestedScrollingEnabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView29"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView28"
+        app:layout_constraintVertical_bias="0.322" />
 
     <com.jjoe64.graphview.GraphView
         android:id="@+id/bargraph"
         android:layout_width="match_parent"
-        android:layout_height="200dip"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="193dp"
+        android:layout_marginTop="20dp"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph" />
 
-    <TextView
-        android:id="@+id/textView29"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="OASIS and ODSIS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button14" />
 </android.support.constraint.ConstraintLayout>
