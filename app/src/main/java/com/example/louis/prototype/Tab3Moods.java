@@ -132,7 +132,7 @@ public class Tab3Moods extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 // Date dateobj = new Date();
                 Calendar cal = Calendar.getInstance();
                 String todaysDate = df.format(cal.getTime());

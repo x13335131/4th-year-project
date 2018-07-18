@@ -38,6 +38,7 @@ public class CalendarActivity extends AppCompatActivity {
    // private CalendarView mCalendarView;
     DatabaseReference panicAttackDb;
     DatabaseReference notesDb;
+    DatabaseReference moods;
     FirebaseDatabase database;
     String userID;
     String date;
