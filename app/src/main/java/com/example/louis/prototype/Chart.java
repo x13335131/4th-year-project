@@ -594,20 +594,20 @@ public class Chart extends AppCompatActivity {
                 GridLabelRenderer gridLabel = barGraph.getGridLabelRenderer();
                 gridLabel.setHorizontalAxisTitle("Moods");
                 // enable scaling and scrolling
-              //  barGraph.getViewport().setScalable(true);
-             //   barGraph.getViewport().setScalableY(false);
+                //  barGraph.getViewport().setScalable(true);
+                //   barGraph.getViewport().setScalableY(false);
 
-             //   barGraph.getViewport().setScrollable(true); // enables horizontal scrolling
-             //   barGraph.getViewport().setScrollableY(false); // enables vertical scrolling
+                //   barGraph.getViewport().setScrollable(true); // enables horizontal scrolling
+                //   barGraph.getViewport().setScrollableY(false); // enables vertical scrolling
                 barGraph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
 
-               // barGraph.getViewport().setScalableY(true); // enables vertical zooming and scrolling
+                // barGraph.getViewport().setScalableY(true); // enables vertical zooming and scrolling
                 //
                 //use static labels for horizontal and vertical labels
-               // StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(barGraph);
-              //  staticLabelsFormatter.setHorizontalLabels(new String[] {" ","moods", " "});
-               // staticLabelsFormatter.setVerticalLabels(new String[] {"low", "middle", "high"});
-              //  barGraph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+                // StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(barGraph);
+                //  staticLabelsFormatter.setHorizontalLabels(new String[] {" ","moods", " "});
+                // staticLabelsFormatter.setVerticalLabels(new String[] {"low", "middle", "high"});
+                //  barGraph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
             }
 
             @Override
