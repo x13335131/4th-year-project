@@ -54,7 +54,11 @@ public class CalendarActivity extends AppCompatActivity {
     String note;
     String med;
     String medDosage;
-    String moodAfraid;
+    String panicOutput="";
+    String noteOutput="";
+    String moodOutput="";
+    String symptomOutput="";
+    String medOutput="";
     private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM- yyyy", Locale.getDefault());
     long milliseconds;
     String loc = "";
@@ -373,305 +377,26 @@ public class CalendarActivity extends AppCompatActivity {
                     }
                 }
 
-                if (panicBool == true && noteBool == true && moodBool == true && symptomBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + "<br/><br/><b>Note(s):</b> " + noteCount
-                            + "<br/>" + formattedCurrentNoteList + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + " <br/> <b>Symptoms:</b> <br/> " + currentSymptomEvent.getData() + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    panicBool = false;
-                    noteBool = false;
-                    moodBool = false;
-                    symptomBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    panicCount = 0;
-                    medCount = 0;
-                    currentNoteList.clear();
-                    currentMedList.clear();
-                    currentPanicList.clear();
-                    //   moodCount=0;
-                } else if (panicBool == true && noteBool == true && moodBool == true && symptomBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + "<br/><br/><b>Note(s):</b> " + noteCount
-                            + "<br/>" + formattedCurrentNoteList + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + " <br/> <b>Symptoms:</b> <br/> " + currentSymptomEvent.getData()));
-                    panicBool = false;
-                    noteBool = false;
-                    moodBool = false;
-                    symptomBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    panicCount = 0;
-                    currentNoteList.clear();
-                    currentPanicList.clear();
-                    //   moodCount=0;
-                } else if (panicBool == true && noteBool == true && moodBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + "<br/><br/><b>Note(s):</b> " + noteCount
-                            + "<br/>" + formattedCurrentNoteList + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    panicBool = false;
-                    noteBool = false;
-                    moodBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    panicCount = 0;
-                    medCount = 0;
-                    currentMedList.clear();
-                    ;
-                    currentNoteList.clear();
-                    currentPanicList.clear();
-                    //   moodCount=0;
-                } else if (panicBool == true && noteBool == true && symptomBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + "<br/><br/><b>Note(s):</b> " + noteCount
-                            + "<br/>" + formattedCurrentNoteList + " <br/> <b>Symptoms:</b> <br/> " + currentSymptomEvent.getData() + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    panicBool = false;
-                    noteBool = false;
-                    symptomBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    panicCount = 0;
-                    medCount = 0;
-                    currentNoteList.clear();
-                    currentMedList.clear();
-                    currentPanicList.clear();
-                    //   moodCount=0;
-                } else if (panicBool == true && moodBool == true && symptomBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + " <br/> <b>Symptoms:</b> <br/> " + currentSymptomEvent.getData() + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    panicBool = false;
-                    moodBool = false;
-                    symptomBool = false;
-                    medBool = false;
-                    panicCount = 0;
-                    medCount = 0;
-                    currentMedList.clear();
-                    currentPanicList.clear();
-                    //   moodCount=0;
-                } else if (noteBool == true && moodBool == true && symptomBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + "<br/><br/><b>Note(s):</b> " + noteCount
-                            + "<br/>" + formattedCurrentNoteList + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + " <br/> <b>Symptoms:</b> <br/> " + currentSymptomEvent.getData() + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    noteBool = false;
-                    moodBool = false;
-                    symptomBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    medCount = 0;
-                    currentNoteList.clear();
-                    currentMedList.clear();
-                    //   moodCount=0;
-                } else if (panicBool == true && noteBool == true && moodBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + "<br/><br/><b>Note(s):</b> " + noteCount
-                            + "<br/>" + formattedCurrentNoteList + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString()));
-                    panicBool = false;
-                    noteBool = false;
-                    panicCount = 0;
-                    noteCount = 0;
-
-                    currentNoteList.clear();
-                    currentPanicList.clear();
-
-                } else if (panicBool == true && noteBool == true && symptomBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + "<br/><br/><b>Note(s):</b> " + noteCount
-                            + "<br/>" + formattedCurrentNoteList + " <br/> <b>Symptoms:</b> " + currentSymptomEvent.getData()));
-                    panicBool = false;
-                    noteBool = false;
-                    symptomBool = false;
-                    panicCount = 0;
-                    noteCount = 0;
-
-                    currentNoteList.clear();
-                    currentPanicList.clear();
-
-                } else if (panicBool == true && moodBool == true && symptomBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + " <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + " <br/> <b>Symptoms:</b> " + currentSymptomEvent.getData()));
-                    panicBool = false;
-                    moodBool = false;
-                    symptomBool = false;
-                    panicCount = 0;
-                    noteCount = 0;
-
-                    currentPanicList.clear();
-
-                } else if (panicBool == true && noteBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + "<br/><br/><b>Note(s):</b> " + noteCount
-                            + "<br/>" + formattedCurrentNoteList + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    panicBool = false;
-                    noteBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    panicCount = 0;
-                    medCount = 0;
-                    currentMedList.clear();
-                    currentPanicList.clear();
-                    //   moodCount=0;
-                } else if (panicBool == true && moodBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    panicBool = false;
-                    moodBool = false;
-                    symptomBool = false;
-                    medBool = false;
-                    panicCount = 0;
-                    medCount = 0;
-                    currentMedList.clear();
-                    currentPanicList.clear();
-                    //   moodCount=0;
-                } else if (panicBool == true && symptomBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + " <br/> <b>Symptoms:</b> <br/> " + currentSymptomEvent.getData() + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    panicBool = false;
-                    noteBool = false;
-                    moodBool = false;
-                    symptomBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    panicCount = 0;
-                    medCount = 0;
-                    currentNoteList.clear();
-                    currentMedList.clear();
-                    currentPanicList.clear();
-                    //   moodCount=0;
-                } else if (moodBool == true && symptomBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + " <br/> <b>Symptoms:</b> <br/> " + currentSymptomEvent.getData() + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    moodBool = false;
-                    symptomBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    panicCount = 0;
-                    medCount = 0;
-                    currentMedList.clear();
-                    currentPanicList.clear();
-                    //   moodCount=0;
-                } else if (noteBool == true && symptomBool == true && medBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + "<br/><br/><b>Note(s):</b> " + noteCount
-                            + "<br/>" + formattedCurrentNoteList + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + " <br/> <b>Symptoms:</b> <br/> " + currentSymptomEvent.getData() + "<br/><br/><b>Medication:</b> " + medCount
-                            + "<br/>" + formattedCurrentMedList));
-                    panicBool = false;
-                    noteBool = false;
-                    moodBool = false;
-                    symptomBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    panicCount = 0;
-                    medCount = 0;
-                    currentNoteList.clear();
-                    currentMedList.clear();
-                    currentPanicList.clear();
-                } else if (noteBool == true && moodBool == true && symptomBool == true) {
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"
-                            + "<b>Note(s):</b> " + noteCount + "<br/>" + formattedCurrentNoteList + " <br/>  <br/><b>Mood(s):</b> " + currentMoodEvent.getData().toString() + " <br/> <b>Symptoms:</b><br/> " + currentSymptomEvent.getData()));
-                    noteBool = false;
-                    moodBool = false;
-                    symptomBool = false;
-                    panicCount = 0;
-                    noteCount = 0;
-                    currentNoteList.clear();
-
-                } else if (panicBool == true && noteBool == true) {
-
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + panicCount + " panic attack(s) have been recorded. <br/><br/> <b>Location:</b><br/> " + formattedCurrentPanicList + "<br/><br/><b>Note(s):</b> " + noteCount + "<br/>" + formattedCurrentNoteList));
-                    panicBool = false;
-                    noteBool = false;
-                    panicCount = 0;
-                    noteCount = 0;
-                    currentNoteList.clear();
-                    currentPanicList.clear();
-
-                } else if (panicBool == true && moodBool == true) {
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + panicCount + " panic attack(s) have been recorded.<br/><br/> <b>Location:</b> " + currentEvent.getData().toString() + "<br/><br/> <b>Mood(s):</b> " + currentMoodEvent.getData().toString()));
-                    panicBool = false;
-                    moodBool = false;
-                    panicCount = 0;
-                    currentPanicList.clear();
-
-                } else if (panicBool == true && symptomBool == true) {
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + panicCount + " panic attack(s) have been recorded.<br/><br/> <b>Location:</b> " + currentEvent.getData().toString() + " <br/> <b>Symptoms:</b> " + currentSymptomEvent.getData()));
-                    panicBool = false;
-                    symptomBool = false;
-                    panicCount = 0;
-                    currentPanicList.clear();
-
-                } else if (noteBool == true && moodBool == true) {
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>"  + "<b> Note(s):</b> " + noteCount + formattedCurrentNoteList + "<br/> <br/> <b>Mood(s)" + ":</b> " + currentMoodEvent.getData().toString()));
-                    noteBool = false;
-                    moodBool = false;
-                    noteCount = 0;
-                    currentNoteList.clear();
-
-                } else if (noteBool == true && symptomBool == true) {
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + "<b> Note(s):</b> " + noteCount + formattedCurrentNoteList + " <br/> <b>Symptoms:</b> " + currentSymptomEvent.getData()));
-                    noteBool = false;
-                    symptomBool = false;
-                    noteCount = 0;
-                    currentNoteList.clear();
-
-                } else if (moodBool == true && symptomBool == true) {
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + "<br/> <br/> <b>Mood(s)" + ":</b> " + currentMoodEvent.getData().toString() + " <br/> <b>Symptoms:</b> " + currentSymptomEvent.getData()));
-                    moodBool = false;
-                    symptomBool = false;
-                } else if (noteBool == true && medBool == true) {
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + "<b>Note(s):</b> " + noteCount + formattedCurrentNoteList + "<br/> <b>Med(s):</b> " + medCount + formattedCurrentMedList));
-                    noteBool = false;
-                    medBool = false;
-                    noteCount = 0;
-                    medCount = 0;
-                    currentNoteList.clear();
-                    currentMedList.clear();
-                } else if (panicBool == true || noteBool == true || moodBool == true || symptomBool == true || medBool) {
+              if (panicBool == true || noteBool == true || moodBool == true || symptomBool == true || medBool == true) {
 
                     if (panicBool == true) {
-                        displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + panicCount + " panic attacks(s) have been recorded.<br/><br/>" + " <b>Location</b> " + currentEvent.getData().toString()));
-                        panicBool = false;
-                        panicCount = 0;
+                        panicOutput= "<br/>" + panicCount + " panic attacks(s) have been recorded.<br/><br/>" + " <b>Location</b> " + currentEvent.getData().toString();
                     }
                     if (noteBool == true) {
-                        displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + "<b>Note(s):</b> " + noteCount + formattedCurrentNoteList));
-                        noteBool = false;
-                        noteCount = 0;
-                        currentNoteList.clear();
+                        noteOutput= "<br/><b>Note(s):</b> " + noteCount + formattedCurrentNoteList;
                     }
                     if (moodBool == true) {
-                        displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + "<b>Mood(s):</b> " + currentMoodEvent.getData().toString()));
-                        moodBool = false;
+                        moodOutput = "<br/> <b>Mood(s):</b> " + currentMoodEvent.getData().toString();
                     }
                     if (symptomBool == true) {
-                        displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + "<b>Symptom(s):</b> " + currentSymptomEvent.getData().toString()));
-                        symptomBool = false;
+                        symptomOutput = "<br/><b>Symptom(s):</b> " + currentSymptomEvent.getData().toString();
                     }
                     if (medBool == true) {
-                        displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> <br/><br/>" + "<b>Med(s):</b> " + medCount + formattedCurrentMedList));
-                        medBool = false;
-                        medCount = 0;
-                        currentMedList.clear();
+                        medOutput = "<br/><b>Med(s):</b> " + medCount + formattedCurrentMedList;
+
                     }
+                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> " + panicOutput + noteOutput + moodOutput + symptomOutput+ medOutput ));
+                    resetValues();
                 } else {
                     Toast.makeText(context, "No Events Planned for that day", Toast.LENGTH_SHORT).show();
                     displayDataTv.setText("");
@@ -702,7 +427,24 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     //*Methods*
-
+public void resetValues(){
+    panicOutput = "";
+    noteOutput = "";
+    moodOutput = "";
+    symptomOutput = "";
+    medOutput = "";
+    panicBool = false;
+    noteBool = false;
+    moodBool = false;
+    symptomBool = false;
+    medBool = false;
+    noteCount = 0;
+    panicCount = 0;
+    medCount = 0;
+    currentNoteList.clear();
+    currentMedList.clear();
+    currentPanicList.clear();
+}
     public void getPanicDate() {
         final Query panicQuery = panicAttackDb.orderByChild("userID").equalTo(userID);
         panicQuery.addChildEventListener(new ChildEventListener() {
