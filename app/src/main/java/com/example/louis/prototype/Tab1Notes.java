@@ -57,7 +57,7 @@ public class Tab1Notes extends Fragment {
         };
     }
     private void addNote(){
-        DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
        // Date dateobj = new Date();
         Calendar cal = Calendar.getInstance();
         String todaysDate = df.format(cal.getTime());
