@@ -9,7 +9,7 @@
     tools:context="com.example.louis.prototype.MyDiary$PlaceholderFragment">
 
     <TextView
-        android:id="@+id/section_label"
+        android:id="@+id/task_Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/section_label" />
@@ -30,9 +30,9 @@
         android:id="@+id/editText10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/section_label"
-        android:layout_alignRight="@+id/section_label"
-        android:layout_below="@+id/section_label"
+        android:layout_alignEnd="@+id/task_Label"
+        android:layout_alignRight="@+id/task_Label"
+        android:layout_below="@+id/task_Label"
         android:layout_marginTop="22dp"
         android:ems="10"
         android:hint="write here"

@@ -11,8 +11,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -67,6 +71,7 @@ public class Tab3Moods extends Fragment {
     private boolean impatientCbValue;
     private boolean insecureCbValue;
 
+    String todaysDate;
     private Button saveBtn;
     DatabaseReference databaseMoods;
 
@@ -119,7 +124,6 @@ public class Tab3Moods extends Fragment {
         hesitantCbValue= false;
         impatientCbValue= false;
        insecureCbValue= false;
-
         return rootView;
     }
     public void itemClicked(View v) {
@@ -135,83 +139,180 @@ public class Tab3Moods extends Fragment {
                 DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 // Date dateobj = new Date();
                 Calendar cal = Calendar.getInstance();
-                String todaysDate = df.format(cal.getTime());
+                todaysDate = df.format(cal.getTime());
                 FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                String userID= currentFirebaseUser.getUid();
+                String userID = currentFirebaseUser.getUid();
+                System.out.println("yo todayssssss date " + todaysDate);
 
-                if(afraidCb.isChecked()){
-                    afraidCbValue =true;
+                final String subDate = todaysDate.substring(0, 10);//date part only
+                System.out.println("sub date " + subDate);
+                if (afraidCb.isChecked()) {
+                    afraidCbValue = true;
                 }
-                if(aggrevatedCb.isChecked()){
-                    aggrevatedCbValue =true;
+                if (aggrevatedCb.isChecked()) {
+                    aggrevatedCbValue = true;
                 }
-                if(angryCb.isChecked()){
-                    angryCbValue =true;
+                if (angryCb.isChecked()) {
+                    angryCbValue = true;
                 }
-                if(anxiousCb.isChecked()){
-                    anxiousCbValue =true;
+                if (anxiousCb.isChecked()) {
+                    anxiousCbValue = true;
                 }
-                if(awkwardCb.isChecked()){
-                    awkwardCbValue =true;
+                if (awkwardCb.isChecked()) {
+                    awkwardCbValue = true;
                 }
-                if(braveCb.isChecked()){
-                    braveCbValue =true;
+                if (braveCb.isChecked()) {
+                    braveCbValue = true;
                 }
-                if(calmCb.isChecked()){
-                    calmCbValue =true;
+                if (calmCb.isChecked()) {
+                    calmCbValue = true;
                 }
-                if(confindentCb.isChecked()){
-                    confidentCbValue =true;
+                if (confindentCb.isChecked()) {
+                    confidentCbValue = true;
                 }
-                if(contentCb.isChecked()){
+                if (contentCb.isChecked()) {
                     contentCbValue = true;
                 }
-                if(depressedCb.isChecked()){
+                if (depressedCb.isChecked()) {
                     depressedCbValue = true;
                 }
-                if(discouragedCb.isChecked()){
-                    discouragedCbValue=true;
+                if (discouragedCb.isChecked()) {
+                    discouragedCbValue = true;
                 }
-                if(distantCb.isChecked()){
-                    distantCbValue=true;
+                if (distantCb.isChecked()) {
+                    distantCbValue = true;
                 }
-                if(energizedCb.isChecked()){
-                    energizedCbValue=true;
+                if (energizedCb.isChecked()) {
+                    energizedCbValue = true;
                 }
-                if(fatiguedCb.isChecked()){
-                    fatiguedCbValue=true;
+                if (fatiguedCb.isChecked()) {
+                    fatiguedCbValue = true;
                 }
-                if(gloomyCb.isChecked()){
-                    gloomyCbValue=true;
+                if (gloomyCb.isChecked()) {
+                    gloomyCbValue = true;
                 }
-                if(grumpyCb.isChecked()){
-                    grumpyCbValue=true;
+                if (grumpyCb.isChecked()) {
+                    grumpyCbValue = true;
                 }
-                if(grouchyCb.isChecked()){
-                    grouchyCbValue=true;
+                if (grouchyCb.isChecked()) {
+                    grouchyCbValue = true;
                 }
-                if(happyCb.isChecked()){
-                    happyCbValue=true;
+                if (happyCb.isChecked()) {
+                    happyCbValue = true;
                 }
-                if(hesitantCb.isChecked()){
-                    hesitantCbValue =true;
+                if (hesitantCb.isChecked()) {
+                    hesitantCbValue = true;
                 }
-                if(impatientCb.isChecked()){
-                    impatientCbValue=true;
+                if (impatientCb.isChecked()) {
+                    impatientCbValue = true;
                 }
-                if(insecureCb.isChecked()){
-                    insecureCbValue=true;
+                if (insecureCb.isChecked()) {
+                    insecureCbValue = true;
                 }
 
+                if (afraidCbValue== false &&
+                    aggrevatedCbValue== false &&
+                    angryCbValue== false  &&
+                    anxiousCbValue== false &&
+                    awkwardCbValue== false &&
+                    braveCbValue== false &&
+                    calmCbValue== false &&
+                    confidentCbValue== false &&
+                    contentCbValue== false &&
+                    depressedCbValue== false &&
+                    discouragedCbValue== false &&
+                    distantCbValue== false &&
+                    energizedCbValue== false &&
+                    fatiguedCbValue == false &&
+                    gloomyCbValue == false &&
+                    grumpyCbValue == false &&
+                    grouchyCbValue == false &&
+                    happyCbValue== false &&
+                    hesitantCbValue== false&&
+                    impatientCbValue== false&&
+                    insecureCbValue == false) {
 
-                String id= databaseMoods.push().getKey();
-                Mood myMood = new Mood(id, afraidCbValue, aggrevatedCbValue, angryCbValue, anxiousCbValue, awkwardCbValue, braveCbValue, calmCbValue,
-                        confidentCbValue,contentCbValue, depressedCbValue, discouragedCbValue,
-                        distantCbValue, energizedCbValue, fatiguedCbValue, gloomyCbValue, grumpyCbValue, grouchyCbValue, happyCbValue, hesitantCbValue,
-                        impatientCbValue, insecureCbValue, todaysDate, userID);
-                databaseMoods.child(id).setValue(myMood);
-                Toast.makeText(Tab3Moods.this.getActivity() ,"moods added", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Tab3Moods.this.getActivity(), "please enter a value", Toast.LENGTH_LONG).show();
+                } else {
+
+                    final Query panicQuery = databaseMoods.orderByChild("userID").equalTo(userID);
+
+                    panicQuery.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            try {
+                                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                    getDate();
+                                    //getting key & value from db
+                                    String key = child.getKey().toString();
+                                    String value = child.getValue().toString();
+
+                                    System.out.println("test child value: " + value);
+                                    System.out.println("test subdate: " + subDate);
+                                    System.out.println("test todays date: " + todaysDate);
+                                    if (key.equals("symptomDate") && value.contains(subDate) && !value.equals(todaysDate)) {
+                                        //  System.out.println("databasemoods parent "+databaseMoods.getParent());
+                                        System.out.println("datasnapshot key " + dataSnapshot.getKey().toString());
+
+                                        String dskey = dataSnapshot.getKey().toString();
+                                        System.out.println("database moods key " + databaseMoods.getKey() + "value: " + dataSnapshot.getValue());
+                                        //   Object o = dataSnapshot;
+                                        System.out.println("database child " + databaseMoods.child(dskey));
+                                        databaseMoods.child(dskey).removeValue();
+                                        System.out.println("CHILD KEY " + child.toString());
+                                        // break;
+                                    } else {
+                                        System.out.println("nahhh");
+                                    }
+
+                                }
+
+                            } catch (Exception e) {
+                                System.out.println(e);
+                            }
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    String id = databaseMoods.push().getKey();
+                    Mood myMood = new Mood(id, afraidCbValue, aggrevatedCbValue, angryCbValue, anxiousCbValue, awkwardCbValue, braveCbValue, calmCbValue,
+                            confidentCbValue, contentCbValue, depressedCbValue, discouragedCbValue,
+                            distantCbValue, energizedCbValue, fatiguedCbValue, gloomyCbValue, grumpyCbValue, grouchyCbValue, happyCbValue, hesitantCbValue,
+                            impatientCbValue, insecureCbValue, todaysDate, userID);
+                    databaseMoods.child(id).setValue(myMood);
+                    Toast.makeText(Tab3Moods.this.getActivity(), "moods added", Toast.LENGTH_LONG).show();
+                }
             }
         };
+    }
+    public void getDate(){
+        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        // Date dateobj = new Date();
+        Calendar cal = Calendar.getInstance();
+        todaysDate = df.format(cal.getTime());
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userID= currentFirebaseUser.getUid();
+        System.out.println("yo todayssssss date "+todaysDate);
+
+        final String subDate=todaysDate.substring(0,10);//date part only
+        System.out.println("sub date "+subDate);
     }
 }

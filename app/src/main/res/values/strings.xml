@@ -46,5 +46,18 @@
     <string name="panicBtn">PANIC BUTTON</string>
     <string name="survey_btn">TAKE SURVAY</string>
     <string name="panic_tv">panic switch</string>
+    <string name="negativeTv">panic attack</string>
+    <string name="diaryEntryTv">diary entry</string>
+    <string name="selectedDateTv">selected date</string>
+    <string name="todaysDateTv">todays date</string>
+    <string name="task_Label">Enter the severity of your symptoms below:</string>
+    <string name="bloatingTv">Bloating</string>
+    <string name="crampsTv">Cramps</string>
+    <string name="dizzinessTv">Dizziness</string>
+    <string name="spotsTv">Spots</string>
+    <string name="headachesTv">Headaches</string>
+    <string name="insomniaTv">Insomnia</string>
+    <string name="sweatingTv">Sweating</string>
+    <string name="SubmitBtn">Submit</string>
 
 </resources>

@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         panicList = new ArrayList<>();
 
         survey = (Button) findViewById(R.id.surveyBtn); //to oasis and odsis
+        survey.setVisibility(View.INVISIBLE);
         mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
 

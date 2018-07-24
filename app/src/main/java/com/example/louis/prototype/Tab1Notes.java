@@ -26,7 +26,7 @@ import java.util.Calendar;
 public class Tab1Notes extends Fragment {
     EditText editTextNote;
     Button buttonSave;
-
+    String note;
     DatabaseReference databaseNotes;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,12 +45,18 @@ public class Tab1Notes extends Fragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               addNote();
+
+
+                note = editTextNote.getText().toString().trim();
+                if(note.isEmpty()){
+                    Toast.makeText(Tab1Notes.this.getActivity(), "Please enter text into text area.", Toast.LENGTH_LONG).show();
+                }else {
+                    addNote();
+                }
             }
         };
     }
     private void addNote(){
-        String note = editTextNote.getText().toString().trim();
         DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
        // Date dateobj = new Date();
         Calendar cal = Calendar.getInstance();

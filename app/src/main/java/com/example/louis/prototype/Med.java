@@ -8,7 +8,7 @@ public class Med {
 
         String medID;
         String medName;
-        int medDosage;
+        Double medDosage;
         String medDate;
         String userID;
 
@@ -16,7 +16,7 @@ public class Med {
 
         }
 
-        public Med(String medID, String medName, int medDosage, String medDate, String userID) {
+        public Med(String medID, String medName, double medDosage, String medDate, String userID) {
             this.medID = medID;
             this.medName = medName;
             this.medDosage = medDosage;
@@ -30,7 +30,7 @@ public class Med {
         public String getMedName() {
             return medName;
         }
-        public int getMedDosage() {
+        public Double getMedDosage() {
         return medDosage;
     }
         public String getMedDate() {

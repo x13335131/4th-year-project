@@ -6,35 +6,20 @@
     android:layout_height="match_parent"
     tools:context="com.example.louis.prototype.SplashScreen">
 
-    <TextView
-        android:id="@+id/textView34"
-        android:layout_width="199dp"
-        android:layout_height="161dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:text="My Mental Health App"
-        android:textAlignment="center"
-        android:textColor="@color/colorAccent"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="56dp" />
-
     <ImageView
         android:id="@+id/splashLogo"
         android:layout_width="215dp"
         android:layout_height="222dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="152dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView34"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/logo" />
 
 </android.support.constraint.ConstraintLayout>

@@ -9,7 +9,7 @@
 <!--
     tools:context="com.example.louis.prototype.MyDiary$PlaceholderFragment" -->
     <TextView
-        android:id="@+id/section_label"
+        android:id="@+id/task_Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Check the boxes that describe how you felt today:"/>
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/section_label"
+        android:layout_below="@+id/task_Label"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="43dp"
@@ -221,8 +221,8 @@
         android:text="Brave"
         android:layout_alignBaseline="@+id/awkwardCb"
         android:layout_alignBottom="@+id/awkwardCb"
-        android:layout_alignRight="@+id/section_label"
-        android:layout_alignEnd="@+id/section_label" />
+        android:layout_alignRight="@+id/task_Label"
+        android:layout_alignEnd="@+id/task_Label" />
 
     <Button
         android:id="@+id/submitBtn"
@@ -231,6 +231,7 @@
         android:layout_alignLeft="@+id/hesitantCb"
         android:layout_alignStart="@+id/hesitantCb"
         android:layout_below="@+id/hesitantCb"
+        android:layout_marginTop="14dp"
         android:background="@color/colorPrimary"
         android:text="Submit" />
 
