@@ -37,70 +37,30 @@ import java.util.Locale;
 
 public class CalendarActivity extends AppCompatActivity {
     CompactCalendarView compactCalendarView;
-    // private CalendarView mCalendarView;
-    DatabaseReference panicAttackDb;
-    DatabaseReference notesDb;
-    DatabaseReference moodsDb;
-    DatabaseReference symptomsDb;
-    DatabaseReference medicationDb;
+    DatabaseReference panicAttackDb, notesDb, moodsDb, symptomsDb, medicationDb;
     FirebaseDatabase database;
-    String userID;
-    String date;
-    String panicDate;
-    String noteDate;
-    String moodDate;
-    String symptomDate;
-    String medDate;
-    String note;
-    String med;
-    String medDosage;
-    String panicOutput="";
-    String noteOutput="";
-    String moodOutput="";
-    String symptomOutput="";
-    String medOutput="";
-    private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM- yyyy", Locale.getDefault());
-    long milliseconds;
+    String userID, date, panicDate, noteDate, moodDate, symptomDate, medDate, note, med, medDosage, formatedEventDate, formattedCurrentNoteList, formattedCurrentPanicList, formattedCurrentMedList;
+    ;
+    String panicOutput = "";
+    String noteOutput = "";
+    String moodOutput = "";
+    String symptomOutput = "";
+    String medOutput = "";
     String loc = "";
-    String string_date;
-    String formatedEventDate;
-    Event event, noteEvent, otherNoteEvent, moodEvent, otherMoodEvent, symptomEvent, otherSymptomEvent, medEvent, otherMedEvent;
-    Event currentEvent;
-    Event currentNoteEvent;
-    Event currentMoodEvent;
-    Event currentSymptomEvent;
-    Event currentMedEvent;
-    int panicCount = 0;
-    int noteCount = 0;
-    int medCount = 0;
-    // int moodCount=0;
-    int panicLength;
     String locLength = "";
-    boolean panicBool;
-    boolean noteBool;
-    boolean moodBool;
-    boolean symptomBool;
-    boolean medBool;
     String prevNoteDate = "00/00/00";
     String prevMoodDate = "00/00/00";
     String prevMedDate = "00/00/00";
     String prevSymptomDate = "00/00/00";
+    private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM- yyyy", Locale.getDefault());
+    long milliseconds;
+    Event event, noteEvent, otherNoteEvent, moodEvent, otherMoodEvent, symptomEvent, otherSymptomEvent, medEvent, otherMedEvent, currentEvent, currentNoteEvent, currentMoodEvent, currentSymptomEvent, currentMedEvent;
+    int panicCount, noteCount, medCount = 0;
+    int panicLength;
+    boolean panicBool, noteBool, moodBool, symptomBool, medBool;
     private TextView displayDataTv;
-    ArrayList<Event> events;
-    ArrayList<Event> noteEvents;
-    ArrayList<Event> moodEvents;
-    ArrayList<Event> symptomEvents;
-    ArrayList<Event> medEvents;
-    ArrayList<String> moodList;
-    ArrayList<String> panicList;
-    ArrayList<String> symptomList;
-    ArrayList<String> currentNoteList;
-    ArrayList<String> currentPanicList;
-    ArrayList<String> currentMedList;
-    ArrayList<String> collectedDates;
-    String formattedCurrentNoteList;
-    String formattedCurrentPanicList;
-    String formattedCurrentMedList;
+    ArrayList<Event> events, noteEvents, moodEvents, symptomEvents, medEvents;
+    ArrayList<String> moodList, panicList, symptomList, currentNoteList, currentPanicList, currentMedList, collectedDates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +89,6 @@ public class CalendarActivity extends AppCompatActivity {
         moodEvents = new ArrayList<Event>();
         symptomEvents = new ArrayList<Event>();
         medEvents = new ArrayList<Event>();
-
-
         moodList = new ArrayList<String>();
         panicList = new ArrayList<String>();
         symptomList = new ArrayList<String>();
@@ -139,10 +97,14 @@ public class CalendarActivity extends AppCompatActivity {
         currentMedList = new ArrayList<String>();
         collectedDates = new ArrayList<String>();
 
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM-yyyy");
+        String date = dateFormat.format(c.getTime());
         //action bar
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(null);
+       // actionBar.setTitle(null);
+        actionBar.setTitle(date);
 
         //setting views
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
@@ -155,6 +117,7 @@ public class CalendarActivity extends AppCompatActivity {
         getSymptoms();
         getMedication();
 
+        compactCalendarView.callOnClick();
         //when calendar is clicked
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
@@ -186,53 +149,24 @@ public class CalendarActivity extends AppCompatActivity {
                     m = "0" + month;
                 } else {
                     m = Integer.toString(month);
-                    ;
                 }
                 String d;
                 if (day < 10) {
                     d = "0" + day;
                 } else {
                     d = Integer.toString(day);
-                    ;
                 }
                 String formatedDate = d + "/" + m + "/" + year;
-
-                //finished formatting clicked date to match date in db
-
                 panicBool = false;
                 noteBool = false;
                 moodBool = false;
                 symptomBool = false;
                 medBool = false;
+
                 //iterating through array
                 for (Event ev : events) {
-
                     long t = ev.getTimeInMillis();
-
-                    //convert back out of milliseconds
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(t);
-
-                    int mYear = calendar.get(Calendar.YEAR);
-                    int mMonth = calendar.get(Calendar.MONTH) + 1;
-                    int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    String mm;
-                    if (mMonth < 10) {
-                        mm = "0" + mMonth;
-                    } else {
-                        mm = Integer.toString(mMonth);
-                        ;
-                    }
-                    String dd;
-                    if (mDay < 10) {
-                        dd = "0" + mDay;
-                    } else {
-                        dd = Integer.toString(mDay);
-                    }
-                    formatedEventDate = dd + "/" + mm + "/" + mYear;
-                    //OUTPUT TO USER
-                    //if date in events == to date clicked
+                    formatDate(t);
                     if (formatedEventDate.equals(formatedDate)) {
                         panicBool = true;
                         panicCount = panicCount + 1;
@@ -248,26 +182,7 @@ public class CalendarActivity extends AppCompatActivity {
 
                 for (Event noteEv : noteEvents) {
                     long t = noteEv.getTimeInMillis();
-                    //convert back out of milliseconds
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(t);
-
-                    int mYear = calendar.get(Calendar.YEAR);
-                    int mMonth = calendar.get(Calendar.MONTH) + 1;
-                    int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-                    String mm;
-                    if (mMonth < 10) {
-                        mm = "0" + mMonth;
-                    } else {
-                        mm = Integer.toString(mMonth);
-                    }
-                    String dd;
-                    if (mDay < 10) {
-                        dd = "0" + mDay;
-                    } else {
-                        dd = Integer.toString(mDay);
-                    }
-                    formatedEventDate = dd + "/" + mm + "/" + mYear;
+                    formatDate(t);
                     if (formatedEventDate.equals(formatedDate)) {
                         noteBool = true;
                         noteCount = noteCount + 1;
@@ -283,27 +198,7 @@ public class CalendarActivity extends AppCompatActivity {
 
                 for (Event moodEv : moodEvents) {
                     long t = moodEv.getTimeInMillis();
-                    //convert back out of milliseconds
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(t);
-
-                    int mYear = calendar.get(Calendar.YEAR);
-                    int mMonth = calendar.get(Calendar.MONTH) + 1;
-                    int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    String mm;
-                    if (mMonth < 10) {
-                        mm = "0" + mMonth;
-                    } else {
-                        mm = Integer.toString(mMonth);
-                    }
-                    String dd;
-                    if (mDay < 10) {
-                        dd = "0" + mDay;
-                    } else {
-                        dd = Integer.toString(mDay);
-                    }
-                    formatedEventDate = dd + "/" + mm + "/" + mYear;
+                    formatDate(t);
                     if (formatedEventDate.equals(formatedDate)) {
                         moodBool = true;
                         currentMoodEvent = moodEv;
@@ -312,58 +207,16 @@ public class CalendarActivity extends AppCompatActivity {
 
                 for (Event symptomEv : symptomEvents) {
                     long t = symptomEv.getTimeInMillis();
-
-                    //convert back out of milliseconds
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(t);
-
-                    int mYear = calendar.get(Calendar.YEAR);
-                    int mMonth = calendar.get(Calendar.MONTH) + 1;
-                    int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    String mm;
-                    if (mMonth < 10) {
-                        mm = "0" + mMonth;
-                    } else {
-                        mm = Integer.toString(mMonth);
-                    }
-                    String dd;
-                    if (mDay < 10) {
-                        dd = "0" + mDay;
-                    } else {
-                        dd = Integer.toString(mDay);
-                    }
-                    formatedEventDate = dd + "/" + mm + "/" + mYear;
+                    formatDate(t);
                     if (formatedEventDate.equals(formatedDate)) {
                         symptomBool = true;
                         currentSymptomEvent = symptomEv;
                     }
-
                 }
 
                 for (Event medEv : medEvents) {
                     long t = medEv.getTimeInMillis();
-                    //convert back out of milliseconds
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(t);
-
-                    int mYear = calendar.get(Calendar.YEAR);
-                    int mMonth = calendar.get(Calendar.MONTH) + 1;
-                    int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    String mm;
-                    if (mMonth < 10) {
-                        mm = "0" + mMonth;
-                    } else {
-                        mm = Integer.toString(mMonth);
-                    }
-                    String dd;
-                    if (mDay < 10) {
-                        dd = "0" + mDay;
-                    } else {
-                        dd = Integer.toString(mDay);
-                    }
-                    formatedEventDate = dd + "/" + mm + "/" + mYear;
+                    formatDate(t);
                     if (formatedEventDate.equals(formatedDate)) {
                         medBool = true;
                         medCount = medCount + 1;
@@ -377,13 +230,13 @@ public class CalendarActivity extends AppCompatActivity {
                     }
                 }
 
-              if (panicBool == true || noteBool == true || moodBool == true || symptomBool == true || medBool == true) {
+                if (panicBool == true || noteBool == true || moodBool == true || symptomBool == true || medBool == true) {
 
                     if (panicBool == true) {
-                        panicOutput= "<br/>" + panicCount + " panic attacks(s) have been recorded.<br/><br/>" + " <b>Location</b> " + currentEvent.getData().toString();
+                        panicOutput = "<br/>" + panicCount + " panic attack(s) have been recorded.<br/><br/>" + " <b>Location(s)</b> " + formattedCurrentPanicList;
                     }
                     if (noteBool == true) {
-                        noteOutput= "<br/><b>Note(s):</b> " + noteCount + formattedCurrentNoteList;
+                        noteOutput = "<br/><b>Note(s):</b> " + noteCount + formattedCurrentNoteList;
                     }
                     if (moodBool == true) {
                         moodOutput = "<br/> <b>Mood(s):</b> " + currentMoodEvent.getData().toString();
@@ -395,7 +248,7 @@ public class CalendarActivity extends AppCompatActivity {
                         medOutput = "<br/><b>Med(s):</b> " + medCount + formattedCurrentMedList;
 
                     }
-                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> " + panicOutput + noteOutput + moodOutput + symptomOutput+ medOutput ));
+                    displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> " + panicOutput + noteOutput + moodOutput + symptomOutput + medOutput));
                     resetValues();
                 } else {
                     Toast.makeText(context, "No Events Planned for that day", Toast.LENGTH_SHORT).show();
@@ -427,24 +280,49 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     //*Methods*
-public void resetValues(){
-    panicOutput = "";
-    noteOutput = "";
-    moodOutput = "";
-    symptomOutput = "";
-    medOutput = "";
-    panicBool = false;
-    noteBool = false;
-    moodBool = false;
-    symptomBool = false;
-    medBool = false;
-    noteCount = 0;
-    panicCount = 0;
-    medCount = 0;
-    currentNoteList.clear();
-    currentMedList.clear();
-    currentPanicList.clear();
-}
+
+    public void formatDate(long t) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(t);
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH) + 1;
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        String mm;
+        if (mMonth < 10) {
+            mm = "0" + mMonth;
+        } else {
+            mm = Integer.toString(mMonth);
+        }
+        String dd;
+        if (mDay < 10) {
+            dd = "0" + mDay;
+        } else {
+            dd = Integer.toString(mDay);
+        }
+        formatedEventDate = dd + "/" + mm + "/" + mYear;
+    }
+
+    public void resetValues() {
+        panicOutput = "";
+        noteOutput = "";
+        moodOutput = "";
+        symptomOutput = "";
+        medOutput = "";
+        panicBool = false;
+        noteBool = false;
+        moodBool = false;
+        symptomBool = false;
+        medBool = false;
+        noteCount = 0;
+        panicCount = 0;
+        medCount = 0;
+        currentNoteList.clear();
+        currentMedList.clear();
+        currentPanicList.clear();
+    }
+
     public void getPanicDate() {
         final Query panicQuery = panicAttackDb.orderByChild("userID").equalTo(userID);
         panicQuery.addChildEventListener(new ChildEventListener() {
@@ -476,7 +354,6 @@ public void resetValues(){
                                 e.printStackTrace();
                             }
                         } else {
-                            System.out.println("no matches ");
                         }
 
                         if (panicLength != 0 & !loc.isEmpty() & milliseconds != 0) {
@@ -543,13 +420,11 @@ public void resetValues(){
                                 e.printStackTrace();
                             }
                         } else {
-                            System.out.println("no matches ");
                         }
 
                         if (!note.isEmpty() && milliseconds != 0) {
                             String subDate = noteDate.substring(0, 10);
                             if (!noteDate.contains(prevNoteDate) && !collectedDates.contains(subDate)) {
-                                System.out.println("IN THE BLUE");
                                 noteEvent = new Event(Color.BLUE, milliseconds, note);
                                 compactCalendarView.addEvent(noteEvent);
                                 //adding event to array list of events
@@ -680,7 +555,6 @@ public void resetValues(){
                                 milliseconds = 0;
                             }
                         } else {
-                            System.out.println("no matches ");
                         }
                         if (!moodList.isEmpty() && milliseconds != 0) {
 
@@ -691,7 +565,6 @@ public void resetValues(){
 
                             String subDate = moodDate.substring(0, 10);
                             if (!moodDate.contains(prevMoodDate) && !collectedDates.toString().contains(subDate)) {
-                                System.out.println("IN THE MOOD GREEN");
                                 moodEvent = new Event(Color.BLUE, milliseconds, formattedMoodList);
                                 compactCalendarView.addEvent(moodEvent);
                                 moodEvents.add(moodEvent);
@@ -753,11 +626,9 @@ public void resetValues(){
                                 e.printStackTrace();
                             }
                         } else {
-                            System.out.println("no matches ");
                         }
                         if (key.equals("value1") && !value.equals("0")) {
                             symptomList.add("acne: " + value + "/10");
-
                         }
                         if (key.equals("value2") && !value.equals("0")) {
                             symptomList.add("bloating: " + value + "/10");
@@ -860,8 +731,6 @@ public void resetValues(){
                         if (key.equals("medName")) {
                             med = child.getValue().toString();
                         }
-
-                        System.out.println("MED: " + med + " med dosage: " + medDosage + " milliseconds: " + milliseconds);
                         if ((med != "" && med != null) && (medDosage != "" && medDosage != null) && milliseconds != 0) {
                             String dateTime = medDate.substring(10, 16);//date part only
                             String medInfo = med + " Dosage: " + medDosage + " Time: " + dateTime;
