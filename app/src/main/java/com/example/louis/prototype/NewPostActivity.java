@@ -16,6 +16,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.lang.Object;
@@ -60,12 +64,21 @@ public class NewPostActivity extends AppCompatActivity {
                     if (!TextUtils.isEmpty(postText)) {
                         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                         String currentuser = currentFirebaseUser.getUid();
+                        Date todayDate = Calendar.getInstance().getTime();
+                       /* SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                        String todayString = formatter.format(todayDate);
+                        Date date1;
+                        try {
+                            date1=new SimpleDateFormat("dd/MM/yyyy").parse(todayString);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }*/
 
                         String id = databasePost.push().getKey();
                         Map<String, Object> userMap = new HashMap<>();
                         userMap.put("post", postText);
                         userMap.put("userID", currentuser);
-                        userMap.put("timestamp", ServerValue.TIMESTAMP);
+                        userMap.put("timestamp", todayDate);
                         databasePost.child(id).setValue(userMap);
 
                         Toast.makeText(NewPostActivity.this, "post added", Toast.LENGTH_LONG).show();

@@ -220,13 +220,13 @@
         app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
 
     <Button
-        android:id="@+id/surveyBtn"
+        android:id="@+id/selfReportBtn"
         android:layout_width="119dp"
         android:layout_height="39dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
-        android:text="@string/survey_btn"
+        android:text="@string/selfReportBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_toolbar" />
 

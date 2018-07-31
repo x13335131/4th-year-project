@@ -1,10 +1,13 @@
 package com.example.louis.prototype;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,13 +16,18 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Created by louis on 25/06/2018.
@@ -33,6 +41,10 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
     DatabaseReference databaseUsername;
     private FirebaseAuth firebaseAuth;
     private String userid;
+    private FirebaseDatabase database;
+    DatabaseReference forumComments;
+
+
     public ForumRecyclerAdapter(List<ForumPost> post_list){
         this.post_list = post_list;
     }
@@ -40,21 +52,26 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_list_item,parent, false);
         context = parent.getContext();
+        database = FirebaseDatabase.getInstance();
+        databaseUsername = FirebaseDatabase.getInstance().getReference("username");
+        firebaseAuth = FirebaseAuth.getInstance();
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+       // holder.setIsRecyclable(false);
         String content_data = post_list.get(position).getPost();
+        System.out.println("postList: "+post_list.toString());
         holder.setContextText(content_data);
-
-        String userID = post_list.get(position).getUserID();
-        firebaseAuth = FirebaseAuth.getInstance();
-
+        final String forumPostId = post_list.get(position).ForumPostId;
+        System.out.println("Forum post id:"+forumPostId);
+        final String userID = post_list.get(position).getUserID();
+        System.out.println("post_list_user id: "+userID);
         userid = firebaseAuth.getCurrentUser().getUid();
 
-        databaseUsername = FirebaseDatabase.getInstance().getReference("username");
         final Query userQuery = databaseUsername.orderByChild("userID").equalTo(userID);
+
 
        userQuery.addChildEventListener(new ChildEventListener() {
             @Override
@@ -87,11 +104,30 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
 
             }
         });
-       /* System.out.println("TESTING");
+      /*  System.out.println("TESTING");
         long millisecond = post_list.get(position).getTimestamp().getTime();
-        System.out.println("long: "+millisecond);*/
-        //String dateString = DateFormat.format("MM/dd/yyyy",new Date(millisecond)).toString();
+        System.out.println("long: "+millisecond);
+        String dateString = DateFormat.format("MM/dd/yyyy", new Date(millisecond)).toString();
+        holder.setDateText(dateString);*/
 
+        ////
+
+
+        long millisecond = post_list.get(position).getTimestamp().getTime();
+
+        System.out.println("long: "+millisecond);
+        Date d = new Date(millisecond);
+        System.out.println("date "+d.toString());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millisecond);
+
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        mMonth=mMonth+1;
+        System.out.println("day: "+mDay+" month "+mMonth+" year "+mYear);
+        String dateString = +mDay+"/"+mMonth+"/"+mYear;
+        holder.setDateText(dateString);
     //    android.text.format.DateFormat df = new android.text.format.DateFormat();
     //   dateString= df.format("dd/MM/yyyy hh:mm:ss", millisecond).toString();
       //  String dateString = DateFormat.getInstance().format(new Date(millisecond)).toString();
@@ -104,16 +140,54 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
 
       ///  String epochString = "1081157732";
       //  long epoch = Long.parseLong( epochString );
-       /* Date d = new Date(millisecond * 1000 );
+      /*  Date d = new Date(millisecond * 1000 );
         String ds = d.toString();
-        System.out.println("testing 2");*/
+        System.out.println("testing 2");
 
-        /*SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         sfd.format(new Date(millisecond));
         String ds= sfd.toString();
         holder.setDateText(ds);*/
-    }
+///////////
+        //Get Comments
+        //Get Likes Count
+        forumComments = database.getReferenceFromUrl("https://mymentalhealthtracker.firebaseio.com/post/"+forumPostId +"/comments");
+        System.out.println("FORUM POST ID "+forumPostId);
+        forumComments.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+              //  for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    System.out.println("post snapshot key: "+dataSnapshot.getKey().toString());
+                   if(dataSnapshot.exists()){
+                       int count = (int) dataSnapshot.getChildrenCount();
 
+                       holder.updateCommentsCount(count);
+                   }else{
+                       holder.updateCommentsCount(0);
+                   }
+             //   }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        /////////
+        holder.forumCommentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent commentIntent = new Intent(context, CommentsActivity.class);
+                System.out.println("FORUM POST ID "+forumPostId);
+                commentIntent.putExtra("forum_post_id", forumPostId);
+                context.startActivity(commentIntent);
+
+            }
+        });
+    }
+//comments feature
     @Override
     public int getItemCount() {
         return post_list.size();
@@ -125,11 +199,13 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
         private TextView contentView;
         private TextView usernameView;
         private TextView dateView;
-
+        private TextView commentCount;
+        private Button forumCommentBtn;
         public ViewHolder(View itemView) {
             super(itemView);
             mView=itemView;
 
+            forumCommentBtn= (Button) mView.findViewById(R.id.forum_commentBtn);
         }
         public void setContextText(String text){
             contentView = (TextView) mView.findViewById(R.id.post_content);
@@ -143,6 +219,12 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
         public void setDateText(String text){
             dateView = (TextView) mView.findViewById(R.id.post_date);
             dateView.setText(text);
+        }
+        public void updateCommentsCount(int count){
+
+            commentCount = (TextView) mView.findViewById(R.id.forum_comment_count);
+            commentCount.setText(count + " Comments");
+
         }
     }
 

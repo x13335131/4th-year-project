@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class SignUp extends AppCompatActivity{
-    private EditText et_name,et_email, et_password, et_cpassword;
-    private String displayName, email, password, cpassword;
+    private EditText et_email, et_password, et_cpassword;
+    private String email, password, cpassword;
     Button regBtn;
     List<String> errorList = new ArrayList<String>();
     private FirebaseAuth mAuth;
@@ -31,13 +31,12 @@ public class SignUp extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         mAuth = FirebaseAuth.getInstance();
-       // et_name = (EditText) findViewById(R.id.editText10);
-        et_email = (EditText) findViewById(R.id.editText14);
+        et_email = (EditText) findViewById(R.id.emailEt);
         et_email.requestFocus();
-        et_password = (EditText) findViewById(R.id.editText11);
-        et_cpassword = (EditText) findViewById(R.id.editText12);
-        regBtn = (Button) findViewById(R.id.button18);
-            regBtn.setOnClickListener(new View.OnClickListener(){
+        et_password = (EditText) findViewById(R.id.passEt);
+        et_cpassword = (EditText) findViewById(R.id.confirmPassEt);
+        regBtn = (Button) findViewById(R.id.regBtn);
+        regBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
                     register();//call when button is clicked to validate the input
@@ -57,7 +56,6 @@ public class SignUp extends AppCompatActivity{
                         Intent setupIntent = new Intent(SignUp.this, SetupActivity.class);
                         startActivity(setupIntent);
                         finish();
-                        //onSignupSuccess();
                     }else{
                         if(task.getException() instanceof FirebaseAuthUserCollisionException){
                             Toast.makeText(getApplicationContext(),"You Are Already Registered", Toast.LENGTH_SHORT).show();
@@ -67,15 +65,7 @@ public class SignUp extends AppCompatActivity{
                     }
                 }
             });
-
         }
-    }
-    public void onSignupSuccess(){
-        //to do after valid input
-        Toast.makeText(getApplicationContext(),
-                "Redirecting...",Toast.LENGTH_SHORT).show();
-        Intent i1 = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(i1);
     }
     public boolean validate(){
         Pattern UpperCasePatten = Pattern.compile("[A-Z ]");
@@ -83,11 +73,6 @@ public class SignUp extends AppCompatActivity{
         Pattern digitCasePatten = Pattern.compile("[0-9 ]");
         boolean valid = true;
         errorList.clear();
-
-       /* if(displayName.isEmpty()||displayName.length()>32){
-            et_name.setError("Please Enter valid name");
-            valid=false;
-        }*/
         if(email.isEmpty()||!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             et_email.setError("Please enter valid email address");
             valid = false;
@@ -120,18 +105,11 @@ public class SignUp extends AppCompatActivity{
             et_cpassword.setError("passwords do not match");
             valid = false;
         }
-        /*for (String error : errorList) {
-            set_password.setError(error);
-        }*/
-        //et_password.setError("Password must have at least "+errorList.toString());
         return valid;
     }
     public void initialize(){
-      //  displayName = et_name.getText().toString().trim();
         email = et_email.getText().toString().trim();
         password = et_password.getText().toString().trim();
         cpassword = et_cpassword.getText().toString().trim();
     }
-
-
 }

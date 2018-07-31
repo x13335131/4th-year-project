@@ -59,5 +59,9 @@
     <string name="insomniaTv">Insomnia</string>
     <string name="sweatingTv">Sweating</string>
     <string name="SubmitBtn">Submit</string>
+    <string name="selfReportBtn">self report</string>
+    <string name="commentLabel">Comments :</string>
+    <string name="comment_field">Your comment here...</string>
+    <string name="comment_post_btn">post</string>
 
 </resources>

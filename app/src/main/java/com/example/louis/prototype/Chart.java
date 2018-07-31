@@ -5,9 +5,22 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -18,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
@@ -30,6 +44,7 @@ import com.jjoe64.graphview.series.Series;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,18 +52,17 @@ import java.util.concurrent.TimeUnit;
 
 public class Chart extends AppCompatActivity {
 
-    private static final String TAG = "Chart";
     String userID;
-    DatabaseReference OasisDb;
-    DatabaseReference OdsisDb;
-    DatabaseReference MoodsDb;
+    FirebaseDatabase database;
+    DatabaseReference OasisDb, OdsisDb, MoodsDb, SymptomsDb;
     LineGraphSeries<DataPoint> series, series2;
     BarGraphSeries<DataPoint> barSeries;
+    GraphView lineGraph, barGraph;
     int x = 1;
     int k = 1;
     int y;
     double totalScore = 5;
-    float percentage;
+    double symtpomTotalScore = 10;
     int afraidCbCount = 0;
     int aggrevatedCbCount = 0;
     int angryCbCount = 0;
@@ -70,13 +84,34 @@ public class Chart extends AppCompatActivity {
     int hesitantCbCount =0;
     int impatientCbCount=0;
     int insecureCbCount =0;
-    GraphView lineGraph, barGraph;
-    FirebaseDatabase database;
-
+//symptoms
+    int acneCount=0;
+    int bloatingCount=0;
+    int crampsCount=0;
+    int dizzinessCount=0;
+    int headacheCount=0;
+    int insomniaCount=0;
+    int spotsCount=0;
+    int sweatingCount=0;
+    Boolean acneSelected=false;
+    Boolean bloatingSelected=false;
+    Boolean crampsSelected=false;
+    Boolean dizzinessSelected=false;
+    Boolean spotsSelected=false;
+    Boolean headacheSelected=false;
+    Boolean insomniaSelected=false;
+    Boolean sweatingSelected=false;
+    //pie stuff
+    private static String TAG = "Chart";
+    private float[] yData;
+    private String[] xData;
+    TextView legendTvACNE, legendTvBLOATING, legendTvCRAMPS, legendTvDIZZINESS, legendTvSPOTS, legendTvHEADACHE, legendTvINSOMNIA, legendTvSWEATING;
+    PieChart pieChart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart);
+
 
         //setting back btn on actionbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -91,6 +126,7 @@ public class Chart extends AppCompatActivity {
         OasisDb = database.getReference("oasis");
         OdsisDb = database.getReference("odsis");
         MoodsDb = database.getReference("moods");
+        SymptomsDb = database.getReference("symptoms");
 
         //assigning variables to views
         lineGraph = (GraphView) findViewById(R.id.graph);
@@ -99,12 +135,62 @@ public class Chart extends AppCompatActivity {
         //setting titles of graphs
         lineGraph.setTitle("Oasis and Odsis");
         barGraph.setTitle("moods barchart");
+//Pie chart
 
+        pieChart = (PieChart)findViewById(R.id.piechart);
+        Description desc = new Description();
+        desc.setTextColor(ColorTemplate.VORDIPLOM_COLORS[2]);
+        desc.setText("My Symptoms");
+        pieChart.setDescription(desc);
+        pieChart.setRotationEnabled(false);
+        pieChart.setHoleRadius(25f);
+        pieChart.setTransparentCircleAlpha(0);
+
+        ///////////////////////////////
+        //pie end
         //plotting graph data
         System.out.println("plotting line lineGraph...");
         getLineGraphData();
         System.out.println("plotting bar chart...");
         getBarChartData();
+        System.out.println("plotting pie chart...");
+        //getValsFromDb();
+        addDataSet();
+        //legend
+        legendTvACNE = (TextView) findViewById(R.id.legendTv);
+        String acneGRAY ="<font color=\"ltgray\"> \u2022 ACNE </font>";
+        String bloatingBLUE ="<font color=\"blue\"> \u2022 BLOATING </font>";
+        String crampRED ="<font color=\"red\"> \u2022 CRAMP </font>";
+        String dizzinessGREEN ="<font color=\"green\"> \u2022 DIZZINESS </font>";
+        String spotsCYAN ="<font color=\"cyan\"> \u2022 SPOTS </font>";
+        String headacheMAGENTA ="<font color=\"magenta\"> \u2022 HEADACHE </font>";
+        String insomniaDKGRAY ="<font color=\"dkgray\"> \u2022 INSOMNIA </font>";
+        String sweatingYELLOW ="<font color=\"yellow\"> \u2022 SWEATING </font>";
+        legendTvACNE.setTextSize(8);
+       // legendTvACNE.setTextColor(Color.GRAY);
+        legendTvACNE.setText(Html.fromHtml("<html> "+acneGRAY+" "+bloatingBLUE+" "+crampRED+" "+dizzinessGREEN+" "+spotsCYAN+" "+headacheMAGENTA+" "+insomniaDKGRAY+" "+sweatingYELLOW+"</html>"));
+       /* legendTvBLOATING.setTextSize(12);
+        legendTvBLOATING.setTextColor(Color.BLUE);
+        legendTvBLOATING.setText("BLOATING");
+        legendTvCRAMPS.setTextSize(12);
+        legendTvCRAMPS.setTextColor(Color.RED);
+        legendTvCRAMPS.setText("CRAMPS");
+        legendTvDIZZINESS.setTextSize(12);
+        legendTvDIZZINESS.setTextColor(Color.GREEN);
+        legendTvDIZZINESS.setText("DIZZINESS");
+        legendTvSPOTS.setTextSize(12);
+        legendTvSPOTS.setTextColor(Color.CYAN);
+        legendTvSPOTS.setText("SPOTS");
+        legendTvHEADACHE.setTextSize(12);
+        legendTvHEADACHE.setTextColor(Color.MAGENTA);
+        legendTvHEADACHE.setText("HEADACHE");
+        legendTvINSOMNIA.setTextSize(12);
+        legendTvINSOMNIA.setTextColor(Color.DKGRAY);
+        legendTvINSOMNIA.setText("INSOMNIA");
+        legendTvSWEATING.setTextSize(12);
+        legendTvSWEATING.setTextColor(Color.YELLOW);
+        legendTvSWEATING.setText("SWEATING");
+*/
 
         //floating home btn
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -119,7 +205,180 @@ public class Chart extends AppCompatActivity {
         );
     }
 
+
     //*Methods*
+
+    private void addDataSet() {
+
+        final Calendar calendar_Today = Calendar.getInstance(); // this would default to now
+        calendar_Today.add(Calendar.DAY_OF_MONTH, +1);
+        //over last week
+        final Calendar calendar_weekAgo = Calendar.getInstance(); // this would default to now
+        calendar_weekAgo.add(Calendar.DAY_OF_MONTH, -7);
+        //over last month
+        final Calendar calendar_monthAgo = Calendar.getInstance();
+        calendar_monthAgo.add(Calendar.DAY_OF_MONTH, -30);
+
+        final Query symptomQuery = SymptomsDb.orderByChild("userID").equalTo(userID);
+        symptomQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                boolean betweenDates = false;
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    String key = child.getKey().toString();
+                    String value = child.getValue().toString();
+                    if (key.equals("symptomDate")) {
+                        DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                        Date startDate;
+                        try {
+                            startDate = df.parse(value);
+                            String startDateString1 = df.format(startDate);
+                            Calendar calendar_Test = Calendar.getInstance();
+                            calendar_Test.setTime(startDate);
+                            if (calendar_Test.getTime().after(calendar_weekAgo.getTime()) && calendar_Test.getTime().before(calendar_Today.getTime())) {
+                                betweenDates = true;
+                                System.out.println("past week: value: " + value);
+                            }
+                            if (calendar_Test.getTime().after(calendar_monthAgo.getTime()) && calendar_Test.getTime().before(calendar_Today.getTime())) {
+                                betweenDates = true;
+                                System.out.println("past Month: value: " + value);
+                            } else {
+                                System.out.println("nope not between these two dates");
+                            }
+                            long a = getDifferenceDays(calendar_Test.getTime(), calendar_Today.getTime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            System.out.println("woops error occurred with dates");
+                        }
+                    }
+
+
+                    //remove series
+                    if (key.equals("value1") && !value.equals("0")) {
+                        acneCount = acneCount + 1;
+                        acneSelected = true;
+                    }
+                    if (key.equals("value2") && !value.equals("0")) {
+                        bloatingCount = bloatingCount + 1;
+                        bloatingSelected = true;
+                    }
+                    if (key.equals("value3") && !value.equals("0")) {
+                        crampsCount = crampsCount + 1;
+                        crampsSelected = true;
+                    }
+                    if (key.equals("value4") && !value.equals("0")) {
+                        dizzinessCount = dizzinessCount + 1;
+                        dizzinessSelected = true;
+                    }
+                    if (key.equals("value5") && !value.equals("0")) {
+                        spotsCount = spotsCount + 1;
+                        spotsSelected = true;
+                    }
+                    if (key.equals("value6") && !value.equals("0")) {
+                        headacheCount = headacheCount + 1;
+                        headacheSelected = true;
+                    }
+                    if (key.equals("value7") && !value.equals("0")) {
+                        insomniaCount = insomniaCount + 1;
+                        insomniaSelected = true;
+                    }
+                    if (key.equals("value8") && !value.equals("0")) {
+                        sweatingCount = sweatingCount + 1;
+                        sweatingSelected = true;
+                    }
+
+                    float acnePercentValue = (float) ((acneCount * 100) / symtpomTotalScore);
+                    System.out.println("val 1: " + acneCount + " percentage: " + acnePercentValue);
+                    float bloatingPercentValue = (float) ((bloatingCount * 100) / symtpomTotalScore);
+                    System.out.println("val 2: " + bloatingCount + " percentage: " + bloatingPercentValue);
+                    float crampPercentValue = (float) ((crampsCount * 100) / symtpomTotalScore);
+                    System.out.println("val 3: " + crampsCount + " percentage: " + crampPercentValue);
+                    float dizzinessPercentValue = (float) ((dizzinessCount * 100) / symtpomTotalScore);
+                    System.out.println("val 4: " + dizzinessCount + " percentage: " + dizzinessPercentValue);
+                    float headachePercentValue = (float) ((headacheCount * 100) / symtpomTotalScore);
+                    System.out.println("val 5: " + headacheCount + " percentage: " + headachePercentValue);
+                    float insomniaPercentValue = (float) ((insomniaCount * 100) / symtpomTotalScore);
+                    System.out.println("val 6: " + insomniaCount + " percentage: " + insomniaPercentValue);
+                    float spotsPercentValue = (float) ((spotsCount * 100) / symtpomTotalScore);
+                    System.out.println("val 7: " + spotsCount + " percentage: " + spotsPercentValue);
+                    float sweatingPercentValue = (float) ((sweatingCount * 100) / symtpomTotalScore);
+                    System.out.println("val 8: " + sweatingCount + " percentage: " + sweatingPercentValue);
+                    System.out.println("-------------------------------------");
+
+                    yData = new float[] {acnePercentValue, bloatingPercentValue, crampPercentValue, dizzinessPercentValue,
+                            spotsPercentValue, headachePercentValue, insomniaPercentValue, sweatingPercentValue};
+                    xData = new String[]{"Acne", "Bloating", "Cramps", "Dizziness", "Spots", "Headache", "Insomnia", "Sweating"};
+
+                    ArrayList<PieEntry> yEntrys = new ArrayList<>();
+                    ArrayList<String> xEntrys = new ArrayList<>();
+
+                    for(int i =0; i < yData.length; i++){
+                        yEntrys.add(new PieEntry(yData[i] , i ));
+                    }
+                    System.out.println("xData length: "+ xData.length);
+                    for(int i = 0; i < xData.length; i++){
+                        xEntrys.add(xData[i]);
+                    }
+
+                    //create data set
+                    PieDataSet pieDataSet = new PieDataSet(yEntrys, "Symptoms");
+                    pieDataSet.setSliceSpace(2);
+                    pieDataSet.setValueTextSize(12);
+
+                    //add colors to dataset
+                    ArrayList<Integer> colors = new ArrayList<>();
+                    colors.add(Color.LTGRAY);
+                    colors.add(Color.BLUE);
+                    colors.add(Color.RED);
+                    colors.add(Color.GREEN);
+                    colors.add(Color.CYAN);
+                    colors.add(Color.MAGENTA);
+                    colors.add(Color.DKGRAY);
+                    colors.add(Color.YELLOW);
+
+                    pieDataSet.setColors(colors);
+
+                    //add legend to chart
+                    Legend legend = pieChart.getLegend();
+                    legend.setForm(Legend.LegendForm.CIRCLE);
+                    legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+
+                    //create pie data object
+                    PieData pieData = new PieData(pieDataSet);
+                    pieChart.setData(pieData);
+                    pieChart.invalidate();
+
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
+
+
+
+
+            }
+
 
     //back to previous activity
     @Override
@@ -143,7 +402,6 @@ public class Chart extends AppCompatActivity {
         oasisQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     //getting key & value from db
                     String key = child.getKey().toString();
@@ -151,14 +409,11 @@ public class Chart extends AppCompatActivity {
 
                     //if key = totalOasisValue do the following:
                     if (key.equals("totalOasisValue")) {
-                        //  System.out.println("key " + key + " Value " + value);
-
                         y = Integer.parseInt(value); //y=value
                         pointVector.add(new DataPoint(x, y)); //add datapoint (1, value)
                         x = x + 1; //x+1=2 (2,value) etc..
                     }
                 }
-
                 //datapoint array
                 DataPoint[] dataPoints = new DataPoint[pointVector.size()];
                 int x = pointVector.size();
@@ -169,8 +424,13 @@ public class Chart extends AppCompatActivity {
                 }
                 series = new LineGraphSeries<>(dataPoints); //plot
                 series.setColor(Color.RED); //red for anxiety line
+                //    series.setTitle("overall anxiety severity and impairment scale");
                 lineGraph.addSeries(series);//add to graph
 
+                series.setTitle("OASIS");//Overall depression severity and impairment scale
+                //   GridLabelRenderer gridLabel = lineGraph.getGridLabelRenderer();
+                //    gridLabel.setHorizontalAxisTitle("Weeks");
+                //   lineGraph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
             }
 
             @Override
@@ -192,10 +452,11 @@ public class Chart extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
 
 
-        System.out.println("------Query 2: ODSIS-------");
+        System.out.println("------ODSIS QUERY-------");
 
         //to do when odsis is added
         odsisQuery.addChildEventListener(new ChildEventListener() {
@@ -209,17 +470,16 @@ public class Chart extends AppCompatActivity {
 
                     //if key = totalOdsisValue do :
                     if (key.equals("totalOdsisValue")) {
-                        //  System.out.println("key " + key + " Value " + value);
                         y = Integer.parseInt(value);
                         pointVector2.add(new DataPoint(k, y));
                         k = k + 1;
                     }
-
                 }
 
                 //data point array
                 DataPoint[] dataPoints = new DataPoint[pointVector2.size()];
                 int x = pointVector2.size();
+                System.out.println("point vector size: "+x);
 
                 //if i is less than pointVector2 size
                 for (int i = 0; i < x; i++) {
@@ -228,6 +488,20 @@ public class Chart extends AppCompatActivity {
                 series2 = new LineGraphSeries<>(dataPoints);
                 series2.setColor(Color.BLUE); //blue line for depression
                 lineGraph.addSeries(series2);
+                // lineGraph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
+
+                // legend
+                lineGraph.getViewport().setMaxX(x+1);
+                lineGraph.getViewport().setMinX(1);
+                lineGraph.getViewport().setMaxY(25);
+                lineGraph.getViewport().setMinY(0);
+                lineGraph.getViewport().setXAxisBoundsManual(true);
+                lineGraph.getViewport().setYAxisBoundsManual(true);
+                series2.setTitle("ODSIS");//Overall depression severity and impairment scale
+                GridLabelRenderer gridLabel = lineGraph.getGridLabelRenderer();
+                gridLabel.setHorizontalAxisTitle("Week");
+                gridLabel.setVerticalAxisTitle("Severity");
+                //     lineGraph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
 
             }
 
@@ -250,6 +524,7 @@ public class Chart extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
     }
 
@@ -266,7 +541,7 @@ public class Chart extends AppCompatActivity {
         calendar_monthAgo.add(Calendar.DAY_OF_MONTH, -30);
 
         final Query moodQuery = MoodsDb.orderByChild("userID").equalTo(userID);
-        System.out.println("------Query 3-------");
+        System.out.println("------MOOD QUERY-------");
 
         moodQuery.addChildEventListener(new ChildEventListener() {
             @Override
@@ -275,9 +550,7 @@ public class Chart extends AppCompatActivity {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String key = child.getKey().toString();
                     String value = child.getValue().toString();
-                    // System.out.println("key "+key+" Value "+value);
                     if (key.equals("symptomDate")) {
-                        // System.out.println("key "+key+" Value "+value);
                         DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
                         Date startDate;
                         try {
@@ -287,7 +560,6 @@ public class Chart extends AppCompatActivity {
                             calendar_Test.setTime(startDate);
                             if (calendar_Test.getTime().after(calendar_weekAgo.getTime()) && calendar_Test.getTime().before(calendar_Today.getTime())) {
                                 betweenDates = true;
-
                                 System.out.println("past week: value: "+value);
                             } if (calendar_Test.getTime().after(calendar_monthAgo.getTime()) && calendar_Test.getTime().before(calendar_Today.getTime())) {
                                 betweenDates = true;
@@ -306,134 +578,111 @@ public class Chart extends AppCompatActivity {
                     //remove series
                     barGraph.removeAllSeries();
                     if (key.equals("afraidCb") && value.equals("true")) {
-                        //   System.out.println("key "+key+" value "+value+" this value is true");
                         afraidCbCount = afraidCbCount + 1;
                     }
                     if (key.equals("aggrevatedCb") && value.equals("true")) {
-                        //    System.out.println("key "+key+" value "+value+" this value is true");
                         aggrevatedCbCount = aggrevatedCbCount + 1;
                     }
                     if (key.equals("angryCb") && value.equals("true")) {
-                        //    System.out.println("key "+key+" value "+value+" this value is true");
                         angryCbCount = angryCbCount + 1;
                     }
                     if (key.equals("anxiousCb") && value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         anxiousCbCount = anxiousCbCount + 1;
                     }
                     if (key.equals("awkwardCb") && value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         awkwardCbCount = awkwardCbCount + 1;
                     }
                     if (key.equals("braveCb") && value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         braveCbCount = braveCbCount + 1;
                     }
                     if (key.equals("calmCb") && value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         calmCbCount = calmCbCount + 1;
                     }
                     if(key.equals("confidentCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         confidentCbCount = confidentCbCount + 1;
                     }
                     if(key.equals("contentCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         contentCbCount = contentCbCount + 1;
                     }
                     if(key.equals("depressedCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         depressedCbCount = depressedCbCount + 1;
                     }
                     if(key.equals("discouragedCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         discouragedCbCount = discouragedCbCount + 1;
                     }
                     if(key.equals("distantCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         distantCbCount = distantCbCount + 1;
                     }
                     if(key.equals("energizedCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         energizedCbCount = energizedCbCount + 1;
                     }
                     if(key.equals("fatiguedCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         fatiguedCbCount = fatiguedCbCount + 1;
                     }
                     if(key.equals("gloomyCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         gloomyCbCount = gloomyCbCount + 1;
                     }
                     if(key.equals("grumpyCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         grumpyCbCount = grumpyCbCount + 1;
                     }
                     if(key.equals("grouchyCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         grouchyCbCount = grouchyCbCount + 1;
                     }
                     if(key.equals("happyCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         happyCbCount = happyCbCount + 1;
                     }
                     if(key.equals("hesitantCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         hesitantCbCount = hesitantCbCount + 1;
                     }
                     if(key.equals("impatientCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         impatientCbCount = impatientCbCount + 1;
                     }
                     if(key.equals("insecureCb")&& value.equals("true")) {
-                        //     System.out.println("key "+key+" value "+value+" this value is true");
                         insecureCbCount = insecureCbCount + 1;
                     }
-
                 }
-                percentage = (float) ((afraidCbCount * 100) / totalScore);
-
-                System.out.println("checkbox 1: " + afraidCbCount + " percentage: " + percentage);
-                percentage = (float) ((aggrevatedCbCount * 100) / totalScore);
-                System.out.println("checkbox 2: " + aggrevatedCbCount + " percentage: " + percentage);
-                percentage = (float) ((angryCbCount * 100) / totalScore);
-                System.out.println("checkbox 3: " + angryCbCount + " percentage: " + percentage);
-                percentage = (float) ((anxiousCbCount * 100) / totalScore);
-                System.out.println("checkbox 4: " + anxiousCbCount + " percentage: " + percentage);
-                percentage = (float) ((awkwardCbCount * 100) / totalScore);
-                System.out.println("checkbox 5: " + awkwardCbCount + " percentage: " + percentage);
-                percentage = (float) ((braveCbCount * 100) / totalScore);
-                System.out.println("checkbox 6: " + braveCbCount + " percentage: " + percentage);
-                percentage = (float) ((calmCbCount * 100) / totalScore);
-                System.out.println("checkbox 7: " + calmCbCount + " percentage: " + percentage);
-                percentage = (float) ((confidentCbCount * 100) / totalScore);
-                System.out.println("checkbox 8: " + confidentCbCount + " percentage: " + percentage);
-                percentage = (float) ((contentCbCount * 100) / totalScore);
-                System.out.println("checkbox 9: " + contentCbCount + " percentage: " + percentage);
-                percentage = (float) ((depressedCbCount * 100) / totalScore);
-                System.out.println("checkbox 10: " + depressedCbCount + " percentage: " + percentage);
-                percentage = (float) ((discouragedCbCount * 100) / totalScore);
-                System.out.println("checkbox 11: " + discouragedCbCount + " percentage: " + percentage);
-                percentage = (float) ((distantCbCount * 100) / totalScore);
-                System.out.println("checkbox 12: " + distantCbCount + " percentage: " + percentage);
-                percentage = (float) ((energizedCbCount * 100) / totalScore);
-                System.out.println("checkbox 13: " + energizedCbCount + " percentage: " + percentage);
-                percentage = (float) ((fatiguedCbCount * 100) / totalScore);
-                System.out.println("checkbox 14: " + fatiguedCbCount + " percentage: " + percentage);
-                percentage = (float) ((gloomyCbCount * 100) / totalScore);
-                System.out.println("checkbox 15: " + gloomyCbCount + " percentage: " + percentage);
-                percentage = (float) ((grumpyCbCount * 100) / totalScore);
-                System.out.println("checkbox 16: " + grumpyCbCount + " percentage: " + percentage);
-                percentage = (float) ((grouchyCbCount * 100) / totalScore);
-                System.out.println("checkbox 17: " + grouchyCbCount + " percentage: " + percentage);
-                percentage = (float) ((happyCbCount * 100) / totalScore);
-                System.out.println("checkbox 18: " + happyCbCount + " percentage: " + percentage);
-                percentage = (float) ((hesitantCbCount * 100) / totalScore);
-                System.out.println("checkbox 19: " + hesitantCbCount + " percentage: " + percentage);
-                percentage = (float) ((impatientCbCount * 100) / totalScore);
-                System.out.println("checkbox 20: " + impatientCbCount + " percentage: " + percentage);
-                percentage = (float) ((insecureCbCount * 100) / totalScore);
-                System.out.println("checkbox 21: " + insecureCbCount + " percentage: " + percentage);
+                float percentageAfraid = (float) ((afraidCbCount * 100) / totalScore);
+                System.out.println("checkbox 1: " + afraidCbCount + " percentage: " + percentageAfraid);
+                float percentageAggrevated = (float) ((aggrevatedCbCount * 100) / totalScore);
+                System.out.println("checkbox 2: " + aggrevatedCbCount + " percentage: " + percentageAggrevated);
+                float percentageAngry = (float) ((angryCbCount * 100) / totalScore);
+                System.out.println("checkbox 3: " + angryCbCount + " percentage: " + percentageAngry);
+                float percentageAnxious = (float) ((anxiousCbCount * 100) / totalScore);
+                System.out.println("checkbox 4: " + anxiousCbCount + " percentage: " + percentageAnxious);
+                float percentageAwkward = (float) ((awkwardCbCount * 100) / totalScore);
+                System.out.println("checkbox 5: " + awkwardCbCount + " percentage: " + percentageAwkward);
+                float  percentageBrave = (float) ((braveCbCount * 100) / totalScore);
+                System.out.println("checkbox 6: " + braveCbCount + " percentage: " + percentageBrave);
+                float  percentageCalm = (float) ((calmCbCount * 100) / totalScore);
+                System.out.println("checkbox 7: " + calmCbCount + " percentage: " + percentageCalm);
+                float  percentageConfident = (float) ((confidentCbCount * 100) / totalScore);
+                System.out.println("checkbox 8: " + confidentCbCount + " percentage: " + percentageConfident);
+                float  percentageContent = (float) ((contentCbCount * 100) / totalScore);
+                System.out.println("checkbox 9: " + contentCbCount + " percentage: " + percentageContent);
+                float percentageDepressed = (float) ((depressedCbCount * 100) / totalScore);
+                System.out.println("checkbox 10: " + depressedCbCount + " percentage: " + percentageDepressed);
+                float percentageDiscouraged = (float) ((discouragedCbCount * 100) / totalScore);
+                System.out.println("checkbox 11: " + discouragedCbCount + " percentage: " + percentageDiscouraged);
+                float percentageDistant = (float) ((distantCbCount * 100) / totalScore);
+                System.out.println("checkbox 12: " + distantCbCount + " percentage: " + percentageDistant);
+                float percentageEnergized = (float) ((energizedCbCount * 100) / totalScore);
+                System.out.println("checkbox 13: " + energizedCbCount + " percentage: " + percentageEnergized);
+                float percentageFatigued = (float) ((fatiguedCbCount * 100) / totalScore);
+                System.out.println("checkbox 14: " + fatiguedCbCount + " percentage: " + percentageFatigued);
+                float percentageGloomy = (float) ((gloomyCbCount * 100) / totalScore);
+                System.out.println("checkbox 15: " + gloomyCbCount + " percentage: " + percentageGloomy);
+                float percentageGrumpy = (float) ((grumpyCbCount * 100) / totalScore);
+                System.out.println("checkbox 16: " + grumpyCbCount + " percentage: " + percentageGrumpy);
+                float percentageGrouchy = (float) ((grouchyCbCount * 100) / totalScore);
+                System.out.println("checkbox 17: " + grouchyCbCount + " percentage: " + percentageGrouchy);
+                float percentageHappy = (float) ((happyCbCount * 100) / totalScore);
+                System.out.println("checkbox 18: " + happyCbCount + " percentage: " + percentageHappy);
+                float percentageHesitant = (float) ((hesitantCbCount * 100) / totalScore);
+                System.out.println("checkbox 19: " + hesitantCbCount + " percentage: " + percentageHesitant);
+                float percentageImpatient = (float) ((impatientCbCount * 100) / totalScore);
+                System.out.println("checkbox 20: " + impatientCbCount + " percentage: " + percentageImpatient);
+                float  percentageInsecure = (float) ((insecureCbCount * 100) / totalScore);
+                System.out.println("checkbox 21: " + insecureCbCount + " percentage: " + percentageInsecure);
                 System.out.println("-------------------------------------");
 
                 final Vector<DataPoint> pointVector3 = new Vector<>();
@@ -461,7 +710,6 @@ public class Chart extends AppCompatActivity {
                 pointVector3.add(new DataPoint(19, impatientCbCount));
                 pointVector3.add(new DataPoint(20, insecureCbCount));
 
-
                 DataPoint[] dataPoints = new DataPoint[pointVector3.size()];
                 int x = pointVector3.size();
                 for (int i = 0; i < x; i++) {
@@ -473,7 +721,6 @@ public class Chart extends AppCompatActivity {
 
                 barSeries = new BarGraphSeries<>(dataPoints);
                 barGraph.addSeries(barSeries);
-
                 // styling
                 barSeries.setValueDependentColor(new ValueDependentColor<DataPoint>() {
                     @Override
@@ -481,15 +728,11 @@ public class Chart extends AppCompatActivity {
                         return Color.rgb((int) data.getX() * 255 / 4, (int) Math.abs(data.getY() * 255 / 6), 100);
                     }
                 });
-                barGraph.getViewport().setMaxX(20);
+                barGraph.getViewport().setMaxX(21);
                 barGraph.getViewport().setMinY(0.0);
                 barSeries.setSpacing(15);
-                // draw values on top
-
                 barSeries.setDrawValuesOnTop(true);
                 barSeries.setValuesOnTopColor(Color.RED);
-
-                //
                 barSeries.setOnDataPointTapListener(new OnDataPointTapListener() {
                     @Override
                     public void onTap(Series series, DataPointInterface dataPoint) {
@@ -498,94 +741,69 @@ public class Chart extends AppCompatActivity {
                         String dpName="";
                         switch(dp) {
                             case "0.0" :
-                                // Statements
                                 dpName="afraid";
-                                break; // optional
-
+                                break;
                             case "1.0" :
-                                // Statements
                                 dpName="aggrevated";
-                                break; // optional
+                                break;
                             case "2.0" :
-                                // Statements
                                 dpName="angry";
-                                break; // optional
+                                break;
                             case "3.0" :
-                                // Statements
                                 dpName="anxious";
-                                break; // optional
+                                break;
                             case "4.0" :
-                                // Statements
                                 dpName="awkward";
-                                break; // optional
+                                break;
                             case "5.0" :
-                                // Statements
                                 dpName="brave";
-                                break; // optional
+                                break;
                             case "6.0" :
-                                // Statements
                                 dpName="calm";
-                                break; // optional
+                                break;
                             case "7.0" :
-                                // Statements
                                 dpName="confident";
-                                break; // optional
+                                break;
                             case "8.0" :
-                                // Statements
                                 dpName="content";
-                                break; // optional
+                                break;
                             case "9.0" :
-                                // Statements
                                 dpName="depressed";
-                                break; // optional
+                                break;
                             case "10.0" :
-                                // Statements
                                 dpName="discouraged";
-                                break; // optional
+                                break;
                             case "11.0" :
-                                // Statements
                                 dpName="distant";
-                                break; // optional
+                                break;
                             case "12.0" :
-                                // Statements
                                 dpName="energized";
-                                break; // optional
+                                break;
                             case "13.0" :
-                                // Statements
                                 dpName="fatigued";
-                                break; // optional
+                                break;
                             case "14.0" :
-                                // Statements
                                 dpName="gloomy";
-                                break; // optional
+                                break;
                             case "15.0" :
-                                // Statements
                                 dpName="grumpy";
-                                break; // optional
+                                break;
                             case "16.0" :
-                                // Statements
                                 dpName="grouchy";
-                                break; // optional
+                                break;
                             case "17.0" :
-                                // Statements
                                 dpName="happy";
-                                break; // optional
+                                break;
                             case "18.0" :
-                                // Statements
                                 dpName="hesitant";
-                                break; // optional
+                                break;
                             case "19.0" :
-                                // Statements
                                 dpName="impatient";
-                                break; // optional
+                                break;
                             case "20.0" :
-                                // Statements
                                 dpName="insecure";
-                                break; // optional
-
-                            // You can have any number of case statements.
-                            default : // Optional
-                                // Statements
+                                break;
+                            default :
                         }
                         Toast.makeText(Chart.this, "Mood: "+dpName, Toast.LENGTH_SHORT).show();
                     }
@@ -593,21 +811,8 @@ public class Chart extends AppCompatActivity {
 
                 GridLabelRenderer gridLabel = barGraph.getGridLabelRenderer();
                 gridLabel.setHorizontalAxisTitle("Moods");
-                // enable scaling and scrolling
-                //  barGraph.getViewport().setScalable(true);
-                //   barGraph.getViewport().setScalableY(false);
-
-                //   barGraph.getViewport().setScrollable(true); // enables horizontal scrolling
-                //   barGraph.getViewport().setScrollableY(false); // enables vertical scrolling
+                gridLabel.setVerticalAxisTitle("Percentage");
                 barGraph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
-
-                // barGraph.getViewport().setScalableY(true); // enables vertical zooming and scrolling
-                //
-                //use static labels for horizontal and vertical labels
-                // StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(barGraph);
-                //  staticLabelsFormatter.setHorizontalLabels(new String[] {" ","moods", " "});
-                // staticLabelsFormatter.setVerticalLabels(new String[] {"low", "middle", "high"});
-                //  barGraph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
             }
 
             @Override
@@ -629,9 +834,7 @@ public class Chart extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-
         });
-
     }
 
     //compare days

@@ -22,9 +22,9 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity {
     EditText email ;
     EditText password;
-    Button b1,b2;
+    Button loginBtn, regBtn;
     String e,p;
-    TextView tx1;
+    TextView attemptCounterTv;
     List<String> errorList = new ArrayList<String>();
     int counter = 3;
     private FirebaseAuth mAuth;
@@ -33,35 +33,27 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
-
-        email = (EditText) findViewById(R.id.editText2);
+        email = (EditText) findViewById(R.id.emailEt);
         email.requestFocus();
-        password = (EditText) findViewById(R.id.editText9);
-        //b2 = (Button)findViewById(R.id.button15);
-        tx1 = (TextView)findViewById(R.id.textView32);
-        tx1.setVisibility(View.GONE);
-        b1 = (Button)findViewById(R.id.button12);
-        b1.setOnClickListener(new View.OnClickListener() {
+        password = (EditText) findViewById(R.id.passwordEt);
+        attemptCounterTv = (TextView)findViewById(R.id.attemptsNumTv);
+        attemptCounterTv.setVisibility(View.GONE);
+        loginBtn = (Button)findViewById(R.id.loginBtn);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Login();
 
             }
         });
-
-       /* b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });*/
-        final Button signupBtn = (Button) findViewById(R.id.button19);
-        signupBtn.setOnClickListener(new View.OnClickListener(){
+        regBtn = (Button) findViewById(R.id.regBtn);
+        regBtn.setOnClickListener(new View.OnClickListener(){
 
                                   @Override
                                   public void onClick(View v) {
-                                      Intent i3 = new Intent(getApplicationContext(), SignUp.class);
-                                      startActivity(i3);
+                                      Intent regIntent = new Intent(getApplicationContext(), SignUp.class);
+                                      startActivity(regIntent);
+                                      finish();
                                   }
                               }
         );
@@ -80,16 +72,14 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
                         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);//not working
                         startActivity(intent1);
+                        finish();
                     } else {
-                        //Toast.makeText(LoginActivity.this, "login failed", Toast.LENGTH_SHORT).show();
                         Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        tx1.setVisibility(View.VISIBLE);
-                        //tx1.setBackgroundColor(Color.RED);
+                        attemptCounterTv.setVisibility(View.VISIBLE);
                         counter--;
-                        tx1.setText(Integer.toString(counter));
-
+                        attemptCounterTv.setText(Integer.toString(counter));
                         if (counter == 0) {
-                            b1.setEnabled(false);
+                            loginBtn.setEnabled(false);
                         }
                     }
 
@@ -111,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
     public void initialize(){
-        //  displayName = et_name.getText().toString().trim();
         e = email.getText().toString().trim();
         p = password.getText().toString().trim();
 

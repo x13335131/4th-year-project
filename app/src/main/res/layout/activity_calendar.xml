@@ -98,7 +98,7 @@
         android:layout_marginEnd="84dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="9dp"
-        android:maxLines="12"
+        android:maxLines="5"
         android:paddingLeft="2px"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"

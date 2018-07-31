@@ -56,7 +56,11 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    ForumPost fp = postSnapshot.getValue(ForumPost.class);
+
+                    String forumPostId = postSnapshot.getKey();
+                    // ForumPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
+                    ForumPost fp = postSnapshot.getValue(ForumPost.class).withId(forumPostId);
+                    //ForumPost fp = postSnapshot.getValue(ForumPost.class);
                     post_list.add(fp);
                     forumRecyclerAdapter.notifyDataSetChanged();
                 }
@@ -114,7 +118,11 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    ForumPost fp = postSnapshot.getValue(ForumPost.class);
+
+
+                    String forumPostId = postSnapshot.getKey();
+                   // ForumPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
+                    ForumPost fp = postSnapshot.getValue(ForumPost.class).withId(forumPostId);
                     post_list.add(fp);
                     forumRecyclerAdapter.notifyDataSetChanged();
                 }

@@ -44,48 +44,46 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-    //private TextView secondsTv;
-    DatabaseReference OdsisDb;
-    TextView secondsTv;
-    private static Timer myTimer;
-    int secondsPassed = 0;
-    int secondsCaptured;
-    List<PanicButton> panicList;
-    DatabaseReference databasePanic;
-    private static final String TAG = "MainActivity";
-    String userID;
-    String value;
-    float daysBetween;
+    FirebaseDatabase database;
     private FirebaseAuth mAuth;
-
+    FirebaseUser currentUser;
+    DatabaseReference OdsisDb, databasePanic;
+    TextView secondsTv, locationTv;
     private Toolbar mainToolbar;
-    private Button diaryBtn, calBtn, chartBtn, socialBtn;
-    private Button survey;
-    private Button panicButton;
+    private static Timer myTimer;
+    private int secondsPassed = 0;
+    private int secondsCaptured;
+    private double latti, longi;
+    private String userID, value, latitude, longitude, address, location;
+    float daysBetween;
+    private Button diaryBtn, calBtn, chartBtn, socialBtn, selfReportBtn, panicButton;
     private Thread thread;
     private static final int REQUEST_LOCATION = 1;
     LocationManager locationManager;
-    String latitude, longitude;
-    TextView locationTv;
     Geocoder geocoder;
+    List<PanicButton> panicList;
     List<Address> addresses;
-    String address;
-    String location;
-    double latti, longi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         setContentView(R.layout.activity_main);
-
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
-
         geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-
+        database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        /*if user is not logged in, send to splash/login activity*/
+        if (currentUser == null) {
+            Intent intent = new Intent(getApplicationContext(), SplashScreen.class);
+            startActivity(intent);
+            finish();
+        } else {
+            userID = currentUser.getUid();
+        }
+
         thread = new Thread() {
 
             @Override
@@ -96,9 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void run() {
-
                             // Stuff that updates the UI
-
                             getSupportActionBar().setTitle("My Mental Health");
                         }
                     });
@@ -108,68 +104,63 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         thread.start();
+        //assigning variables
         secondsTv = (TextView) findViewById(R.id.seconds_tv);
         locationTv = (TextView) findViewById(R.id.text_location);
         diaryBtn = (Button) findViewById(R.id.diary_btn); //diary button
         calBtn = (Button) findViewById(R.id.calendar_btn); //calendar button
         chartBtn = (Button) findViewById(R.id.charts_btn); //chart button
         socialBtn = (Button) findViewById(R.id.social_btn); //social button
-
-        // Stuff that updates the UI
+        selfReportBtn = (Button) findViewById(R.id.selfReportBtn); //to oasis and odsis
+        panicButton = (Button) findViewById(R.id.panic_btn);
         Switch s = (Switch) findViewById(R.id.panic_btn_switch);
         databasePanic = FirebaseDatabase.getInstance().getReference("panic");
-        panicButton = (Button) findViewById(R.id.panic_btn);
         panicList = new ArrayList<>();
-
-        survey = (Button) findViewById(R.id.surveyBtn); //to oasis and odsis
-        survey.setVisibility(View.INVISIBLE);
         mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        userID = currentFirebaseUser.getUid();
-
+        //referencing database
         OdsisDb = database.getReference("odsis");
-
-        Query lastQuery = OdsisDb.orderByChild("user").equalTo(userID).limitToLast(1);//.orderByKey().limitToLast(1);
+        //set survay btn to visible
+        selfReportBtn.setVisibility(View.INVISIBLE);
+        Query lastQuery = OdsisDb.orderByChild("user").equalTo(userID);//.limitToLast(1); //finding most recent self report for user
+        System.out.println("................");
+        lastQuery= lastQuery.limitToLast(1);
         lastQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-
+               // System.out.println("CHILDREN.."+ dataSnapshot.getChildren().toString());
+               /* if(dataSnapshot.child("user")..exists()){
+                System.out.println("SNAPSHOT EXISTS");
+            }else{
+                System.out.println("NO NOT EXISTS");
+            }*/
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
+
                     String key = child.getKey().toString();
                     value = child.getValue().toString();
+                    System.out.println("key; "+key);
+                    System.out.println("value; "+value);
+
                     if (key.equals("todaysDate")) {
-                        System.out.println("key " + key + " Value " + value);
                         SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
                         String dateBeforeString = value;
                         String dateAfterString = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
-                        System.out.println("Date Before String: " + dateBeforeString);
-                        System.out.println("Date After String: " + dateAfterString);
                         try {
                             Date dateBefore = myFormat.parse(dateBeforeString);
                             Date dateAfter = myFormat.parse(dateAfterString);
-
                             long difference = dateAfter.getTime() - dateBefore.getTime();
                             daysBetween = (difference / (1000 * 60 * 60 * 24));
-
-                            System.out.println("Number of Days between dates: " + daysBetween);
 
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        if (daysBetween < 7.0) { //it has been less than 7 days since user took odsis survey then set button to invisible
-                            System.out.println("survey set to invisible ");
-                            survey.setVisibility(View.INVISIBLE);
-                        } else { //it has been more than 7 days than they may take survey
-                            System.out.println("Survay set to visible ");
-                            survey.setVisibility(View.VISIBLE);
+                        if (daysBetween < 7.0) { //it has been less than 7 days since user took odsis selfReportBtn then set button to invisible
+                            selfReportBtn.setVisibility(View.INVISIBLE);
+                        } else { //it has been more than 7 days than they may take selfReportBtn
+                            selfReportBtn.setVisibility(View.VISIBLE);
                         }
                     }
-
                 }
-
             }
 
             @Override
@@ -194,14 +185,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         panicButton.setOnClickListener(new View.OnClickListener() {
-
-
             boolean pressed = true;
 
-            //Timer  myTimer = new Timer();
             @Override
-            public void onClick(View v) {
-//if clicked
+            public void onClick(View v) {//if clicked
                 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
                 if (pressed == true) {
@@ -218,8 +205,6 @@ public class MainActivity extends AppCompatActivity {
                     end();
                     pressed = true;
                 }
-
-
             }
 
             private void getLocation() {
@@ -228,9 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
                 } else {
                     Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
                     Location location1 = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
                     Location location2 = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
 
                     if (location != null) {
@@ -246,9 +229,6 @@ public class MainActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        System.out.println("Latitude: " + latitude + " longitude: " + longitude);
-                            /*locationTv.setText("Your current location is"+ "\n" + "Lattitude = " + latitude
-                                    + "\n" + "Longitude = " + longitude);*/
 
                     } else if (location1 != null) {
                         latti = location1.getLatitude();
@@ -263,13 +243,6 @@ public class MainActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-                        System.out.println("Latitude: " + latitude + " longitude: " + longitude);
-                            /*
-                            locationTv.setText("Your current location is"+ "\n" + "Lattitude = " + latitude
-                                    + "\n" + "Longitude = " + longitude);*/
-
-
                     } else if (location2 != null) {
                         latti = location2.getLatitude();
                         longi = location2.getLongitude();
@@ -283,16 +256,9 @@ public class MainActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-                        System.out.println("Latitude: " + latitude + " longitude: " + longitude);
-                            /*
-                            locationTv.setText("Your current location is"+ "\n" + "Lattitude = " + latitude
-                                    + "\n" + "Longitude = " + longitude);*/
-
                     } else {
 
-                        Toast.makeText(MainActivity.this, "Unble to Trace your location", Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(MainActivity.this, "Unable to Trace your location", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -316,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
                 alert.show();
             }
 
-
             //start timer
             public void start() {
 
@@ -334,9 +299,7 @@ public class MainActivity extends AppCompatActivity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            System.out.println("Seconds passed " + secondsPassed);
                                             secondsTv.setText("Seconds Passed: " + String.valueOf(secondsPassed));
-
                                         }
                                     });
                                 }
@@ -353,8 +316,6 @@ public class MainActivity extends AppCompatActivity {
             //end timer
             public void end() {
                 addPanicToDiary();
-                getUserData();
-                //a = secondsTv.getText().toString();
                 secondsPassed = 0;
                 myTimer.cancel();
                 secondsTv.setText("Timer Stopped" + secondsCaptured);
@@ -366,97 +327,51 @@ public class MainActivity extends AppCompatActivity {
                 DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 java.util.Calendar cal = java.util.Calendar.getInstance();
                 String todaysDate = df.format(cal.getTime());
-
-                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                userID = currentFirebaseUser.getUid();
-
+                userID = currentUser.getUid();
                 String id = databasePanic.push().getKey();
                 PanicButton panic = new PanicButton(secondsCaptured, todaysDate, longi, latti, location, userID);
                 databasePanic.child(id).setValue(panic);
                 Toast.makeText(MainActivity.this, "panic attack added", Toast.LENGTH_LONG).show();
             }
-
-            public void getUserData() {
-                // Read from the database
-                //ordering output by length
-                // final Query userQuery = databasePanic.orderByChild("length");
-                final Query userQuery = databasePanic.orderByChild("userID").equalTo(userID);
-                userQuery.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        // map.clear();
-                        //Get the node from the datasnapshot
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            String key = child.getKey().toString();
-                            String value = child.getValue().toString();
-                            //map.put(key,value);
-                            System.out.println("key " + key + " Value " + value);
-                        }
-
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-            }
         });
-
 
         diaryBtn.setOnClickListener(new View.OnClickListener() {
 
-                                  @Override
-                                  public void onClick(View v) {
-                                      Intent i1 = new Intent(getApplicationContext(), MyDiary.class);
-                                      startActivity(i1);
-                                  }
-                              }
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent i1 = new Intent(getApplicationContext(), MyDiary.class);
+                                            startActivity(i1);
+                                        }
+                                    }
         );
         calBtn.setOnClickListener(new View.OnClickListener() {
 
-                                  @Override
-                                  public void onClick(View v) {
-                                      Intent i2 = new Intent(getApplicationContext(), CalendarActivity.class);
-                                      startActivity(i2);
+                                      @Override
+                                      public void onClick(View v) {
+                                          Intent i2 = new Intent(getApplicationContext(), CalendarActivity.class);
+                                          startActivity(i2);
+                                      }
                                   }
-                              }
         );
         chartBtn.setOnClickListener(new View.OnClickListener() {
 
-                                  @Override
-                                  public void onClick(View v) {
-                                      Intent i3 = new Intent(getApplicationContext(), Chart.class);
-                                      startActivity(i3);
-                                  }
-                              }
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent i3 = new Intent(getApplicationContext(), Chart.class);
+                                            startActivity(i3);
+                                        }
+                                    }
         );
         socialBtn.setOnClickListener(new View.OnClickListener() {
 
-                                  @Override
-                                  public void onClick(View v) {
-                                      Intent i4 = new Intent(getApplicationContext(), Social.class);
-                                      startActivity(i4);
-                                  }
-                              }
+                                         @Override
+                                         public void onClick(View v) {
+                                             Intent i4 = new Intent(getApplicationContext(), Social.class);
+                                             startActivity(i4);
+                                         }
+                                     }
         );
-        survey.setOnClickListener(new View.OnClickListener() {
+        selfReportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i5 = new Intent(getApplicationContext(), Oasis.class);
@@ -468,22 +383,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (panicButton.isShown()) {//if clicked and panic button is already showing, make it disappear
-                    //myTimer = new Timer();
                     secondsPassed = 0;
-                    // myTimer.cancel();
-
                     panicButton.setVisibility(View.GONE);
                     secondsTv.setVisibility(View.GONE);
                     locationTv.setVisibility(View.GONE);
-
                 } else {
                     panicButton.setVisibility(View.VISIBLE);
                 }
-
             }
         });
-
-
     }
 
     @Override
@@ -503,7 +411,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings_btn:
                 Intent settingsIntent = new Intent(MainActivity.this, SetupActivity.class);
                 startActivity(settingsIntent);
-
                 return true;
             default:
                 return false;
@@ -520,5 +427,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(loginIntent);
         finish();
     }
-
 }

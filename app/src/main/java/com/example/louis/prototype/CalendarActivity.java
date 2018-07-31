@@ -40,7 +40,6 @@ public class CalendarActivity extends AppCompatActivity {
     DatabaseReference panicAttackDb, notesDb, moodsDb, symptomsDb, medicationDb;
     FirebaseDatabase database;
     String userID, date, panicDate, noteDate, moodDate, symptomDate, medDate, note, med, medDosage, formatedEventDate, formattedCurrentNoteList, formattedCurrentPanicList, formattedCurrentMedList;
-    ;
     String panicOutput = "";
     String noteOutput = "";
     String moodOutput = "";
@@ -59,7 +58,7 @@ public class CalendarActivity extends AppCompatActivity {
     int panicLength;
     boolean panicBool, noteBool, moodBool, symptomBool, medBool;
     private TextView displayDataTv;
-    ArrayList<Event> events, noteEvents, moodEvents, symptomEvents, medEvents;
+    ArrayList<Event> panicEvents, noteEvents, moodEvents, symptomEvents, medEvents;
     ArrayList<String> moodList, panicList, symptomList, currentNoteList, currentPanicList, currentMedList, collectedDates;
 
     @Override
@@ -83,8 +82,8 @@ public class CalendarActivity extends AppCompatActivity {
         moodsDb = database.getReference("moods");
         symptomsDb = database.getReference("symptoms");
         medicationDb = database.getReference("meds");
-        //events
-        events = new ArrayList<Event>();
+        //panicEvents
+        panicEvents = new ArrayList<Event>();
         noteEvents = new ArrayList<Event>();
         moodEvents = new ArrayList<Event>();
         symptomEvents = new ArrayList<Event>();
@@ -128,16 +127,14 @@ public class CalendarActivity extends AppCompatActivity {
                 //convert date clicked to string
                 String clickedDateString = dateClicked.toString();
 
-                //convert to Clicked date to correct format
+                //convert clicked date to correct format
                 DateFormat clickedDateFormatter = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
                 Date clickedDate = null;
                 try {
                     clickedDate = (Date) clickedDateFormatter.parse(clickedDateString);
-
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(clickedDate);
                 int day = cal.get(Calendar.DATE);
@@ -157,20 +154,22 @@ public class CalendarActivity extends AppCompatActivity {
                     d = Integer.toString(day);
                 }
                 String formatedDate = d + "/" + m + "/" + year;
+                //finished correcting date to correct format.
                 panicBool = false;
                 noteBool = false;
                 moodBool = false;
                 symptomBool = false;
                 medBool = false;
 
-                //iterating through array
-                for (Event ev : events) {
-                    long t = ev.getTimeInMillis();
+                /* iterating through each of the event arrays*/
+                //**panicAttack events
+                for (Event panicEv : panicEvents) {
+                    long t = panicEv.getTimeInMillis();
                     formatDate(t);
                     if (formatedEventDate.equals(formatedDate)) {
                         panicBool = true;
                         panicCount = panicCount + 1;
-                        currentEvent = ev;
+                        currentEvent = panicEv;
                         currentPanicList.add(currentEvent.getData().toString());
                         formattedCurrentPanicList = currentPanicList.toString()
                                 .replace("[", "<br/>\u2022")  //remove the left bracket
@@ -179,7 +178,7 @@ public class CalendarActivity extends AppCompatActivity {
                                 .trim();           //remove trailing spaces from partially initialized arrays
                     }
                 }
-
+                //**note events
                 for (Event noteEv : noteEvents) {
                     long t = noteEv.getTimeInMillis();
                     formatDate(t);
@@ -195,7 +194,7 @@ public class CalendarActivity extends AppCompatActivity {
                                 .trim();           //remove trailing spaces from partially initialized arrays
                     }
                 }
-
+                //**mood events
                 for (Event moodEv : moodEvents) {
                     long t = moodEv.getTimeInMillis();
                     formatDate(t);
@@ -204,7 +203,7 @@ public class CalendarActivity extends AppCompatActivity {
                         currentMoodEvent = moodEv;
                     }
                 }
-
+                //**symptom events
                 for (Event symptomEv : symptomEvents) {
                     long t = symptomEv.getTimeInMillis();
                     formatDate(t);
@@ -213,7 +212,7 @@ public class CalendarActivity extends AppCompatActivity {
                         currentSymptomEvent = symptomEv;
                     }
                 }
-
+                //**medication events
                 for (Event medEv : medEvents) {
                     long t = medEv.getTimeInMillis();
                     formatDate(t);
@@ -229,7 +228,7 @@ public class CalendarActivity extends AppCompatActivity {
                                 .trim();           //remove trailing spaces from partially initialized arrays
                     }
                 }
-
+                //if any of the above have events for the clicked day create the strings for the event(s)
                 if (panicBool == true || noteBool == true || moodBool == true || symptomBool == true || medBool == true) {
 
                     if (panicBool == true) {
@@ -246,23 +245,23 @@ public class CalendarActivity extends AppCompatActivity {
                     }
                     if (medBool == true) {
                         medOutput = "<br/><b>Med(s):</b> " + medCount + formattedCurrentMedList;
-
                     }
+                    //displaying strings created to user
                     displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> " + panicOutput + noteOutput + moodOutput + symptomOutput + medOutput));
-                    resetValues();
-                } else {
+                    resetValues(); //set values back to false
+                } else {//if the date selected has no events do:
                     Toast.makeText(context, "No Events Planned for that day", Toast.LENGTH_SHORT).show();
                     displayDataTv.setText("");
                 }
             }
 
             @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-                actionBar.setTitle(dateFormatMonth.format(firstDayOfNewMonth));
+            public void onMonthScroll(Date firstDayOfNewMonth) { //when moving through calendar months
+                actionBar.setTitle(dateFormatMonth.format(firstDayOfNewMonth)); //set action bar title to the month selected
             }
         });
 
-        //setting back btn to visible
+        //setting back btn in action bar to visible
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //floating home btn
@@ -279,10 +278,10 @@ public class CalendarActivity extends AppCompatActivity {
 
     }
 
-    //*Methods*
+    //*********METHODS************
 
+    //formatting date from milliseconds to day/month/year
     public void formatDate(long t) {
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(t);
         int mYear = calendar.get(Calendar.YEAR);
@@ -323,6 +322,8 @@ public class CalendarActivity extends AppCompatActivity {
         currentPanicList.clear();
     }
 
+    /*RETRIEVING PANIC/NOTE/MOOD/SYMPTOM AND MEDICATION DATES FOR USER X */
+    //retrieving dates to which a given user had a panic attack & adding to an array list of events which will then be displayed on calendar
     public void getPanicDate() {
         final Query panicQuery = panicAttackDb.orderByChild("userID").equalTo(userID);
         panicQuery.addChildEventListener(new ChildEventListener() {
@@ -355,12 +356,12 @@ public class CalendarActivity extends AppCompatActivity {
                             }
                         } else {
                         }
-
+                        //if each of the values arent null, create the event
                         if (panicLength != 0 & !loc.isEmpty() & milliseconds != 0) {
                             locLength = loc + " Length: " + panicLength + ".";
                             event = new Event(Color.RED, milliseconds, locLength);
                             compactCalendarView.addEvent(event);
-                            events.add(event);
+                            panicEvents.add(event);
                             loc = "";
                             panicLength = 0;
                             milliseconds = 0;
@@ -395,6 +396,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
+    //retrieving dates to which a given user wrote a note in the diary & adding to an array list of events which will then be displayed on calendar
     public void getNotes() {
         final Query notesQuery = notesDb.orderByChild("userID").equalTo(userID);
         notesQuery.addChildEventListener(new ChildEventListener() {
@@ -421,13 +423,14 @@ public class CalendarActivity extends AppCompatActivity {
                             }
                         } else {
                         }
-
+                        //if note and date arent empty create event
                         if (!note.isEmpty() && milliseconds != 0) {
                             String subDate = noteDate.substring(0, 10);
+                            //checking if any diary events are listed on the same date, if so make event icon transparent. only 1 blue icon per diary entry
                             if (!noteDate.contains(prevNoteDate) && !collectedDates.contains(subDate)) {
                                 noteEvent = new Event(Color.BLUE, milliseconds, note);
                                 compactCalendarView.addEvent(noteEvent);
-                                //adding event to array list of events
+                                //adding event to array list of panicEvents
                                 noteEvents.add(noteEvent);
                                 collectedDates.add(noteDate);
                             } else {
@@ -467,6 +470,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
+    //retrieving dates to which a given user entered mood to diary & adding to an array list of events which will then be displayed on calendar
     public void getMoods() {
         final Query moodsQuery = moodsDb.orderByChild("userID").equalTo(userID);
         moodsQuery.addChildEventListener(new ChildEventListener() {
@@ -478,69 +482,11 @@ public class CalendarActivity extends AppCompatActivity {
                         String key = child.getKey().toString();
                         String value = child.getValue().toString();
 
-                        if (key.equals("afraidCb") && value.equals("true")) {
-                            moodList.add("afraid");
+                        if(key.contains("Cb") && value.equals("true")){
+                            key=key.replace("Cb", "");
+                            moodList.add(key);
                         }
-                        if (key.equals("aggrevatedCb") && value.equals("true")) {
-                            moodList.add("aggrevated");
-                        }
-                        if (key.equals("angryCb") && value.equals("true")) {
-                            moodList.add("angry");
-                        }
-                        if (key.equals("anxiousCb") && value.equals("true")) {
-                            moodList.add("anxious");
-                        }
-                        if (key.equals("awkwardCb") && value.equals("true")) {
-                            moodList.add("awkward");
-                        }
-                        if (key.equals("braveCb") && value.equals("true")) {
-                            moodList.add("brave");
-                        }
-                        if (key.equals("calmCb") && value.equals("true")) {
-                            moodList.add("calm");
-                        }
-                        if (key.equals("confidentCb") && value.equals("true")) {
-                            moodList.add("confident");
-                        }
-                        if (key.equals("contentCb") && value.equals("true")) {
-                            moodList.add("content");
-                        }
-                        if (key.equals("depressedCb") && value.equals("true")) {
-                            moodList.add("depressed");
-                        }
-                        if (key.equals("discouragedCb") && value.equals("true")) {
-                            moodList.add("discouraged");
-                        }
-                        if (key.equals("distantCb") && value.equals("true")) {
-                            moodList.add("distant");
-                        }
-                        if (key.equals("energizedCb") && value.equals("true")) {
-                            moodList.add("energized");
-                        }
-                        if (key.equals("fatiguedCb") && value.equals("true")) {
-                            moodList.add("fatigued");
-                        }
-                        if (key.equals("gloomyCb") && value.equals("true")) {
-                            moodList.add("gloomy");
-                        }
-                        if (key.equals("grumpyCb") && value.equals("true")) {
-                            moodList.add("grumpy");
-                        }
-                        if (key.equals("grouchyCb") && value.equals("true")) {
-                            moodList.add("grouchy");
-                        }
-                        if (key.equals("happyCb") && value.equals("true")) {
-                            moodList.add("happy");
-                        }
-                        if (key.equals("hesitantCb") && value.equals("true")) {
-                            moodList.add("hesitant");
-                        }
-                        if (key.equals("impatientCb") && value.equals("true")) {
-                            moodList.add("impatient");
-                        }
-                        if (key.equals("insecureCb") && value.equals("true")) {
-                            moodList.add("insecure");
-                        }
+
                         if (key.equals("symptomDate")) {//&& value.contains(date)) {
                             moodDate = child.getValue().toString();
                             SimpleDateFormat f = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
@@ -605,6 +551,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
+    //retrieving dates to which a user x added symptoms to diary & adding to an array list of events which will then be displayed on calendar
     public void getSymptoms() {
         final Query symptomsQuery = symptomsDb.orderByChild("userID").equalTo(userID);
         symptomsQuery.addChildEventListener(new ChildEventListener() {
@@ -627,6 +574,7 @@ public class CalendarActivity extends AppCompatActivity {
                             }
                         } else {
                         }
+                        //gathering individual values
                         if (key.equals("value1") && !value.equals("0")) {
                             symptomList.add("acne: " + value + "/10");
                         }
@@ -661,6 +609,7 @@ public class CalendarActivity extends AppCompatActivity {
                                     .replace(",", "<br/>\u2022")  //remove commas
                                     .trim();           //remove trailing spaces from partially initialized arrays
                             String subDate = symptomDate.substring(0, 10);
+                            //checking if other events are on that date
                             if (!symptomDate.contains(prevSymptomDate) && !collectedDates.toString().contains(subDate)) {
                                 symptomEvent = new Event(Color.BLUE, milliseconds, formattedSymptomList);
                                 compactCalendarView.addEvent(symptomEvent);
@@ -703,6 +652,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
     }
 
+    //retrieving dates to which user x added medication to diary entry & adding to an array list of events which will then be displayed on calendar
     public void getMedication() {
         final Query medQuery = medicationDb.orderByChild("userID").equalTo(userID);
         medQuery.addChildEventListener(new ChildEventListener() {
@@ -735,6 +685,7 @@ public class CalendarActivity extends AppCompatActivity {
                             String dateTime = medDate.substring(10, 16);//date part only
                             String medInfo = med + " Dosage: " + medDosage + " Time: " + dateTime;
                             String subDate = medDate.substring(0, 10);
+                            //adding event whilst checking for other events for the selected date
                             if (!medDate.contains(prevMedDate) && !collectedDates.toString().contains(subDate)) {
                                 medEvent = new Event(Color.BLUE, milliseconds, medInfo);
                                 compactCalendarView.addEvent(medEvent);
@@ -744,7 +695,7 @@ public class CalendarActivity extends AppCompatActivity {
                                 otherMedEvent = new Event(Color.TRANSPARENT, milliseconds, medInfo);
                                 medEvents.add(otherMedEvent);
                             }
-                            prevMedDate = medDate.substring(0, 10);//date part only
+                            prevMedDate = medDate.substring(0, 10);// getting date part only
                             med = "";
                             medDosage = "";
                             milliseconds = 0;

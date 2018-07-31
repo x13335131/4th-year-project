@@ -3,30 +3,29 @@ package com.example.louis.prototype;
 import java.util.Date;
 
 /**
- * Created by louis on 25/06/2018.
+ * Created by louis on 30/07/2018.
  */
 
-public class ForumPost extends ForumPostId  {
+public class Comments {
 
-    public String post, userID;
-    public Date timestamp;
+    private String comment, userID;
+    private Date timestamp;
 
-  // public Timestamp timestamp;
+    public Comments() {
+    }
 
-    public ForumPost(){}
-
-    public ForumPost(String post, String userID,  Date timestamp) {
-        this.post = post;
+    public Comments(String comment, String userID, Date timestamp) {
+        this.comment = comment;
         this.userID = userID;
         this.timestamp = timestamp;
     }
 
-    public String getPost() {
-        return post;
+    public String getComment() {
+        return comment;
     }
 
-    public void setPost(String post) {
-        this.post = post;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getUserID() {
@@ -44,5 +43,4 @@ public class ForumPost extends ForumPostId  {
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
-
 }
