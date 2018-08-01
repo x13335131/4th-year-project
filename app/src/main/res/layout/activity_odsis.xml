@@ -20,7 +20,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -30,7 +30,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
-                android:text="Overall Depression Severity and Impairment Scale"
+                android:text="@string/odsisTV"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.16"
@@ -38,16 +38,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/editText15"
+                android:id="@+id/explanationOdsisTv"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:inputType="none|textMultiLine"
                 android:singleLine="false"
-                android:text="Rate yourself from 1-5 in each scenario over the past week, 5 being most severe "
+                android:text="@string/explanationOdsisTv"
                 android:textAlignment="center"
                 android:textSize="12sp"
                 android:textStyle="italic"
@@ -56,93 +55,101 @@
                 app:layout_constraintTop_toBottomOf="@+id/odsisTV" />
 
             <TextView
-                android:id="@+id/question1Txt"
+                android:id="@+id/question1OdsisTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
-                android:text="How often have you felt depressed"
+                android:text="@string/question1OdsisTxt"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText15" />
+                app:layout_constraintTop_toBottomOf="@+id/explanationOdsisTv"
+                android:layout_marginLeft="16dp" />
 
             <SeekBar
-                android:id="@+id/answer1"
+                android:id="@+id/answer1Odsis"
                 android:layout_width="match_parent"
                 android:layout_height="21dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/question1Txt" />
+                app:layout_constraintTop_toBottomOf="@+id/question1Txt"
+                android:layout_marginLeft="12dp" />
 
             <TextView
-                android:id="@+id/question2Txt"
+                android:id="@+id/question2OdsisTxt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="When you felt depressed, how intense or severe was your depression?"
+                android:text="@string/question2OdsisTxt"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/answer1" />
+                app:layout_constraintTop_toBottomOf="@+id/answer1"
+                android:layout_marginLeft="16dp" />
 
             <SeekBar
-                android:id="@+id/answer2"
+                android:id="@+id/answer2Odsis"
                 android:layout_width="match_parent"
                 android:layout_height="21dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/question2Txt" />
+                app:layout_constraintTop_toBottomOf="@+id/question2Txt"
+                android:layout_marginLeft="12dp" />
 
             <TextView
-                android:id="@+id/question3Txt"
+                android:id="@+id/question3OdsisTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="How often did you have difficulty engaging in or being interested in activities you normally enjoy because of depression?"
+                android:text="@string/question3OdsisTxt"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/answer2" />
+                app:layout_constraintTop_toBottomOf="@+id/answer2"
+                android:layout_marginLeft="16dp" />
 
             <SeekBar
-                android:id="@+id/answer3"
+                android:id="@+id/answer3Odsis"
                 android:layout_width="match_parent"
                 android:layout_height="21dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/question3Txt" />
+                app:layout_constraintTop_toBottomOf="@+id/question3Txt"
+                android:layout_marginLeft="12dp" />
 
             <TextView
-                android:id="@+id/question4Txt"
+                android:id="@+id/question4OdsisTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16px"
-                android:layout_marginTop="8px"
-                android:text="How much did your depression interfere with your ability to do the things you needed to do at work, at school, or at home?" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/question4OdsisTxt"
+                android:layout_marginLeft="16dp" />
 
             <SeekBar
-                android:id="@+id/answer4"
+                android:id="@+id/answer4Odsis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/question5Txt"
+                android:id="@+id/question5OdsisTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16px"
-                android:layout_marginTop="8px"
-                android:text="How much has depression interfered with your social life and relationships?" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/question5OdsisTxt"
+                android:layout_marginLeft="16dp" />
 
             <SeekBar
-                android:id="@+id/answer5"
+                android:id="@+id/answer5Odsis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/submit"
+                android:id="@+id/submitOdsis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Submit" />
+                android:text="@string/submitOdsis" />
 
         </LinearLayout>
 

@@ -9,33 +9,33 @@
     tools:context="com.example.louis.prototype.MyDiary$PlaceholderFragment">
 
     <TextView
-        android:id="@+id/task_Label"
+        android:id="@+id/med_task_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/section_label" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/saveNoteBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginBottom="76dp"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:text="@string/button2"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:text="@string/button2" />
 
     <EditText
-        android:id="@+id/editText10"
+        android:id="@+id/typeHereEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/task_Label"
-        android:layout_alignRight="@+id/task_Label"
-        android:layout_below="@+id/task_Label"
+        android:layout_alignEnd="@+id/med_task_label"
+        android:layout_alignRight="@+id/med_task_label"
+        android:layout_below="@+id/med_task_label"
         android:layout_marginTop="22dp"
         android:ems="10"
-        android:hint="write here"
+        android:hint="@string/typeHere"
         android:inputType="textMultiLine" />
 
 </RelativeLayout>

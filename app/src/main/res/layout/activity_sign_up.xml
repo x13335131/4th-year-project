@@ -13,7 +13,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="30dp"
-        android:text="Register"
+        android:text="@string/regTv"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -26,13 +26,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="34dp"
         android:ems="10"
-        android:hint="password"
+        android:hint="@string/passEt"
         android:inputType="textPassword"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="34dp"
         app:layout_constraintTop_toBottomOf="@+id/emailEt" />
 
     <EditText
@@ -43,30 +43,30 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="36dp"
         android:ems="10"
-        android:hint="confirm password"
+        android:hint="@string/confirmPassEt"
         android:inputType="textPassword"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passEt"
-        app:layout_constraintHorizontal_bias="0.503" />
+        app:layout_constraintTop_toBottomOf="@+id/passEt" />
 
     <EditText
         android:id="@+id/emailEt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="email"
-        android:inputType="textEmailAddress"
-        android:layout_marginTop="49dp"
-        app:layout_constraintTop_toBottomOf="@+id/regTv"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="49dp"
+        android:ems="10"
+        android:hint="@string/emailEt"
+        android:inputType="textEmailAddress"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.503" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/regTv" />
 
     <Button
-        android:id="@+id/regBtn"
+        android:id="@+id/registerBtn"
         android:layout_width="213dp"
         android:layout_height="51dp"
         android:layout_marginBottom="54dp"
@@ -74,7 +74,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
-        android:text="register"
+        android:text="@string/registerBtn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"

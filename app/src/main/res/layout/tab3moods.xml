@@ -9,10 +9,10 @@
 <!--
     tools:context="com.example.louis.prototype.MyDiary$PlaceholderFragment" -->
     <TextView
-        android:id="@+id/task_Label"
+        android:id="@+id/task_mood_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Check the boxes that describe how you felt today:"/>
+        android:text="@string/task_mood_label"/>
 
     <CheckBox
         android:id="@+id/afraidCb"
@@ -22,7 +22,7 @@
         android:layout_alignBottom="@+id/aggrevatedCb"
         android:layout_alignLeft="@+id/braveCb"
         android:layout_alignStart="@+id/braveCb"
-        android:text="Afraid" />
+        android:text="@string/afraidCb" />
 
     <CheckBox
         android:id="@+id/aggrevatedCb"
@@ -31,7 +31,7 @@
         android:layout_alignBaseline="@+id/angryCb"
         android:layout_alignBottom="@+id/angryCb"
         android:layout_centerHorizontal="true"
-        android:text="Aggrevated" />
+        android:text="@string/aggrevatedCb" />
 
     <CheckBox
         android:id="@+id/angryCb"
@@ -39,11 +39,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/task_Label"
+        android:layout_below="@+id/task_mood_label"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="43dp"
-        android:text="Angry" />
+        android:text="@string/angryCb" />
 
     <CheckBox
         android:id="@+id/anxiousCb"
@@ -53,7 +53,7 @@
         android:layout_alignBottom="@+id/awkwardCb"
         android:layout_alignLeft="@+id/angryCb"
         android:layout_alignStart="@+id/angryCb"
-        android:text="Anxious" />
+        android:text="@string/anxiousCb" />
 
     <CheckBox
         android:id="@+id/calmCb"
@@ -63,7 +63,7 @@
         android:layout_alignBottom="@+id/contentCb"
         android:layout_alignLeft="@+id/anxiousCb"
         android:layout_alignStart="@+id/anxiousCb"
-        android:text="Calm" />
+        android:text="@string/calmCb" />
 
     <CheckBox
         android:id="@+id/depressedCb"
@@ -73,7 +73,7 @@
         android:layout_alignStart="@+id/calmCb"
         android:layout_below="@+id/calmCb"
         android:layout_marginTop="16dp"
-        android:text="Depressed" />
+        android:text="@string/depressedCb" />
 
     <CheckBox
         android:id="@+id/energizedCb"
@@ -83,7 +83,7 @@
         android:layout_alignStart="@+id/depressedCb"
         android:layout_below="@+id/depressedCb"
         android:layout_marginTop="13dp"
-        android:text="Energized" />
+        android:text="@string/energizedCb" />
 
     <CheckBox
         android:id="@+id/grumpyCb"
@@ -93,7 +93,7 @@
         android:layout_alignStart="@+id/energizedCb"
         android:layout_below="@+id/energizedCb"
         android:layout_marginTop="12dp"
-        android:text="Grumpy" />
+        android:text="@string/grumpyCb" />
 
     <CheckBox
         android:id="@+id/hesitantCb"
@@ -103,13 +103,13 @@
         android:layout_alignStart="@+id/grumpyCb"
         android:layout_below="@+id/grumpyCb"
         android:layout_marginTop="13dp"
-        android:text="Hesitant" />
+        android:text="@string/hesitantCb" />
 
     <CheckBox
         android:id="@+id/impatientCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Impatient"
+        android:text="@string/impatientCb"
         android:layout_alignBaseline="@+id/hesitantCb"
         android:layout_alignBottom="@+id/hesitantCb"
         android:layout_alignLeft="@+id/grouchyCb"
@@ -119,7 +119,7 @@
         android:id="@+id/grouchyCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Grouchy"
+        android:text="@string/grouchyCb"
         android:layout_above="@+id/hesitantCb"
         android:layout_alignLeft="@+id/fatiguedCb"
         android:layout_alignStart="@+id/fatiguedCb" />
@@ -132,7 +132,7 @@
         android:layout_alignBottom="@+id/grouchyCb"
         android:layout_alignLeft="@+id/insecureCb"
         android:layout_alignStart="@+id/insecureCb"
-        android:text="Happy" />
+        android:text="@string/happyCb" />
 
     <CheckBox
         android:id="@+id/insecureCb"
@@ -152,7 +152,7 @@
         android:layout_alignBottom="@+id/discouragedCb"
         android:layout_alignLeft="@+id/contentCb"
         android:layout_alignStart="@+id/contentCb"
-        android:text="Distant" />
+        android:text="@string/distantCb" />
 
     <CheckBox
         android:id="@+id/confidentCb"
@@ -162,7 +162,7 @@
         android:layout_alignBottom="@+id/calmCb"
         android:layout_alignLeft="@+id/awkwardCb"
         android:layout_alignStart="@+id/awkwardCb"
-        android:text="Confident" />
+        android:text="@string/confidentCb" />
 
     <CheckBox
         android:id="@+id/contentCb"
@@ -172,7 +172,7 @@
         android:layout_alignStart="@+id/braveCb"
         android:layout_below="@+id/braveCb"
         android:layout_marginTop="20dp"
-        android:text="Content" />
+        android:text="@string/contentCb" />
 
     <CheckBox
         android:id="@+id/discouragedCb"
@@ -181,7 +181,7 @@
         android:layout_alignBottom="@+id/depressedCb"
         android:layout_alignLeft="@+id/awkwardCb"
         android:layout_alignStart="@+id/awkwardCb"
-        android:text="Discouraged" />
+        android:text="@string/discouragedCb" />
 
     <CheckBox
         android:id="@+id/fatiguedCb"
@@ -191,7 +191,7 @@
         android:layout_alignBottom="@+id/energizedCb"
         android:layout_alignLeft="@+id/discouragedCb"
         android:layout_alignStart="@+id/discouragedCb"
-        android:text="Fatigued" />
+        android:text="@string/fatiguedCb" />
 
 
     <CheckBox
@@ -218,11 +218,11 @@
         android:id="@+id/braveCb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Brave"
+        android:text="@string/braveCb"
         android:layout_alignBaseline="@+id/awkwardCb"
         android:layout_alignBottom="@+id/awkwardCb"
-        android:layout_alignRight="@+id/task_Label"
-        android:layout_alignEnd="@+id/task_Label" />
+        android:layout_alignRight="@+id/task_mood_label"
+        android:layout_alignEnd="@+id/task_mood_label" />
 
     <Button
         android:id="@+id/submitBtn"
@@ -233,6 +233,6 @@
         android:layout_below="@+id/hesitantCb"
         android:layout_marginTop="14dp"
         android:background="@color/colorPrimary"
-        android:text="Submit" />
+        android:text="@string/submitBtn" />
 
 </RelativeLayout>

@@ -33,8 +33,8 @@ public class Tab1Notes extends Fragment {
                              Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.tab1notes, container, false);
-        editTextNote = (EditText) rootView.findViewById(R.id.editText10);
-        buttonSave = (Button) rootView.findViewById(R.id.button2);
+        editTextNote = (EditText) rootView.findViewById(R.id.typeHereEt);
+        buttonSave = (Button) rootView.findViewById(R.id.saveNoteBtn);
 
         buttonSave.setOnClickListener(getButtonOnClickListener());
         databaseNotes = FirebaseDatabase.getInstance().getReference("notes");

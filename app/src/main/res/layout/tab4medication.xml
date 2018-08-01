@@ -9,48 +9,49 @@
 
     <TextView
 
-        android:id="@+id/task_Label"
+        android:id="@+id/med_task_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enter any medication taken today and the amount (ie. number of tablets):"
+        android:text="@string/med_task_label"
         android:textSize="18sp" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/enterMedEt"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/task_Label"
+        android:layout_below="@+id/med_task_label"
         android:layout_marginTop="89dp"
         android:ems="10"
-        android:hint="eg. Zanex, Anti-depressants etc"
+        android:hint="@string/enterMedEt"
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/editText7"
+        android:id="@+id/enterNumMedEt"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/editText4"
-        android:layout_alignBottom="@+id/editText4"
-        android:layout_alignEnd="@+id/task_Label"
-        android:layout_alignRight="@+id/task_Label"
+        android:layout_alignBaseline="@+id/enterMedEt"
+        android:layout_alignBottom="@+id/enterMedEt"
+        android:layout_alignEnd="@+id/med_task_label"
+        android:layout_alignRight="@+id/med_task_label"
         android:ems="10"
+        android:hint="@string/enterNumMedEt"
         android:inputType="number|numberDecimal"
         android:textAlignment="center" />
 
     <Button
-        android:id="@+id/button9"
+        android:id="@+id/addBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/editText4"
+        android:layout_below="@+id/enterMedEt"
         android:layout_marginLeft="18dp"
         android:layout_marginStart="18dp"
         android:layout_marginTop="36dp"
         android:background="@color/colorPrimary"
-        android:text="Add" />
+        android:text="@string/addBtn" />
 
     <TextView
         android:id="@+id/addedMedTv"
@@ -58,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/button9"
+        android:layout_below="@+id/addBtn"
         android:layout_marginTop="48dp" />
 
 </RelativeLayout>

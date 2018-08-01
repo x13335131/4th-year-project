@@ -22,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -59,10 +58,10 @@ public class Tab4Medication extends Fragment {
         userID = currentFirebaseUser.getUid();
         System.out.println("sub date "+subDate);
         databaseMed = database.getReference("meds");
-        editTextMed = (EditText) rootView.findViewById(R.id.editText4);
-        editTextMedDosage = (EditText) rootView.findViewById(R.id.editText7);
+        editTextMed = (EditText) rootView.findViewById(R.id.enterMedEt);
+        editTextMedDosage = (EditText) rootView.findViewById(R.id.enterNumMedEt);
         addedMedsTv = (TextView) rootView.findViewById(R.id.addedMedTv);
-        buttonSave = (Button) rootView.findViewById(R.id.button9);
+        buttonSave = (Button) rootView.findViewById(R.id.addBtn);
 
         medicationList = new ArrayList<String>();
         buttonSave.setOnClickListener(getButtonOnClickListener());

@@ -48,7 +48,7 @@
 
     <TextView
         android:id="@+id/diaryEntryBlueTv"
-        android:layout_width="20dp"
+        android:layout_width="10dp"
         android:layout_height="14dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -58,7 +58,7 @@
 
     <TextView
         android:id="@+id/panicRedTv"
-        android:layout_width="20dp"
+        android:layout_width="10dp"
         android:layout_height="14dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -68,8 +68,8 @@
 
     <TextView
         android:id="@+id/panicTv"
-        android:layout_width="wrap_content"
-        android:layout_height="23dp"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/negativeTv"
@@ -80,8 +80,8 @@
 
     <TextView
         android:id="@+id/diaryTv"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/diaryEntryTv"
@@ -98,7 +98,7 @@
         android:layout_marginEnd="84dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="9dp"
-        android:maxLines="5"
+        android:maxLines="10"
         android:paddingLeft="2px"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -110,7 +110,7 @@
 
     <TextView
         android:id="@+id/selectedDateGreenTv"
-        android:layout_width="20dp"
+        android:layout_width="10dp"
         android:layout_height="14dp"
         android:layout_marginEnd="4dp"
         android:layout_marginTop="8dp"
@@ -120,8 +120,8 @@
 
     <TextView
         android:id="@+id/selectedDateTv"
-        android:layout_width="wrap_content"
-        android:layout_height="15dp"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/selectedDateTv"
@@ -132,10 +132,10 @@
 
     <TextView
         android:id="@+id/todaysDatePinkTv"
-        android:layout_width="20dp"
+        android:layout_width="10dp"
         android:layout_height="14dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorAccent"
         app:layout_constraintEnd_toStartOf="@+id/todaysDateTv"
@@ -145,7 +145,7 @@
 
     <TextView
         android:id="@+id/todaysDateTv"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"

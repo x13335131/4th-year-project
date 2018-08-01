@@ -7,9 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 public class Social extends AppCompatActivity {
 
     @Override
@@ -19,7 +16,7 @@ public class Social extends AppCompatActivity {
             setContentView(R.layout.activity_social);
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            Button b = (Button) findViewById(R.id.button17); //social button
+            Button b = (Button) findViewById(R.id.forumBtn); //social button
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
 

@@ -96,15 +96,17 @@ public class CalendarActivity extends AppCompatActivity {
         currentMedList = new ArrayList<String>();
         collectedDates = new ArrayList<String>();
 
-        Calendar c = Calendar.getInstance();
+       /* Calendar c = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM-yyyy");
         String date = dateFormat.format(c.getTime());
         //action bar
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
        // actionBar.setTitle(null);
-        actionBar.setTitle(date);
-
+        actionBar.setTitle(date);*/
+       final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setTitle(null);
         //setting views
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         compactCalendarView.setUseThreeLetterAbbreviation(true);

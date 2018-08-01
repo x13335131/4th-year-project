@@ -35,7 +35,7 @@ public class SignUp extends AppCompatActivity{
         et_email.requestFocus();
         et_password = (EditText) findViewById(R.id.passEt);
         et_cpassword = (EditText) findViewById(R.id.confirmPassEt);
-        regBtn = (Button) findViewById(R.id.regBtn);
+        regBtn = (Button) findViewById(R.id.registerBtn);
         regBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){

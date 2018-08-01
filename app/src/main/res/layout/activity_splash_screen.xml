@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/splashLogo"
-        android:layout_width="277dp"
-        android:layout_height="257dp"
+        android:layout_width="309dp"
+        android:layout_height="276dp"
         android:layout_marginBottom="24dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
