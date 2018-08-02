@@ -122,5 +122,7 @@
     <string name="enterMedEt">z.B. Xanax, Antidepressiva usw</string>
     <string name="med_task_label">Geben Sie alle heute eingenommenen Medikamente und die Menge (z. B. Anzahl der Tabletten) ein:</string>
     <string name="enterNumMedEt">1</string>
+    <string name="statsDisplayTv">Keine Daten zum Anzeigen</string>
+    <string name="post_delete_btn">delete post</string>
 
 </resources>

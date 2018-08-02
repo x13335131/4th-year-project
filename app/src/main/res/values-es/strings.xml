@@ -122,5 +122,7 @@
     <string name="enterMedEt">p.ej. Xanax, antidepresivos, etc.</string>
     <string name="med_task_label">Ingrese cualquier medicamento tomado hoy y la cantidad (es decir, el número de tabletas):</string>
     <string name="enterNumMedEt">1</string>
+    <string name="statsDisplayTv">no hay información para mostrar</string>
+    <string name="post_delete_btn">delete post</string>
 
 </resources>

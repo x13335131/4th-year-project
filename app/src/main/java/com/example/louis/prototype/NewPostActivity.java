@@ -14,10 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -82,7 +79,7 @@ public class NewPostActivity extends AppCompatActivity {
                         databasePost.child(id).setValue(userMap);
 
                         Toast.makeText(NewPostActivity.this, "post added", Toast.LENGTH_LONG).show();
-                        Intent forumIntent = new Intent(getApplicationContext(), QandA.class);
+                        Intent forumIntent = new Intent(getApplicationContext(), ForumActivity.class);
                         startActivity(forumIntent);
                     }
 

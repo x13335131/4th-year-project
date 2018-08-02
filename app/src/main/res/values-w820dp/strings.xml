@@ -59,4 +59,6 @@
     <string name="enterMedEt">eg. Zanex, Anti-depressants etc</string>
     <string name="med_task_label">Enter any medication taken today and the amount (ie. number of tablets):</string>
     <string name="enterNumMedEt">1</string>
+    <string name="statsDisplayTv">No data to display</string>
+    <string name="post_delete_btn">delete post</string>
 </resources>

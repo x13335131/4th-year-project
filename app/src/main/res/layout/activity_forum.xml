@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:design="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.louis.prototype.QandA">
+    tools:context="com.example.louis.prototype.ForumActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/main_toolbar"

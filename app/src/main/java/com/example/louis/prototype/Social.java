@@ -16,7 +16,8 @@ public class Social extends AppCompatActivity {
             setContentView(R.layout.activity_social);
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            Button b = (Button) findViewById(R.id.forumBtn); //social button
+            Button forumBtn = (Button) findViewById(R.id.forumBtn); //forum button
+            Button statsBtn = (Button) findViewById(R.id.statisticsBtn); //stats button
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
 
@@ -29,15 +30,24 @@ public class Social extends AppCompatActivity {
                                        }
                                    }
             );
-            b.setOnClickListener(new View.OnClickListener() {
+            forumBtn.setOnClickListener(new View.OnClickListener() {
 
                                      @Override
                                      public void onClick(View v) {
-                                         Intent i5 = new Intent(getApplicationContext(), QandA.class);
-                                         startActivity(i5);
+                                         Intent forumIntent = new Intent(getApplicationContext(), ForumActivity.class);
+                                         startActivity(forumIntent);
                                      }
                                  }
             );
+            statsBtn.setOnClickListener(new View.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent statsIntent = new Intent(getApplicationContext(), StatsActivity.class);
+                                            startActivity(statsIntent);
+                                        }
+                                    }
+             );
         }
     @Override
     public boolean onSupportNavigateUp() {

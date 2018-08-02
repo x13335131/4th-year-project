@@ -2,29 +2,25 @@ package com.example.louis.prototype;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -40,14 +36,16 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
     private Context context;
     DatabaseReference databaseUsername;
     private FirebaseAuth firebaseAuth;
-    private String userid;
+    private String currentUserId;
     private FirebaseDatabase database;
-    DatabaseReference forumComments;
+    DatabaseReference forumComments, forumPosts;
 
 
     public ForumRecyclerAdapter(List<ForumPost> post_list){
         this.post_list = post_list;
     }
+
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_list_item,parent, false);
@@ -55,22 +53,30 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
         database = FirebaseDatabase.getInstance();
         databaseUsername = FirebaseDatabase.getInstance().getReference("username");
         firebaseAuth = FirebaseAuth.getInstance();
+        synchronized(post_list){
+            System.out.println("in here");
+            post_list.notify();
+        }
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-       // holder.setIsRecyclable(false);
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.setIsRecyclable(false);
         String content_data = post_list.get(position).getPost();
         System.out.println("postList: "+post_list.toString());
         holder.setContextText(content_data);
         final String forumPostId = post_list.get(position).ForumPostId;
         System.out.println("Forum post id:"+forumPostId);
-        final String userID = post_list.get(position).getUserID();
-        System.out.println("post_list_user id: "+userID);
-        userid = firebaseAuth.getCurrentUser().getUid();
+        final String forumUserId = post_list.get(position).getUserID();
+        System.out.println("post_list_user id: "+forumUserId);
+        currentUserId = firebaseAuth.getCurrentUser().getUid();
 
-        final Query userQuery = databaseUsername.orderByChild("userID").equalTo(userID);
+        if(forumUserId.equals(currentUserId)){
+            holder.post_delete_btn.setEnabled(true);
+            holder.post_delete_btn.setVisibility(View.VISIBLE);
+        }
+        final Query userQuery = databaseUsername.orderByChild("userID").equalTo(forumUserId);
 
 
        userQuery.addChildEventListener(new ChildEventListener() {
@@ -186,6 +192,22 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
 
             }
         });
+
+        holder.post_delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                forumPosts = database.getReferenceFromUrl("https://mymentalhealthtracker.firebaseio.com/post/");
+
+                final Task<Void> deleteUserForumPost = forumPosts.child(forumPostId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        post_list.remove(position);
+
+                    }
+                });
+
+        }
+    });
     }
 //comments feature
     @Override
@@ -201,11 +223,14 @@ public class ForumRecyclerAdapter extends RecyclerView.Adapter<ForumRecyclerAdap
         private TextView dateView;
         private TextView commentCount;
         private Button forumCommentBtn;
+        Button post_delete_btn;
+
         public ViewHolder(View itemView) {
             super(itemView);
             mView=itemView;
 
             forumCommentBtn= (Button) mView.findViewById(R.id.forum_commentBtn);
+            post_delete_btn = (Button) mView.findViewById(R.id.post_delete_btn);
         }
         public void setContextText(String text){
             contentView = (TextView) mView.findViewById(R.id.post_content);

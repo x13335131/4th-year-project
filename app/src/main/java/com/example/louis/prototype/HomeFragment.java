@@ -54,14 +54,24 @@ public class HomeFragment extends Fragment {
         Query firstQuery = databasePost.orderByChild("timestamp");//.limitToLast(3);
         firstQuery.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {synchronized(post_list) {
+                post_list.clear();
+                post_list.notify();
+            }
                 for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
 
                     String forumPostId = postSnapshot.getKey();
+
+
                     // ForumPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
                     ForumPost fp = postSnapshot.getValue(ForumPost.class).withId(forumPostId);
+                   post_list_view.getRecycledViewPool().clear();
+                    forumRecyclerAdapter.notifyDataSetChanged();
+
                     //ForumPost fp = postSnapshot.getValue(ForumPost.class);
                     post_list.add(fp);
+
                     forumRecyclerAdapter.notifyDataSetChanged();
                 }
                 Collections.reverse(post_list); //in decending order

@@ -13,9 +13,8 @@ import android.view.View;
 import android.support.design.widget.BottomNavigationView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-public class QandA extends AppCompatActivity {
+public class ForumActivity extends AppCompatActivity {
     private android.support.v7.widget.Toolbar mainToolbar;
 
     private FirebaseAuth mAuth;
@@ -30,7 +29,7 @@ public class QandA extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-            setContentView(R.layout.activity_qand);
+            setContentView(R.layout.activity_forum);
             mainToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.main_toolbar);
             setSupportActionBar(mainToolbar);
 
@@ -53,7 +52,7 @@ public class QandA extends AppCompatActivity {
             addPostBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent newPostIntent = new Intent(QandA.this, NewPostActivity.class);
+                    Intent newPostIntent = new Intent(ForumActivity.this, NewPostActivity.class);
                     startActivity(newPostIntent);
 
                 }
@@ -103,7 +102,7 @@ public class QandA extends AppCompatActivity {
                 return true;
 
             case R.id.action_settings_btn:
-                Intent settingsIntent = new Intent(QandA.this, SetupActivity.class);
+                Intent settingsIntent = new Intent(ForumActivity.this, SetupActivity.class);
                 startActivity(settingsIntent);
 
                 return true;
@@ -118,7 +117,7 @@ public class QandA extends AppCompatActivity {
     }
 
     private void sendToLogin() {
-        Intent loginIntent = new Intent(QandA.this, LoginActivity.class);
+        Intent loginIntent = new Intent(ForumActivity.this, LoginActivity.class);
         startActivity(loginIntent);
         finish();
     }
