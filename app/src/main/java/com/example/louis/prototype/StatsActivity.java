@@ -11,11 +11,13 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import java.util.Locale;
 
 public class StatsActivity extends AppCompatActivity {
 
+    private android.support.v7.widget.Toolbar mainToolbar;
     DatabaseReference panicAttackDb, moodsDb;
     FirebaseDatabase database;
     String todaysDate;
@@ -68,27 +71,27 @@ public class StatsActivity extends AppCompatActivity {
     int impatientCbCount=0;
     int insecureCbCount =0;
 
-    float percentageAfraid;
-    float percentageAggrevated;
-    float percentageAngry;
-    float percentageAnxious;
-    float percentageAwkward;
-    float  percentageBrave;
-    float  percentageCalm;
-    float  percentageConfident;
-    float  percentageContent;
-    float percentageDepressed;
-    float percentageDiscouraged;
-    float percentageDistant;
-    float percentageEnergized;
-    float percentageFatigued;
-    float percentageGloomy;
-    float percentageGrumpy;
-    float percentageGrouchy;
-    float percentageHappy;
-    float percentageHesitant;
-    float percentageImpatient;
-    float  percentageInsecure;
+    int percentageAfraid;
+    int percentageAggrevated;
+    int percentageAngry;
+    int percentageAnxious;
+    int percentageAwkward;
+    int  percentageBrave;
+    int  percentageCalm;
+    int  percentageConfident;
+    int  percentageContent;
+    int percentageDepressed;
+    int percentageDiscouraged;
+    int percentageDistant;
+    int percentageEnergized;
+    int percentageFatigued;
+    int percentageGloomy;
+    int percentageGrumpy;
+    int percentageGrouchy;
+    int percentageHappy;
+    int percentageHesitant;
+    int percentageImpatient;
+    int  percentageInsecure;
 
     boolean isAfraid;
     boolean isAggrevated;
@@ -111,13 +114,20 @@ public class StatsActivity extends AppCompatActivity {
     boolean isHesitant;
     boolean isImpatient;
     boolean  isInsecure;
-int childCount;
+int childCount=0;
 String moodString;
+    int max = 0;
+    String moodTitle="";
+    String mostCommonMood;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
+        mainToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mainToolbar);
+        getSupportActionBar().setTitle("Statistics");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);
         geocoder = new Geocoder(StatsActivity.this, Locale.getDefault());
@@ -133,6 +143,17 @@ String moodString;
         getCurrentLocation();
         getPanicAttacks();
         getMoodCount();
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+
+                                   @Override
+                                   public void onClick(View v) {
+                                       Intent i8 = new Intent(getApplicationContext(), MainActivity.class);
+                                       startActivity(i8);
+                                   }
+                               }
+        );
        thread = new Thread() {
 
             @Override
@@ -146,7 +167,8 @@ String moodString;
                             // Stuff that updates the UI
                             System.out.println("displaying text..");
                             displayStatsTv.setText(Html.fromHtml("<h2>Panic Attacks</h2> "+panicText+" <br /> The total number of panic attacks in <i>"+userCountryName+"</i> is: "+countryPanicCount
-                            + "<br /> The total number of panic attacks today in <i>"+userCountryName+"</i> is "+todayCountryPanicCount+"<br /><h2>Moods</h2>"+moodString));
+                            + "<br /> The total number of panic attacks today in <i>"+userCountryName+"</i> is "+todayCountryPanicCount+"<br /><h2>Moods</h2>"
+                                    +" most common mood type today: "+mostCommonMood+" <br/>"+moodString));
 
                         }
                     });
@@ -196,8 +218,6 @@ String moodString;
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 resetValues();
-                childCount= childCount+1;
-                System.out.println("CHILDDD"+childCount);
                  try {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         //getting key & value from db
@@ -268,6 +288,8 @@ String moodString;
                            isInsecure=true;
                         }
                         if(key.equals("symptomDate") && value.contains(todaysDate)){
+                            max=0;
+                            childCount= childCount+1;
                             if (isAfraid==true) {
                                 afraidCbCount = afraidCbCount + 1;
                             }
@@ -334,55 +356,117 @@ String moodString;
                         }
 
                     }
-                     percentageAfraid = (float) ((afraidCbCount * 100) / childCount);
+                     percentageAfraid = (int) ((afraidCbCount * 100) / childCount);
+                    getMax(percentageAfraid, "afraid");
                      System.out.println("checkbox 1: " + afraidCbCount + " percentage: " + percentageAfraid);
-                     percentageAggrevated = (float) ((aggrevatedCbCount * 100) / childCount);
+
+                     percentageAggrevated = (int) ((aggrevatedCbCount * 100) / childCount);
+                     getMax(percentageAggrevated, "aggrevated");
                      System.out.println("checkbox 2: " + aggrevatedCbCount + " percentage: " + percentageAggrevated);
-                     percentageAngry = (float) ((angryCbCount * 100) / childCount);
+
+                     percentageAngry = (int) ((angryCbCount * 100) / childCount);
+                     getMax(percentageAngry, "angry");
                      System.out.println("checkbox 3: " + angryCbCount + " percentage: " + percentageAngry);
-                     percentageAnxious = (float) ((anxiousCbCount * 100) / childCount);
+
+                     percentageAnxious = (int) ((anxiousCbCount * 100) / childCount);
+                     System.out.println("choooooooo "+childCount);
+                     getMax(percentageAnxious, "anxious");
                      System.out.println("checkbox 4: " + anxiousCbCount + " percentage: " + percentageAnxious);
-                     percentageAwkward = (float) ((awkwardCbCount * 100) / childCount);
+
+                     percentageAwkward = (int) ((awkwardCbCount * 100) / childCount);
+                     getMax(percentageAwkward, "awkward");
                      System.out.println("checkbox 5: " + awkwardCbCount + " percentage: " + percentageAwkward);
-                     percentageBrave = (float) ((braveCbCount * 100) / childCount);
+
+                     percentageBrave = (int) ((braveCbCount * 100) / childCount);
+                     getMax(percentageBrave, "brave");
                      System.out.println("checkbox 6: " + braveCbCount + " percentage: " + percentageBrave);
-                     percentageCalm = (float) ((calmCbCount * 100) / childCount);
+
+                     percentageCalm = (int) ((calmCbCount * 100) / childCount);
+                     getMax(percentageAggrevated, "brave");
                      System.out.println("checkbox 7: " + calmCbCount + " percentage: " + percentageCalm);
-                     percentageConfident = (float) ((confidentCbCount * 100) / childCount);
+
+                     percentageConfident = (int) ((confidentCbCount * 100) / childCount);
+                     getMax(percentageConfident, "confident");
                      System.out.println("checkbox 8: " + confidentCbCount + " percentage: " + percentageConfident);
-                     percentageContent = (float) ((contentCbCount * 100) / childCount);
+
+                     percentageContent = (int) ((contentCbCount * 100) / childCount);
+                     getMax(percentageContent, "content");
                      System.out.println("checkbox 9: " + contentCbCount + " percentage: " + percentageContent);
-                     percentageDepressed = (float) ((depressedCbCount * 100) / childCount);
+
+                     percentageDepressed = (int) ((depressedCbCount * 100) / childCount);
+                     getMax(percentageDepressed, "depressed");
                      System.out.println("checkbox 10: " + depressedCbCount + " percentage: " + percentageDepressed);
-                     percentageDiscouraged = (float) ((discouragedCbCount * 100) / childCount);
+
+                     percentageDiscouraged = (int) ((discouragedCbCount * 100) / childCount);
+                     getMax(percentageDiscouraged, "discouraged");
                      System.out.println("checkbox 11: " + discouragedCbCount + " percentage: " + percentageDiscouraged);
-                     percentageDistant = (float) ((distantCbCount * 100) / childCount);
+
+                     percentageDistant = (int) ((distantCbCount * 100) / childCount);
+                     getMax(percentageDistant, "distant");
                      System.out.println("checkbox 12: " + distantCbCount + " percentage: " + percentageDistant);
-                     percentageEnergized = (float) ((energizedCbCount * 100) / childCount);
+
+                     percentageEnergized = (int) ((energizedCbCount * 100) / childCount);
+                     getMax(percentageEnergized, "energized");
                      System.out.println("checkbox 13: " + energizedCbCount + " percentage: " + percentageEnergized);
-                     percentageFatigued = (float) ((fatiguedCbCount * 100) / childCount);
+
+                     percentageFatigued = (int) ((fatiguedCbCount * 100) / childCount);
+                     getMax(percentageFatigued, "fatigued");
                      System.out.println("checkbox 14: " + fatiguedCbCount + " percentage: " + percentageFatigued);
-                     percentageGloomy = (float) ((gloomyCbCount * 100) / childCount);
+
+                     percentageGloomy = (int) ((gloomyCbCount * 100) / childCount);
+                     getMax(percentageGloomy, "gloomy");
                      System.out.println("checkbox 15: " + gloomyCbCount + " percentage: " + percentageGloomy);
-                     percentageGrumpy = (float) ((grumpyCbCount * 100) / childCount);
+
+                     percentageGrumpy = (int) ((grumpyCbCount * 100) / childCount);
+                     getMax(percentageGrumpy, "grumpy");
                      System.out.println("checkbox 16: " + grumpyCbCount + " percentage: " + percentageGrumpy);
-                     percentageGrouchy = (float) ((grouchyCbCount * 100) / childCount);
+
+                     percentageGrouchy = (int) ((grouchyCbCount * 100) / childCount);
+                     getMax(percentageGrouchy, "grouchy");
                      System.out.println("checkbox 17: " + grouchyCbCount + " percentage: " + percentageGrouchy);
-                     percentageHappy = (float) ((happyCbCount * 100) / childCount);
+
+                     percentageHappy = (int) ((happyCbCount * 100) / childCount);
+                     getMax(percentageHappy, "happy");
                      System.out.println("checkbox 18: " + happyCbCount + " percentage: " + percentageHappy);
-                     percentageHesitant = (float) ((hesitantCbCount * 100) / childCount);
+
+                     percentageHesitant = (int) ((hesitantCbCount * 100) / childCount);
+                     getMax(percentageHesitant, "hesitant");
                      System.out.println("checkbox 19: " + hesitantCbCount + " percentage: " + percentageHesitant);
-                     percentageImpatient = (float) ((impatientCbCount * 100) / childCount);
+
+                     percentageImpatient = (int) ((impatientCbCount * 100) / childCount);
+                     getMax(percentageImpatient, "impatient");
                      System.out.println("checkbox 20: " + impatientCbCount + " percentage: " + percentageImpatient);
-                     percentageInsecure = (float) ((insecureCbCount * 100) / childCount);
+
+                     percentageInsecure = (int) ((insecureCbCount * 100) / childCount);
+                     getMax(percentageInsecure, "insecure");
                      System.out.println("checkbox 21: " + insecureCbCount + " percentage: " + percentageInsecure);
+
                      System.out.println("-------------------------------------");
 
-                     moodString= "Afraid:"+percentageAfraid +"<br/>Aggrevated: "+ percentageAggrevated+"<br/> Angry: "+percentageAngry+"<br/> Anxious: "+percentageAnxious+"<br /> Awkward: "+percentageAwkward
-                             +"<br /> Brave: "+percentageBrave+"<br /> Calm: "+percentageCalm+"<br /> Confident: "+percentageConfident+"<br /> Content: "+percentageContent +
-                            "<br /> Depressed: "+percentageDepressed+"<br /> Discouraged: "+percentageDiscouraged+"<br /> Distant: "+percentageDistant+"<br /> Energized: "+percentageEnergized +
-                             "<br /> Fatigued: "+percentageFatigued+"<br /> Gloomy: "+percentageGloomy+"<br /> Grumpy: "+percentageGrumpy+"<br /> Grouchy"+percentageGrouchy+"<br /> Happy "+percentageHappy +
-                             "<br /> Hesitant: "+percentageHesitant+"<br /> Impatient: "+percentageImpatient+"<br/> Insecure: "+percentageInsecure;
+                    System.out.println("CHILD COUNT"+childCount);
+
+
+                     moodString= " "+percentageAfraid +"% of people are feeling afraid. <br/>"
+                             + percentageAggrevated+"% of people are feeling aggrevated. <br/> "
+                             +percentageAngry+"% of people are feeling angry.<br/>"
+                             +percentageAnxious+"% of people are feeling anxious.<br/>"
+                             +percentageAwkward +"% of people are feeling awkward. <br /> "
+                             +percentageBrave+"% of people are feeling brave. <br />"
+                             +percentageCalm+"% of people are feeling calm. <br />"
+                             +percentageConfident+"% of people are feeling confident. <br />"
+                             +percentageContent +"% of people are feeling content. <br /> "
+                             +percentageDepressed+"% of people are feeling depressed. <br /> "
+                             +percentageDiscouraged+"% of people are feeling discouraged. <br />"
+                             +percentageDistant+"% of people are feeling distant. <br /> "
+                             +percentageEnergized + "% of people are feeling energized. <br />"
+                             +percentageFatigued+"% of people are feeling fatigued. <br />"
+                             +percentageGloomy+"% of people are feeling gloomy. <br /> "
+                             +percentageGrumpy+"% of people are feeling grumpy. <br /> "
+                             +percentageGrouchy+"% of people are feeling grouchy. <br />"
+                             +percentageHappy +"% of people are feeling happy. <br /> "
+                             +percentageHesitant+"% of people are feeling hesitant. <br /> "
+                             +percentageImpatient+"% of people are feeling impatient. <br/> "
+                             +percentageInsecure+"% of people are feeling insecure.";
                  } catch (Exception e) {
                     System.out.println("error in capturing panic attacks "+e);
                 }
@@ -409,6 +493,17 @@ String moodString;
 
             }
         });
+    }
+    public void getMax(int value, String name){
+        System.out.println("value: "+value+" name: "+name);
+        int val = value;
+        String n = name;
+        if (val >= max) {
+            max=value;
+            moodTitle=n;
+            System.out.println("max: "+max+" mood title "+moodTitle);
+            mostCommonMood="With a total of "+max+"% of people feeling "+moodTitle+".";
+        }
     }
 
     private void resetValues() {
@@ -625,4 +720,11 @@ String moodString;
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 }

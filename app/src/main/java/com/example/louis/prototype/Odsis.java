@@ -31,12 +31,12 @@ public class Odsis extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_odsis);
 
-        seekbar1 = (SeekBar)findViewById(R.id.answer1);
-        seekbar2 = (SeekBar)findViewById(R.id.answer2);
-        seekbar3 = (SeekBar)findViewById(R.id.answer3);
-        seekbar4 = (SeekBar)findViewById(R.id.answer4);
-        seekbar5 = (SeekBar)findViewById(R.id.answer5);
-        Button submit = (Button)findViewById(R.id.submit); //to oasis and odsis
+        seekbar1 = (SeekBar)findViewById(R.id.answer1Odsis);
+        seekbar2 = (SeekBar)findViewById(R.id.answer2Odsis);
+        seekbar3 = (SeekBar)findViewById(R.id.answer3Odsis);
+        seekbar4 = (SeekBar)findViewById(R.id.answer4Odsis);
+        seekbar5 = (SeekBar)findViewById(R.id.answer5Odsis);
+        Button submit = (Button)findViewById(R.id.submitOdsis); //to oasis and odsis
         databaseOdsis = FirebaseDatabase.getInstance().getReference("odsis");
         //set maximum value
         seekbar1.setMax(5);

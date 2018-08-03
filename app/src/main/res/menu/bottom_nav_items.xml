@@ -9,8 +9,4 @@
             android:id="@+id/menu_notifications"
             android:title="notifications"
             android:icon="@mipmap/ic_notification" />
-        <item
-            android:id="@+id/menu_account"
-            android:icon="@mipmap/ic_account"
-            android:title="account" />
 </menu>

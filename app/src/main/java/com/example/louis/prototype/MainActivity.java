@@ -404,6 +404,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.more_info_btn:
+            Intent infoIntent = new Intent(MainActivity.this, InformationActivity.class);
+            startActivity(infoIntent);
+            return true;
+
             case R.id.action_logout_btn:
                 logOut();
                 return true;

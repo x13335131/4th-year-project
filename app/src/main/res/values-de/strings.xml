@@ -123,6 +123,8 @@
     <string name="med_task_label">Geben Sie alle heute eingenommenen Medikamente und die Menge (z. B. Anzahl der Tabletten) ein:</string>
     <string name="enterNumMedEt">1</string>
     <string name="statsDisplayTv">Keine Daten zum Anzeigen</string>
-    <string name="post_delete_btn">delete post</string>
+    <string name="post_delete_btn">Beitrag entfernen</string>
+    <string name="more_info_btn">Informationen</string>
+    <string name="guide_tv">guide to using the app</string>
 
 </resources>

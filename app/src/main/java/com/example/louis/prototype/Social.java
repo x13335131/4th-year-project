@@ -16,6 +16,7 @@ public class Social extends AppCompatActivity {
             setContentView(R.layout.activity_social);
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Social");
             Button forumBtn = (Button) findViewById(R.id.forumBtn); //forum button
             Button statsBtn = (Button) findViewById(R.id.statisticsBtn); //stats button
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -24,8 +25,6 @@ public class Social extends AppCompatActivity {
                                        @Override
                                        public void onClick(View v) {
                                            Intent i8 = new Intent(getApplicationContext(), MainActivity.class);
-
-
                                            startActivity(i8);
                                        }
                                    }

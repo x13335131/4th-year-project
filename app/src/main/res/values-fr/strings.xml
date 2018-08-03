@@ -123,6 +123,8 @@
     <string name="med_task_label">Enter any medication taken today and the amount (ie. number of tablets):</string>
     <string name="enterNumMedEt">1</string>
     <string name="statsDisplayTv">aucune donnée à afficher</string>
-    <string name="post_delete_btn">delete post</string>
+    <string name="post_delete_btn">Supprimer le message</string>
+    <string name="more_info_btn">Information</string>
+    <string name="guide_tv">guide to using the app</string>
 
 </resources>

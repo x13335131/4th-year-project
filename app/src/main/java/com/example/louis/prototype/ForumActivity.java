@@ -22,7 +22,6 @@ public class ForumActivity extends AppCompatActivity {
     private BottomNavigationView mBottomNav;
     private HomeFragment homeFragment;
     private NotificationFragment notificationFragment;
-    private AccountFragment accountFragment;
 
 
     @Override
@@ -41,7 +40,7 @@ public class ForumActivity extends AppCompatActivity {
             //fragments
             homeFragment = new HomeFragment();
             notificationFragment = new NotificationFragment();
-            accountFragment = new AccountFragment();
+           // accountFragment = new AccountFragment();
 
 
             replaceFragment(homeFragment);
@@ -70,9 +69,9 @@ public class ForumActivity extends AppCompatActivity {
                         case R.id.menu_notifications:
                             replaceFragment(notificationFragment);
                             return true;
-                        case R.id.menu_account:
+                       /* case R.id.menu_account:
                             replaceFragment(accountFragment);
-                            return true;
+                            return true;*/
 
                         default:
                             return false;
@@ -97,6 +96,12 @@ public class ForumActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
+            case R.id.more_info_btn:
+                Intent infoIntent = new Intent(ForumActivity.this, InformationActivity.class);
+                startActivity(infoIntent);
+                return true;
+
             case R.id.action_logout_btn:
                 logOut();
                 return true;

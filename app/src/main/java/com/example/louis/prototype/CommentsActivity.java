@@ -1,8 +1,15 @@
 package com.example.louis.prototype;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
@@ -47,6 +54,7 @@ public class CommentsActivity extends AppCompatActivity {
     private CommentsRecyclerAdapter commentsRecyclerAdapter;
     private List<Comments> commentsList;
 
+    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +106,12 @@ public class CommentsActivity extends AppCompatActivity {
         comment_post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String comment_message = comment_field.getText().toString();
+                final String comment_message = comment_field.getText().toString();
                 System.out.println("comment message: "+comment_message);
                 //String dateString = todayDate.toString();
 
                 if(!comment_message.isEmpty()){
+
                     Date todayDate = Calendar.getInstance().getTime();
                     String id = forumComments.push().getKey();
                     Map<String, Object> commentsMap = new HashMap<>();
@@ -116,7 +125,36 @@ public class CommentsActivity extends AppCompatActivity {
                                 Toast.makeText(CommentsActivity.this, "Error posting comment: "+ task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(CommentsActivity.this, "comment added", Toast.LENGTH_SHORT).show();
-                               // comment_field.setText("");
+                               // comment_field.setText("");//notify user
+
+                                mBuilder.setSmallIcon(R.drawable.info);
+                                mBuilder.setContentTitle("New comment!");
+                                mBuilder.setContentText(comment_message);
+
+                                Intent resultIntent = new Intent(getApplicationContext(), ForumActivity.class);
+                                TaskStackBuilder stackBuilder = null;
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                                    stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                                }
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                    stackBuilder.addParentStack(CommentsActivity.class);
+                                }
+
+// Adds the Intent that starts the Activity to the top of the stack
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                    stackBuilder.addNextIntent(resultIntent);
+                                }
+                                PendingIntent resultPendingIntent = null;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                    resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                                }
+                                mBuilder.setContentIntent(resultPendingIntent);
+
+                                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+// notificationID allows you to update the notification later on.
+                                mNotificationManager.notify(1, mBuilder.build());
+                                //
                             }
                         }
                     });

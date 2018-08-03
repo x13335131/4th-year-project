@@ -61,4 +61,6 @@
     <string name="enterNumMedEt">1</string>
     <string name="statsDisplayTv">No data to display</string>
     <string name="post_delete_btn">delete post</string>
+    <string name="more_info_btn">Information</string>
+    <string name="guide_tv">guide to using the app</string>
 </resources>
