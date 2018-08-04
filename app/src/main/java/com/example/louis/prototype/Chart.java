@@ -406,6 +406,7 @@ public class Chart extends AppCompatActivity {
                     //getting key & value from db
                     String key = child.getKey().toString();
                     String value = child.getValue().toString();
+                    System.out.println("chart key: "+key+" value "+value);
 
                     //if key = totalOasisValue do the following:
                     if (key.equals("totalOasisValue")) {

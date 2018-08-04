@@ -29,7 +29,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -114,12 +117,22 @@ public class StatsActivity extends AppCompatActivity {
     boolean isHesitant;
     boolean isImpatient;
     boolean  isInsecure;
+
+
+    boolean morning = false;
+    boolean  afternoon= false;
+    boolean evening = false;
+    boolean night= false;
+
+    int morningCount=0;
+    int afternoonCount=0;
+    int eveningCount=0;
+    int nightCount=0;
+
+    int panicCountThisYear=0;
+
 int childCount=0;
 String moodString;
-    int max = 0;
-    String moodTitle="";
-    String mostCommonMood;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,9 +179,13 @@ String moodString;
                         public void run() {
                             // Stuff that updates the UI
                             System.out.println("displaying text..");
-                            displayStatsTv.setText(Html.fromHtml("<h2>Panic Attacks</h2> "+panicText+" <br /> The total number of panic attacks in <i>"+userCountryName+"</i> is: "+countryPanicCount
-                            + "<br /> The total number of panic attacks today in <i>"+userCountryName+"</i> is "+todayCountryPanicCount+"<br /><h2>Moods</h2>"
-                                    +" most common mood type today: "+mostCommonMood+" <br/>"+moodString));
+                            displayStatsTv.setText(Html.fromHtml("<h2>Panic Attacks</h2> "+panicText+ "<br /> The total number of panic attacks today in <i>"+userCountryName+"</i> is "+todayCountryPanicCount
+                                    +"<br /> <h5>~~This year~~</h5> "
+                                    +"Total panic attacks as of yet "+panicCountThisYear+
+                                    "<br /> Total morning panic attacks: "+morningCount+
+                                    "<br /> Total afternoon panic attacks: "+afternoonCount+"<br /> Total evening panic attacks: "+eveningCount+
+                                    "<br /> Total night panic attacks: "+nightCount+"<br/><h2>Moods</h2>"
+                                    +moodString));
 
                         }
                     });
@@ -288,7 +305,6 @@ String moodString;
                            isInsecure=true;
                         }
                         if(key.equals("symptomDate") && value.contains(todaysDate)){
-                            max=0;
                             childCount= childCount+1;
                             if (isAfraid==true) {
                                 afraidCbCount = afraidCbCount + 1;
@@ -357,88 +373,66 @@ String moodString;
 
                     }
                      percentageAfraid = (int) ((afraidCbCount * 100) / childCount);
-                    getMax(percentageAfraid, "afraid");
                      System.out.println("checkbox 1: " + afraidCbCount + " percentage: " + percentageAfraid);
 
                      percentageAggrevated = (int) ((aggrevatedCbCount * 100) / childCount);
-                     getMax(percentageAggrevated, "aggrevated");
                      System.out.println("checkbox 2: " + aggrevatedCbCount + " percentage: " + percentageAggrevated);
 
                      percentageAngry = (int) ((angryCbCount * 100) / childCount);
-                     getMax(percentageAngry, "angry");
                      System.out.println("checkbox 3: " + angryCbCount + " percentage: " + percentageAngry);
 
                      percentageAnxious = (int) ((anxiousCbCount * 100) / childCount);
-                     System.out.println("choooooooo "+childCount);
-                     getMax(percentageAnxious, "anxious");
                      System.out.println("checkbox 4: " + anxiousCbCount + " percentage: " + percentageAnxious);
 
                      percentageAwkward = (int) ((awkwardCbCount * 100) / childCount);
-                     getMax(percentageAwkward, "awkward");
                      System.out.println("checkbox 5: " + awkwardCbCount + " percentage: " + percentageAwkward);
 
                      percentageBrave = (int) ((braveCbCount * 100) / childCount);
-                     getMax(percentageBrave, "brave");
                      System.out.println("checkbox 6: " + braveCbCount + " percentage: " + percentageBrave);
 
                      percentageCalm = (int) ((calmCbCount * 100) / childCount);
-                     getMax(percentageAggrevated, "brave");
                      System.out.println("checkbox 7: " + calmCbCount + " percentage: " + percentageCalm);
 
                      percentageConfident = (int) ((confidentCbCount * 100) / childCount);
-                     getMax(percentageConfident, "confident");
                      System.out.println("checkbox 8: " + confidentCbCount + " percentage: " + percentageConfident);
 
                      percentageContent = (int) ((contentCbCount * 100) / childCount);
-                     getMax(percentageContent, "content");
                      System.out.println("checkbox 9: " + contentCbCount + " percentage: " + percentageContent);
 
                      percentageDepressed = (int) ((depressedCbCount * 100) / childCount);
-                     getMax(percentageDepressed, "depressed");
                      System.out.println("checkbox 10: " + depressedCbCount + " percentage: " + percentageDepressed);
 
                      percentageDiscouraged = (int) ((discouragedCbCount * 100) / childCount);
-                     getMax(percentageDiscouraged, "discouraged");
                      System.out.println("checkbox 11: " + discouragedCbCount + " percentage: " + percentageDiscouraged);
 
                      percentageDistant = (int) ((distantCbCount * 100) / childCount);
-                     getMax(percentageDistant, "distant");
                      System.out.println("checkbox 12: " + distantCbCount + " percentage: " + percentageDistant);
 
                      percentageEnergized = (int) ((energizedCbCount * 100) / childCount);
-                     getMax(percentageEnergized, "energized");
                      System.out.println("checkbox 13: " + energizedCbCount + " percentage: " + percentageEnergized);
 
                      percentageFatigued = (int) ((fatiguedCbCount * 100) / childCount);
-                     getMax(percentageFatigued, "fatigued");
                      System.out.println("checkbox 14: " + fatiguedCbCount + " percentage: " + percentageFatigued);
 
                      percentageGloomy = (int) ((gloomyCbCount * 100) / childCount);
-                     getMax(percentageGloomy, "gloomy");
                      System.out.println("checkbox 15: " + gloomyCbCount + " percentage: " + percentageGloomy);
 
                      percentageGrumpy = (int) ((grumpyCbCount * 100) / childCount);
-                     getMax(percentageGrumpy, "grumpy");
                      System.out.println("checkbox 16: " + grumpyCbCount + " percentage: " + percentageGrumpy);
 
                      percentageGrouchy = (int) ((grouchyCbCount * 100) / childCount);
-                     getMax(percentageGrouchy, "grouchy");
                      System.out.println("checkbox 17: " + grouchyCbCount + " percentage: " + percentageGrouchy);
 
                      percentageHappy = (int) ((happyCbCount * 100) / childCount);
-                     getMax(percentageHappy, "happy");
                      System.out.println("checkbox 18: " + happyCbCount + " percentage: " + percentageHappy);
 
                      percentageHesitant = (int) ((hesitantCbCount * 100) / childCount);
-                     getMax(percentageHesitant, "hesitant");
                      System.out.println("checkbox 19: " + hesitantCbCount + " percentage: " + percentageHesitant);
 
                      percentageImpatient = (int) ((impatientCbCount * 100) / childCount);
-                     getMax(percentageImpatient, "impatient");
                      System.out.println("checkbox 20: " + impatientCbCount + " percentage: " + percentageImpatient);
 
                      percentageInsecure = (int) ((insecureCbCount * 100) / childCount);
-                     getMax(percentageInsecure, "insecure");
                      System.out.println("checkbox 21: " + insecureCbCount + " percentage: " + percentageInsecure);
 
                      System.out.println("-------------------------------------");
@@ -446,29 +440,31 @@ String moodString;
                     System.out.println("CHILD COUNT"+childCount);
 
 
-                     moodString= " "+percentageAfraid +"% of people are feeling afraid. <br/>"
-                             + percentageAggrevated+"% of people are feeling aggrevated. <br/> "
-                             +percentageAngry+"% of people are feeling angry.<br/>"
-                             +percentageAnxious+"% of people are feeling anxious.<br/>"
-                             +percentageAwkward +"% of people are feeling awkward. <br /> "
-                             +percentageBrave+"% of people are feeling brave. <br />"
-                             +percentageCalm+"% of people are feeling calm. <br />"
-                             +percentageConfident+"% of people are feeling confident. <br />"
-                             +percentageContent +"% of people are feeling content. <br /> "
-                             +percentageDepressed+"% of people are feeling depressed. <br /> "
-                             +percentageDiscouraged+"% of people are feeling discouraged. <br />"
-                             +percentageDistant+"% of people are feeling distant. <br /> "
-                             +percentageEnergized + "% of people are feeling energized. <br />"
-                             +percentageFatigued+"% of people are feeling fatigued. <br />"
-                             +percentageGloomy+"% of people are feeling gloomy. <br /> "
-                             +percentageGrumpy+"% of people are feeling grumpy. <br /> "
-                             +percentageGrouchy+"% of people are feeling grouchy. <br />"
-                             +percentageHappy +"% of people are feeling happy. <br /> "
-                             +percentageHesitant+"% of people are feeling hesitant. <br /> "
-                             +percentageImpatient+"% of people are feeling impatient. <br/> "
-                             +percentageInsecure+"% of people are feeling insecure.";
+                     moodString= "<i>Below show the % of people feeling one of the following moods today:</i> <br/><br/>"
+                             +percentageAfraid +"% ~ feeling <i>afraid</i>. <br/>"
+                             +percentageAggrevated+"% ~ feeling <i>aggrevated</i>. <br/> "
+                             +percentageAngry+"% ~ feeling <i>angry.<br/>"
+                             +percentageAnxious+"% ~ feeling <i>anxious.<br/>"
+                             +percentageAwkward +"% ~ feeling <i>awkward. <br /> "
+                             +percentageBrave+"% ~ feeling <i>brave. <br />"
+                             +percentageCalm+"% ~ feeling <i>calm. <br />"
+                             +percentageConfident+"% ~ feeling <i>confident</i>. <br />"
+                             +percentageContent +"% ~ feeling <i>content</i>. <br /> "
+                             +percentageDepressed+"% ~ feeling <i>depressed</i>. <br /> "
+                             +percentageDiscouraged+"% ~ feeling <i>discouraged</i>. <br />"
+                             +percentageDistant+"% ~ feeling <i>distant</i>. <br /> "
+                             +percentageEnergized + "% ~ feeling <i>energized</i>. <br />"
+                             +percentageFatigued+"% ~ feeling <i>fatigued</i>. <br />"
+                             +percentageGloomy+"% ~ feeling <i>gloomy</i>. <br /> "
+                             +percentageGrumpy+"% ~ feeling <i>grumpy</i>. <br /> "
+                             +percentageGrouchy+"% ~ feeling <i>grouchy</i>. <br />"
+                             +percentageHappy +"% ~ feeling <i>happy</i>. <br /> "
+                             +percentageHesitant+"% ~ feeling <i>hesitant</i>. <br /> "
+                             +percentageImpatient+"% ~ feeling <i>impatient</i>. <br/> "
+                             +percentageInsecure+"% ~ feeling <i>insecure</i>.";
                  } catch (Exception e) {
                     System.out.println("error in capturing panic attacks "+e);
+                     moodString="no results found, please try again";
                 }
 
             }
@@ -493,17 +489,6 @@ String moodString;
 
             }
         });
-    }
-    public void getMax(int value, String name){
-        System.out.println("value: "+value+" name: "+name);
-        int val = value;
-        String n = name;
-        if (val >= max) {
-            max=value;
-            moodTitle=n;
-            System.out.println("max: "+max+" mood title "+moodTitle);
-            mostCommonMood="With a total of "+max+"% of people feeling "+moodTitle+".";
-        }
     }
 
     private void resetValues() {
@@ -536,9 +521,10 @@ String moodString;
         /*Getting current date*/
         Calendar cal = Calendar.getInstance();
         cal.getTime();
+        System.out.println("cal.getTime: "+cal.getTime());
         int day = cal.get(Calendar.DATE);
         int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
+        final int year = cal.get(Calendar.YEAR);
 
         String m;
         if (month < 10) {
@@ -552,6 +538,8 @@ String moodString;
         } else {
             d = Integer.toString(day);
         }
+
+
         final String todaysDate = d + "/" + m + "/" + year;
         System.out.println("todays date: "+todaysDate);
 
@@ -580,7 +568,110 @@ String moodString;
                             date=true;
                             System.out.println("in count...current count is: "+ todaysPanicCount);
 
+                            //
+                            //
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            try
+                            {
+                                Date tempDate = simpleDateFormat.parse(value);
+
+                                System.out.println("date : "+simpleDateFormat.format(tempDate));
+
+                                String temp = simpleDateFormat.format(tempDate);
+                                //  System.out.println(temp.substring(temp.lastIndexOf("")))
+                                String substring = temp.substring(temp.length() -5);
+                                String substring1 = substring.substring(0,2);
+
+                                System.out.println("temp: "+temp+ "sub string: "+substring+" sub string 1: "+substring1);
+                                int v = Integer.parseInt(substring1);
+                                //System.out.println("Double "+v);
+                                //
+                                if(v>06&& v <12){
+
+                                    morning = true;
+                                    morningCount = morningCount+1;
+                                    System.out.println("morning");
+                                }else if(v> 12 && v < 15){
+
+                                    afternoon= true;
+                                    afternoonCount =afternoonCount+1;
+                                    System.out.println("afternoon");
+                                }else if(v > 15 && v < 19){
+
+                                    evening = true;
+                                    eveningCount = eveningCount+1;
+                                    System.out.println("evening");
+                                }else{
+
+                                    nightCount= nightCount+1;
+                                    System.out.println("night");
+                                    night=true;
+
+                                }
+
+                                panicCountThisYear= panicCountThisYear+1;
+                            }
+                            catch (ParseException ex)
+                            {
+                                System.out.println("Exception "+ex);
+                            }
+
+                            //
+                        }else if(key.equals("panicDate") && !value.contains(todaysDate)){
+                            //
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            try {
+                                Date tempDate = simpleDateFormat.parse(value);
+                                String t = tempDate.toString().substring(tempDate.toString().length() - 4);
+                                int tempDateYear = Integer.parseInt(t);
+                                System.out.println("tempDateYear: " + tempDateYear);
+                                if (tempDateYear==year) {
+                                    System.out.println("tempDateYear is 2018");
+
+                                System.out.println("date : " + simpleDateFormat.format(tempDate));
+
+                                String temp = simpleDateFormat.format(tempDate);
+                                //  System.out.println(temp.substring(temp.lastIndexOf("")))
+                                String substring = temp.substring(temp.length() - 5);
+                                String substring1 = substring.substring(0, 2);
+
+                                System.out.println("temp: " + temp + "sub string: " + substring + " sub string 1: " + substring1);
+                                int v = Integer.parseInt(substring1);
+                                //System.out.println("Double "+v);
+                                //
+                                if (v > 06 && v < 12) {
+
+                                    morning = true;
+                                    morningCount = morningCount + 1;
+                                    System.out.println("morning");
+                                } else if (v > 12 && v < 15) {
+
+                                    afternoon = true;
+                                    afternoonCount = afternoonCount + 1;
+                                    System.out.println("afternoon");
+                                } else if (v > 15 && v < 19) {
+
+                                    evening = true;
+                                    eveningCount = eveningCount + 1;
+                                    System.out.println("evening");
+                                } else {
+
+                                    nightCount = nightCount + 1;
+                                    System.out.println("night");
+                                    night = true;
+
+                                }
+                            }else{
+
+                                }
+                                panicCountThisYear= panicCountThisYear+1;
+                            }
+                            catch (ParseException ex)
+                            {
+                                System.out.println("Exception "+ex);
+                            }
                         }
+
                     }
                     if(loc==true && date==true){
                         todayCountryPanicCount= todayCountryPanicCount+1;
@@ -596,6 +687,8 @@ String moodString;
 
                 } catch (Exception e) {
                     System.out.println("error in capturing panic attacks "+e);
+                    panicText="no results found, please try again";
+
                 }
 
             }

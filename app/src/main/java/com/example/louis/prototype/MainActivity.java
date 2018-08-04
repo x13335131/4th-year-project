@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -122,24 +123,77 @@ public class MainActivity extends AppCompatActivity {
         OdsisDb = database.getReference("odsis");
         //set survay btn to visible
         selfReportBtn.setVisibility(View.INVISIBLE);
-        Query lastQuery = OdsisDb.orderByChild("user").equalTo(userID);//.limitToLast(1); //finding most recent self report for user
-        System.out.println("................");
-        lastQuery= lastQuery.limitToLast(1);
-        lastQuery.addChildEventListener(new ChildEventListener() {
+        Query lastQuery = OdsisDb.orderByChild("user").equalTo(userID).limitToLast(1); //finding most recent self report for user
+        System.out.println("................last query "+lastQuery);
+
+        //lastQuery= lastQuery..limitToLast(1);
+
+        lastQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    System.out.println("EXISTS");
+                    //found results
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+                        String key = child.getKey().toString();
+                        value = child.getValue().toString();
+                        System.out.println("key; " + key);
+                        System.out.println("value; " + value);
+
+                        if (key.equals("todaysDate")) {
+                            SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                            String dateBeforeString = value;
+                            String dateAfterString = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
+                            try {
+                                Date dateBefore = myFormat.parse(dateBeforeString);
+                                Date dateAfter = myFormat.parse(dateAfterString);
+                                long difference = dateAfter.getTime() - dateBefore.getTime();
+                                daysBetween = (difference / (1000 * 60 * 60 * 24));
+
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            if (daysBetween < 7.0) { //it has been less than 7 days since user took odsis selfReportBtn then set button to invisible
+                                selfReportBtn.setVisibility(View.INVISIBLE);
+                            } else { //it has been more than 7 days than they may take selfReportBtn
+                                selfReportBtn.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                    }
+                }
+                else {
+                    //not found
+                    System.out.println("DOES NOT EXIST");
+                    selfReportBtn.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+      /*  lastQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-               // System.out.println("CHILDREN.."+ dataSnapshot.getChildren().toString());
+
+
+                    // System.out.println("CHILDREN.."+ dataSnapshot.getChildren().toString());
                /* if(dataSnapshot.child("user")..exists()){
                 System.out.println("SNAPSHOT EXISTS");
             }else{
                 System.out.println("NO NOT EXISTS");
             }*/
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
+           /*     for (DataSnapshot child : dataSnapshot.getChildren()) {
 
                     String key = child.getKey().toString();
                     value = child.getValue().toString();
-                    System.out.println("key; "+key);
-                    System.out.println("value; "+value);
+                    System.out.println("key; " + key);
+                    System.out.println("value; " + value);
 
                     if (key.equals("todaysDate")) {
                         SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
@@ -160,7 +214,9 @@ public class MainActivity extends AppCompatActivity {
                             selfReportBtn.setVisibility(View.VISIBLE);
                         }
                     }
+
                 }
+
             }
 
             @Override
@@ -182,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         panicButton.setOnClickListener(new View.OnClickListener() {
             boolean pressed = true;

@@ -23,7 +23,7 @@ public class Odsis extends AppCompatActivity {
     private int seek3Value;
     private int seek4Value;
     private int seek5Value;
-    private int totalOasisValue;
+    private int totalOdsisValue;
     private String todaysDate;
     DatabaseReference databaseOdsis;
     @Override
@@ -61,9 +61,9 @@ public class Odsis extends AppCompatActivity {
                 seek3Value=seekbar3.getProgress();
                 seek4Value=seekbar4.getProgress();
                 seek5Value=seekbar5.getProgress();
-                totalOasisValue= seek1Value+seek2Value+seek3Value+seek4Value+seek5Value;
+                totalOdsisValue= seek1Value+seek2Value+seek3Value+seek4Value+seek5Value;
                 String id= databaseOdsis.push().getKey();
-                OdsisGS myOdsis = new OdsisGS(totalOasisValue, todaysDate, currentuser);
+                OdsisGS myOdsis = new OdsisGS(totalOdsisValue, todaysDate, currentuser);
                 databaseOdsis.child(id).setValue(myOdsis);
                 Toast.makeText(Odsis.this ,"odsis added", Toast.LENGTH_LONG).show();
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
