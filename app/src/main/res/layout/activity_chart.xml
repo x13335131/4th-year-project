@@ -50,19 +50,23 @@
             android:id="@+id/monthlyReportBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="36dp"
+            android:layout_marginRight="34dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
             android:text="@string/monthlyReportBtn"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/myProgressLbl" />
+            app:layout_constraintStart_toEndOf="@+id/weeklyReportBtn"
+            app:layout_constraintTop_toBottomOf="@+id/graph" />
 
         <Button
             android:id="@+id/weeklyReportBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="48dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="8dp"
             android:text="@string/weeklyReportBtn"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/myProgressLbl" />
+            app:layout_constraintTop_toBottomOf="@+id/graph" />
 
         <com.jjoe64.graphview.GraphView
             android:id="@+id/graph"
@@ -72,10 +76,10 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="24dp"
             android:nestedScrollingEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/myProgressLbl" />
 
@@ -83,7 +87,7 @@
             android:id="@+id/bargraph"
             android:layout_width="match_parent"
             android:layout_height="193dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="68dp"
             android:scrollbars="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -94,7 +98,7 @@
             android:id="@+id/piechart"
             android:layout_width="0dp"
             android:layout_height="200dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="12dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -104,14 +108,11 @@
 
         <TextView
             android:id="@+id/legendTv"
-            android:layout_width="348dp"
-            android:layout_height="77dp"
-            android:layout_marginEnd="2dp"
+            android:layout_width="93dp"
+            android:layout_height="137dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.025"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/piechart" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

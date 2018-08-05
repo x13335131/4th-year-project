@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +85,28 @@ public class Chart extends AppCompatActivity {
     int hesitantCbCount =0;
     int impatientCbCount=0;
     int insecureCbCount =0;
+
+    boolean afraidCheck =false;
+    boolean aggrevatedCheck =false;
+    boolean angryCheck =false;
+    boolean anxiousCheck =false;
+    boolean awkwardCheck =false;
+    boolean braveCheck =false;
+    boolean calmCheck =false;
+    boolean confidentCheck =false;
+    boolean contentCheck =false;
+    boolean depressedCheck =false;
+    boolean discouragedCheck =false;
+    boolean distantCheck =false;
+    boolean energizedCheck =false;
+    boolean fatiguedCheck =false;
+    boolean gloomyCheck =false;
+    boolean grumpyCheck =false;
+    boolean grouchyCheck =false;
+    boolean happyCheck =false;
+    boolean hesitantCheck =false;
+    boolean impatientCheck=false;
+    boolean insecureCheck =false;
 //symptoms
     int acneCount=0;
     int bloatingCount=0;
@@ -105,8 +128,11 @@ public class Chart extends AppCompatActivity {
     private static String TAG = "Chart";
     private float[] yData;
     private String[] xData;
-    TextView legendTvACNE, legendTvBLOATING, legendTvCRAMPS, legendTvDIZZINESS, legendTvSPOTS, legendTvHEADACHE, legendTvINSOMNIA, legendTvSWEATING;
+    TextView legendTv;
     PieChart pieChart;
+    Button weeklyReportBtn;
+    Button monthlyReportBtn;
+    String barType;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +141,7 @@ public class Chart extends AppCompatActivity {
 
         //setting back btn on actionbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.textView5));
+        getSupportActionBar().setTitle("Charts");
         database = FirebaseDatabase.getInstance();
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -152,23 +178,23 @@ public class Chart extends AppCompatActivity {
         System.out.println("plotting line lineGraph...");
         getLineGraphData();
         System.out.println("plotting bar chart...");
-        getBarChartData();
+        getBarChartData("week");
         System.out.println("plotting pie chart...");
         //getValsFromDb();
         addDataSet();
         //legend
-        legendTvACNE = (TextView) findViewById(R.id.legendTv);
+        legendTv = (TextView) findViewById(R.id.legendTv);
         String acneGRAY ="<font color=\"ltgray\"> \u2022 ACNE </font>";
         String bloatingBLUE ="<font color=\"blue\"> \u2022 BLOATING </font>";
-        String crampRED ="<font color=\"red\"> \u2022 CRAMP </font>";
+        String crampRED ="<font color=\"red\"> \u2022 CRAMPS </font>";
         String dizzinessGREEN ="<font color=\"green\"> \u2022 DIZZINESS </font>";
         String spotsCYAN ="<font color=\"cyan\"> \u2022 SPOTS </font>";
-        String headacheMAGENTA ="<font color=\"magenta\"> \u2022 HEADACHE </font>";
+        String headacheMAGENTA ="<font color=\"magenta\"> \u2022 HEADACHES </font>";
         String insomniaDKGRAY ="<font color=\"dkgray\"> \u2022 INSOMNIA </font>";
         String sweatingYELLOW ="<font color=\"yellow\"> \u2022 SWEATING </font>";
-        legendTvACNE.setTextSize(8);
-       // legendTvACNE.setTextColor(Color.GRAY);
-        legendTvACNE.setText(Html.fromHtml("<html> "+acneGRAY+" "+bloatingBLUE+" "+crampRED+" "+dizzinessGREEN+" "+spotsCYAN+" "+headacheMAGENTA+" "+insomniaDKGRAY+" "+sweatingYELLOW+"</html>"));
+        legendTv.setTextSize(12);
+       // legendTv.setTextColor(Color.GRAY);
+        legendTv.setText(Html.fromHtml("<html> "+acneGRAY+"<br/> "+bloatingBLUE+"<br/> "+crampRED+"<br/> "+dizzinessGREEN+"<br/>  "+spotsCYAN+"<br/> "+headacheMAGENTA+"<br/>  "+insomniaDKGRAY+"<br/> "+sweatingYELLOW+"</html>"));
        /* legendTvBLOATING.setTextSize(12);
         legendTvBLOATING.setTextColor(Color.BLUE);
         legendTvBLOATING.setText("BLOATING");
@@ -191,7 +217,31 @@ public class Chart extends AppCompatActivity {
         legendTvSWEATING.setTextColor(Color.YELLOW);
         legendTvSWEATING.setText("SWEATING");
 */
+        weeklyReportBtn = (Button) findViewById(R.id.weeklyReportBtn);
+        weeklyReportBtn.setEnabled(false);
+        monthlyReportBtn = (Button) findViewById(R.id.monthlyReportBtn);
 
+        weeklyReportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                weeklyReportBtn.setEnabled(false);
+                monthlyReportBtn.setEnabled(true);
+                resetMoodCount();
+
+                getBarChartData("week");
+            }
+        });
+
+        monthlyReportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                monthlyReportBtn.setEnabled(false);
+                weeklyReportBtn.setEnabled(true);
+                resetMoodCount();
+
+                getBarChartData("month");
+            }
+        });
         //floating home btn
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -530,8 +580,10 @@ public class Chart extends AppCompatActivity {
     }
 
     //BarChart Data
-    public void getBarChartData() {
+    public void getBarChartData(String b) {
+         barType=b;
 
+         System.out.println("bar type="+barType);
         final Calendar calendar_Today = Calendar.getInstance(); // this would default to now
         calendar_Today.add(Calendar.DAY_OF_MONTH, +1);
         //over last week
@@ -547,101 +599,247 @@ public class Chart extends AppCompatActivity {
         moodQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                boolean betweenDates = false;
+                System.out.println("moooooooooooooooooooooood");
+
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     String key = child.getKey().toString();
                     String value = child.getValue().toString();
-                    if (key.equals("symptomDate")) {
-                        DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-                        Date startDate;
-                        try {
-                            startDate = df.parse(value);
-                            String startDateString1 = df.format(startDate);
-                            Calendar calendar_Test = Calendar.getInstance();
-                            calendar_Test.setTime(startDate);
-                            if (calendar_Test.getTime().after(calendar_weekAgo.getTime()) && calendar_Test.getTime().before(calendar_Today.getTime())) {
-                                betweenDates = true;
-                                System.out.println("past week: value: "+value);
-                            } if (calendar_Test.getTime().after(calendar_monthAgo.getTime()) && calendar_Test.getTime().before(calendar_Today.getTime())) {
-                                betweenDates = true;
+                    System.out.println("KEYYYYYYYY"+key);
 
-                                System.out.println("past Month: value: "+value);
-                            } else {
-                                System.out.println("nope not between these two dates");
-                            }
-                            long a = getDifferenceDays(calendar_Test.getTime(), calendar_Today.getTime());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                            System.out.println("woops error occurred with dates");
-                        }
-                    }
-
+                    System.out.println("afraid check bool="+afraidCheck);
                     //remove series
                     barGraph.removeAllSeries();
-                    if (key.equals("afraidCb") && value.equals("true")) {
-                        afraidCbCount = afraidCbCount + 1;
-                    }
-                    if (key.equals("aggrevatedCb") && value.equals("true")) {
-                        aggrevatedCbCount = aggrevatedCbCount + 1;
-                    }
-                    if (key.equals("angryCb") && value.equals("true")) {
-                        angryCbCount = angryCbCount + 1;
-                    }
-                    if (key.equals("anxiousCb") && value.equals("true")) {
-                        anxiousCbCount = anxiousCbCount + 1;
-                    }
-                    if (key.equals("awkwardCb") && value.equals("true")) {
-                        awkwardCbCount = awkwardCbCount + 1;
-                    }
-                    if (key.equals("braveCb") && value.equals("true")) {
-                        braveCbCount = braveCbCount + 1;
-                    }
-                    if (key.equals("calmCb") && value.equals("true")) {
-                        calmCbCount = calmCbCount + 1;
-                    }
-                    if(key.equals("confidentCb")&& value.equals("true")) {
-                        confidentCbCount = confidentCbCount + 1;
-                    }
-                    if(key.equals("contentCb")&& value.equals("true")) {
-                        contentCbCount = contentCbCount + 1;
-                    }
-                    if(key.equals("depressedCb")&& value.equals("true")) {
-                        depressedCbCount = depressedCbCount + 1;
-                    }
-                    if(key.equals("discouragedCb")&& value.equals("true")) {
-                        discouragedCbCount = discouragedCbCount + 1;
-                    }
-                    if(key.equals("distantCb")&& value.equals("true")) {
-                        distantCbCount = distantCbCount + 1;
-                    }
-                    if(key.equals("energizedCb")&& value.equals("true")) {
-                        energizedCbCount = energizedCbCount + 1;
-                    }
-                    if(key.equals("fatiguedCb")&& value.equals("true")) {
-                        fatiguedCbCount = fatiguedCbCount + 1;
-                    }
-                    if(key.equals("gloomyCb")&& value.equals("true")) {
-                        gloomyCbCount = gloomyCbCount + 1;
-                    }
-                    if(key.equals("grumpyCb")&& value.equals("true")) {
-                        grumpyCbCount = grumpyCbCount + 1;
-                    }
-                    if(key.equals("grouchyCb")&& value.equals("true")) {
-                        grouchyCbCount = grouchyCbCount + 1;
-                    }
-                    if(key.equals("happyCb")&& value.equals("true")) {
-                        happyCbCount = happyCbCount + 1;
-                    }
-                    if(key.equals("hesitantCb")&& value.equals("true")) {
-                        hesitantCbCount = hesitantCbCount + 1;
-                    }
-                    if(key.equals("impatientCb")&& value.equals("true")) {
-                        impatientCbCount = impatientCbCount + 1;
-                    }
-                    if(key.equals("insecureCb")&& value.equals("true")) {
-                        insecureCbCount = insecureCbCount + 1;
-                    }
+
+                        if (key.equals("afraidCb") && value.equals("true")) {
+                            afraidCheck=true;
+                        }
+                        if (key.equals("aggrevatedCb") && value.equals("true")) {
+                            aggrevatedCheck =true;
+                        }
+                        if (key.equals("angryCb") && value.equals("true")) {
+                            angryCheck =true;
+                        }
+                        if (key.equals("anxiousCb") && value.equals("true")) {
+                            anxiousCheck = true;
+                        }
+                        if (key.equals("awkwardCb") && value.equals("true")) {
+                            awkwardCheck = true;
+                        }
+                        if (key.equals("braveCb") && value.equals("true")) {
+                            braveCheck =true;
+                        }
+                        if (key.equals("calmCb") && value.equals("true")) {
+                            calmCheck = true;
+                        }
+                        if (key.equals("confidentCb") && value.equals("true")) {
+                            confidentCheck =true;
+                        }
+                        if (key.equals("contentCb") && value.equals("true")) {
+                            contentCheck =true;
+                        }
+                        if (key.equals("depressedCb") && value.equals("true")) {
+                            depressedCheck = true;
+                        }
+                        if (key.equals("discouragedCb") && value.equals("true")) {
+                            discouragedCheck = true;
+                        }
+                        if (key.equals("distantCb") && value.equals("true")) {
+                            distantCheck = true;
+                        }
+                        if (key.equals("energizedCb") && value.equals("true")) {
+                            energizedCheck = true;
+                        }
+                        if (key.equals("fatiguedCb") && value.equals("true")) {
+                            fatiguedCheck = true;
+                        }
+                        if (key.equals("gloomyCb") && value.equals("true")) {
+                            gloomyCheck = true;
+                        }
+                        if (key.equals("grumpyCb") && value.equals("true")) {
+                            grumpyCheck = true;
+                        }
+                        if (key.equals("grouchyCb") && value.equals("true")) {
+                            grouchyCheck = true;
+                        }
+                        if (key.equals("happyCb") && value.equals("true")) {
+                            happyCheck = true;
+                        }
+                        if (key.equals("hesitantCb") && value.equals("true")) {
+                            hesitantCheck =true;
+                        }
+                        if (key.equals("impatientCb") && value.equals("true")) {
+                            impatientCheck = true;
+                        }
+                        if (key.equals("insecureCb") && value.equals("true")) {
+                            insecureCheck = true;
+                        }
+                        if (key.equals("symptomDate")) {
+                            DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                            Date startDate;
+                            try {
+                                startDate = df.parse(value);
+                                String startDateString1 = df.format(startDate);
+                                Calendar calendar_Test = Calendar.getInstance();
+                                calendar_Test.setTime(startDate);
+                                if(barType.equals("week") || barType.equals("month")){
+                                    if(barType.equals("week")) {
+                                        if (calendar_Test.getTime().after(calendar_weekAgo.getTime()) && calendar_Test.getTime().before(calendar_Today.getTime())) {
+                                           // betweenDates = true;
+
+                                            if (afraidCheck==true) {
+                                                afraidCbCount = afraidCbCount + 1;
+                                            }
+                                            if (aggrevatedCheck==true) {
+                                                aggrevatedCbCount = aggrevatedCbCount + 1;
+                                            }
+                                            if (angryCheck==true) {
+                                                angryCbCount = angryCbCount + 1;
+                                            }
+                                            if (anxiousCheck==true) {
+                                                anxiousCbCount = anxiousCbCount + 1;
+                                            }
+                                            if (awkwardCheck==true) {
+                                                awkwardCbCount = awkwardCbCount + 1;
+                                            }
+                                            if (braveCheck==true) {
+                                                braveCbCount = braveCbCount + 1;
+                                            }
+                                            if (calmCheck==true) {
+                                                calmCbCount = calmCbCount + 1;
+                                            }
+                                            if (confidentCheck==true) {
+                                                confidentCbCount = confidentCbCount + 1;
+                                            }
+                                            if (contentCheck==true) {
+                                                contentCbCount = contentCbCount + 1;
+                                            }
+                                            if (depressedCheck==true) {
+                                                depressedCbCount = depressedCbCount + 1;
+                                            }
+                                            if (discouragedCheck==true) {
+                                                discouragedCbCount = discouragedCbCount + 1;
+                                            }
+                                            if (distantCheck==true) {
+                                                distantCbCount = distantCbCount + 1;
+                                            }
+                                            if (energizedCheck==true) {
+                                                energizedCbCount = energizedCbCount + 1;
+                                            }
+                                            if (fatiguedCheck==true) {
+                                                fatiguedCbCount = fatiguedCbCount + 1;
+                                            }
+                                            if (gloomyCheck==true) {
+                                                gloomyCbCount = gloomyCbCount + 1;
+                                            }
+                                            if (grumpyCheck==true) {
+                                                grumpyCbCount = grumpyCbCount + 1;
+                                            }
+                                            if (grouchyCheck==true) {
+                                                grouchyCbCount = grouchyCbCount + 1;
+                                            }
+                                            if (happyCheck==true) {
+                                                happyCbCount = happyCbCount + 1;
+                                            }
+                                            if (hesitantCheck==true) {
+                                                hesitantCbCount = hesitantCbCount + 1;
+                                            }
+                                            if (impatientCheck==true) {
+                                                impatientCbCount = impatientCbCount + 1;
+                                            }
+                                            if (insecureCheck==true) {
+                                                insecureCbCount = insecureCbCount + 1;
+                                            }
+                                            
+                                            
+                                            System.out.println("past week: value: " + value);
+                                            resetMoodValues();
+                                        }
+                                    }
+                                    if (barType.equals("month")) {
+                                        if (calendar_Test.getTime().after(calendar_monthAgo.getTime()) && calendar_Test.getTime().before(calendar_Today.getTime())) {
+                                            if (afraidCheck==true) {
+                                                afraidCbCount = afraidCbCount + 1;
+                                            }
+                                            if (aggrevatedCheck==true) {
+                                                aggrevatedCbCount = aggrevatedCbCount + 1;
+                                            }
+                                            if (angryCheck==true) {
+                                                angryCbCount = angryCbCount + 1;
+                                            }
+                                            if (anxiousCheck==true) {
+                                                anxiousCbCount = anxiousCbCount + 1;
+                                            }
+                                            if (awkwardCheck==true) {
+                                                awkwardCbCount = awkwardCbCount + 1;
+                                            }
+                                            if (braveCheck==true) {
+                                                braveCbCount = braveCbCount + 1;
+                                            }
+                                            if (calmCheck==true) {
+                                                calmCbCount = calmCbCount + 1;
+                                            }
+                                            if (confidentCheck==true) {
+                                                confidentCbCount = confidentCbCount + 1;
+                                            }
+                                            if (contentCheck==true) {
+                                                contentCbCount = contentCbCount + 1;
+                                            }
+                                            if (depressedCheck==true) {
+                                                depressedCbCount = depressedCbCount + 1;
+                                            }
+                                            if (discouragedCheck==true) {
+                                                discouragedCbCount = discouragedCbCount + 1;
+                                            }
+                                            if (distantCheck==true) {
+                                                distantCbCount = distantCbCount + 1;
+                                            }
+                                            if (energizedCheck==true) {
+                                                energizedCbCount = energizedCbCount + 1;
+                                            }
+                                            if (fatiguedCheck==true) {
+                                                fatiguedCbCount = fatiguedCbCount + 1;
+                                            }
+                                            if (gloomyCheck==true) {
+                                                gloomyCbCount = gloomyCbCount + 1;
+                                            }
+                                            if (grumpyCheck==true) {
+                                                grumpyCbCount = grumpyCbCount + 1;
+                                            }
+                                            if (grouchyCheck==true) {
+                                                grouchyCbCount = grouchyCbCount + 1;
+                                            }
+                                            if (happyCheck==true) {
+                                                happyCbCount = happyCbCount + 1;
+                                            }
+                                            if (hesitantCheck==true) {
+                                                hesitantCbCount = hesitantCbCount + 1;
+                                            }
+                                            if (impatientCheck==true) {
+                                                impatientCbCount = impatientCbCount + 1;
+                                            }
+                                            if (insecureCheck==true) {
+                                                insecureCbCount = insecureCbCount + 1;
+                                            }
+                                            resetMoodValues();
+                                            System.out.println("past Month: value: " + value);
+                                        }
+                                    }
+
+                                }
+                                else {
+                                    System.out.println("nope not between these two dates");
+                                    resetMoodValues();
+                                }
+                                long a = getDifferenceDays(calendar_Test.getTime(), calendar_Today.getTime());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                System.out.println("woops error occurred with dates");
+                            }
+                            resetMoodValues();
+                        }
+
                 }
+
                 float percentageAfraid = (float) ((afraidCbCount * 100) / totalScore);
                 System.out.println("checkbox 1: " + afraidCbCount + " percentage: " + percentageAfraid);
                 float percentageAggrevated = (float) ((aggrevatedCbCount * 100) / totalScore);
@@ -836,6 +1034,52 @@ public class Chart extends AppCompatActivity {
 
             }
         });
+    }
+private void resetMoodCount(){
+     afraidCbCount = 0;
+     aggrevatedCbCount = 0;
+     angryCbCount = 0;
+     anxiousCbCount = 0;
+     awkwardCbCount = 0;
+     braveCbCount = 0;
+     calmCbCount = 0;
+     confidentCbCount = 0;
+     contentCbCount = 0;
+     depressedCbCount = 0;
+     discouragedCbCount = 0;
+     distantCbCount = 0;
+     energizedCbCount = 0;
+     fatiguedCbCount = 0;
+     gloomyCbCount = 0;
+     grumpyCbCount = 0;
+     grouchyCbCount =0;
+     happyCbCount = 0;
+     hesitantCbCount =0;
+     impatientCbCount=0;
+     insecureCbCount =0;
+}
+    private void resetMoodValues() {
+         afraidCheck =false;
+         aggrevatedCheck =false;
+         angryCheck =false;
+         anxiousCheck =false;
+         awkwardCheck =false;
+         braveCheck =false;
+         calmCheck =false;
+         confidentCheck =false;
+         contentCheck =false;
+         depressedCheck =false;
+         discouragedCheck =false;
+         distantCheck =false;
+         energizedCheck =false;
+         fatiguedCheck =false;
+         gloomyCheck =false;
+         grumpyCheck =false;
+         grouchyCheck =false;
+         happyCheck =false;
+         hesitantCheck =false;
+         impatientCheck=false;
+         insecureCheck =false;
     }
 
     //compare days
