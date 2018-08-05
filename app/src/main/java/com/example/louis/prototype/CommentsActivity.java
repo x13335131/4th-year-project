@@ -63,6 +63,7 @@ public class CommentsActivity extends AppCompatActivity {
 
         commentToolbar = (Toolbar) findViewById(R.id.comment_toolbar);
         setSupportActionBar(commentToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Comments");
 
         database = FirebaseDatabase.getInstance();
@@ -81,28 +82,8 @@ public class CommentsActivity extends AppCompatActivity {
         comment_list.setLayoutManager(new LinearLayoutManager(this));
         comment_list.setAdapter(commentsRecyclerAdapter);
 
-        forumComments = database.getReferenceFromUrl("https://mymentalhealthtracker.firebaseio.com/post/"+forum_post_id+"/comments");
+        getComments();
 
-      forumComments.addValueEventListener(new ValueEventListener() {
-          @Override
-          public void onDataChange(DataSnapshot dataSnapshot) {
-              for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                  String commentId = postSnapshot.getKey();
-                  Comments comments = postSnapshot.getValue(Comments.class);
-                  commentsList.add(comments);
-                  System.out.println("commentlist size:" + commentsList.size() + " user id " + comments.getUserID() + " timestamp " + comments.getTimestamp());
-                  // ForumPost blogPost = doc.getDocument().toObject(BlogPost.class).withId(blogPostId);
-                  //     ForumPost fp = postSnapshot.getValue(ForumPost.class).withId(forumPostId);
-                  ////     post_list.add(fp);
-                  //     forumRecyclerAdapter.notifyDataSetChanged();
-              }
-
-          }
-          @Override
-          public void onCancelled(DatabaseError databaseError) {
-
-          }
-      });
         comment_post_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,5 +143,35 @@ public class CommentsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+
+    private void getComments() {
+        forumComments = database.getReferenceFromUrl("https://mymentalhealthtracker.firebaseio.com/post/"+forum_post_id+"/comments");
+
+        forumComments.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    String commentId = postSnapshot.getKey();
+                    Comments comments = postSnapshot.getValue(Comments.class);
+                    commentsList.add(comments);
+                    System.out.println("commentlist size:" + commentsList.size() + " user id " + comments.getUserID() + " timestamp " + comments.getTimestamp());
+
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //return to previous activity
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

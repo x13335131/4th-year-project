@@ -115,7 +115,7 @@ public class Chart extends AppCompatActivity {
 
         //setting back btn on actionbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getSupportActionBar().setTitle("Charts");
         database = FirebaseDatabase.getInstance();
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 

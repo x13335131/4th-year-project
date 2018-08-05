@@ -374,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
                 addPanicToDiary();
                 secondsPassed = 0;
                 myTimer.cancel();
-                secondsTv.setText("Timer Stopped" + secondsCaptured);
+                secondsTv.setText("Timer Stopped " + secondsCaptured);
             }
 
             public void addPanicToDiary() {

@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -35,15 +36,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import android.app.ProgressDialog;
 
 public class StatsActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar mainToolbar;
-    DatabaseReference panicAttackDb, moodsDb;
+    DatabaseReference panicAttackDb, moodsDb, odsisDb, oasisDb;
     FirebaseDatabase database;
     String todaysDate;
     TextView displayStatsTv;
-    Thread thread;
     int todaysPanicCount, countryPanicCount, todayCountryPanicCount;
     private double latti, longi;
     private String userID, value, latitude, longitude, address, location, panicText, userCountryName, userAddress, postelCode, countryCode;
@@ -131,12 +132,27 @@ public class StatsActivity extends AppCompatActivity {
 
     int panicCountThisYear=0;
 
+    int clinicalDepressionCount=0;
+    int clinicalAnxietyCount=0;
+
+    int odsisCount=0;
+    int oasisCount=0;
+
 int childCount=0;
 String moodString;
+String odsisString;
+String oasisString;
+Thread thread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
+
+        //android prompts imports
+
+
+
         mainToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
         getSupportActionBar().setTitle("Statistics");
@@ -148,14 +164,28 @@ String moodString;
         database = FirebaseDatabase.getInstance();
         panicAttackDb = database.getReference("panic");
         moodsDb = database.getReference("moods");
+        odsisDb = database.getReference("odsis");
+        oasisDb = database.getReference("oasis");
         todaysPanicCount = 0;
 
         displayStatsTv = (TextView) findViewById(R.id.statsDisplayTv);
         displayStatsTv.setMovementMethod(new ScrollingMovementMethod());
         displayStatsTv.setScrollbarFadingEnabled(false);
-        getCurrentLocation();
-        getPanicAttacks();
-        getMoodCount();
+
+              getMoodCount();
+            getOdsis();
+            getOasis();
+            getCurrentLocation();
+            getPanicAttacks();
+
+            // Stuff that updates the UI
+
+
+        AsyncTaskRunner runner = new AsyncTaskRunner();
+        String sleepTime = "1000";
+        runner.execute(sleepTime);
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -167,41 +197,197 @@ String moodString;
                                    }
                                }
         );
-       thread = new Thread() {
 
-            @Override
-            public void run() {
 
-                try {
-                    runOnUiThread(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            // Stuff that updates the UI
-                            System.out.println("displaying text..");
-                            displayStatsTv.setText(Html.fromHtml("<h2>Panic Attacks</h2> "+panicText+ "<br /> The total number of panic attacks today in <i>"+userCountryName+"</i> is "+todayCountryPanicCount
-                                    +"<br /> <h5>~~This year~~</h5> "
-                                    +"Total panic attacks as of yet "+panicCountThisYear+
-                                    "<br /> Total morning panic attacks: "+morningCount+
-                                    "<br /> Total afternoon panic attacks: "+afternoonCount+"<br /> Total evening panic attacks: "+eveningCount+
-                                    "<br /> Total night panic attacks: "+nightCount+"<br/><h2>Moods</h2>"
-                                    +moodString));
 
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
+    }
+
+    private class AsyncTaskRunner extends AsyncTask<String, String, String> {
+        private String resp;
+        ProgressDialog progressDialog;
+
+        @Override
+        protected String doInBackground(String... strings) {
+            publishProgress("Sleeping..."); // Calls onProgressUpdate()
+
+            try {
+                int time = 1000;
+
+                Thread.sleep(time);
+                resp = "Slept for " + time+ " seconds";
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                resp = e.getMessage();
+            } catch (Exception e) {
+                e.printStackTrace();
+                resp = e.getMessage();
             }
-        };
-        try {
-            System.out.println("sleeping...");
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            return resp;
         }
 
-        thread.start();
+        @Override
+        protected void onPostExecute(String result) {
+            // execution of result of Long time consuming operation
+            progressDialog.dismiss();
+            System.out.println("displaying text..");
+            displayStatsTv.setText(Html.fromHtml("<h2>Panic Attacks</h2> "+panicText+ "<br /> The total number of panic attacks today in <i>"+userCountryName+"</i> is "+todayCountryPanicCount
+                    +"<br /> <h5>~~This year~~</h5> "
+                    +"Total panic attacks as of yet "+panicCountThisYear+
+                    "<br /> Total morning panic attacks: "+morningCount+
+                    "<br /> Total afternoon panic attacks: "+afternoonCount+"<br /> Total evening panic attacks: "+eveningCount+
+                    "<br /> Total night panic attacks: "+nightCount+"<br/><h2>Moods</h2>"
+                    +moodString+" <h2>ODSIS</h2>"+odsisString+"<h2>OASIS</h2>"+oasisString));
+          //  finalResult.setText(result);
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(StatsActivity.this,
+                    "Gathering Data",
+                    "Please wait..");
+        }
+
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+            System.out.println("in prog update");
+
+        }
+    }
+
+
+    private void getOasis() {
+
+        final Query oasisQuery = oasisDb.orderByChild("todaysDate");
+
+        System.out.println("oasis");
+        oasisQuery.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                try {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        //getting key & value from db
+                        String key = child.getKey().toString();
+                        String value = child.getValue().toString();
+                        //  int value = Integer.parseInt(child.getValue().toString());
+
+                        if(key.equals("totalOasisValue")){
+                            int v = Integer.parseInt(value);
+                            if(v > 8) {
+                                clinicalAnxietyCount = clinicalAnxietyCount + 1;
+                            }else{
+
+                            }
+
+
+                            oasisCount = oasisCount+1;
+                        }
+
+                    }
+                    System.out.println("clinical anxiety count: "+clinicalAnxietyCount+" oasis count "+oasisCount);
+                    int p = clinicalAnxietyCount*100/oasisCount;
+                    oasisString="In 2018 "+p +"% of people are suffering from clinical anxiety";
+                    System.out.println("oasis string "+oasisString);
+                }
+                catch (Exception e){
+                    System.out.println("exception: "+e);
+                }
+
+            }
+
+
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getOdsis() {
+
+        final Query odsisQuery = odsisDb.orderByChild("todaysDate");
+
+        System.out.println("odsis");
+        odsisQuery.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                try {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        //getting key & value from db
+                        String key = child.getKey().toString();
+                        String value = child.getValue().toString();
+                      //  int value = Integer.parseInt(child.getValue().toString());
+
+                        if(key.equals("totalOdsisValue")){
+                            int v = Integer.parseInt(value);
+                            if(v > 8) {
+                                clinicalDepressionCount = clinicalDepressionCount + 1;
+                            }else{
+
+                            }
+
+
+                            odsisCount = odsisCount+1;
+                        }
+
+                    }
+                    System.out.println("clinical depression count: "+clinicalDepressionCount+" odsis count "+odsisCount);
+                    int p = clinicalDepressionCount*100/odsisCount;
+                    odsisString="In 2018 "+p +"% of people are suffering from clinical depression";
+System.out.println("odsis string "+odsisString);
+                }
+                catch (Exception e){
+                    System.out.println("exception: "+e);
+                }
+
+           }
+
+
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+        });
+
     }
 
     private void getMoodCount() {

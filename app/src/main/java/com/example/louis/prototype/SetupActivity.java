@@ -125,5 +125,11 @@ public class SetupActivity extends AppCompatActivity {
                 }
             });
         }
+    //return to previous activity
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 }

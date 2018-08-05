@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.louis.prototype.StatsActivity">
 
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
@@ -13,7 +14,8 @@
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/textCol"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

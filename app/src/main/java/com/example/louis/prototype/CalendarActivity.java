@@ -96,17 +96,17 @@ public class CalendarActivity extends AppCompatActivity {
         currentMedList = new ArrayList<String>();
         collectedDates = new ArrayList<String>();
 
-       /* Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM-yyyy");
         String date = dateFormat.format(c.getTime());
         //action bar
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
        // actionBar.setTitle(null);
-        actionBar.setTitle(date);*/
-       final ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(date);
+     /*  final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setTitle(null);
+        actionBar.setTitle(null);*/
         //setting views
         compactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         compactCalendarView.setUseThreeLetterAbbreviation(true);
@@ -237,16 +237,16 @@ public class CalendarActivity extends AppCompatActivity {
                         panicOutput = "<br/>" + panicCount + " panic attack(s) have been recorded.<br/><br/>" + " <b>Location(s)</b> " + formattedCurrentPanicList;
                     }
                     if (noteBool == true) {
-                        noteOutput = "<br/><b>Note(s):</b> " + noteCount + formattedCurrentNoteList;
+                        noteOutput = "<br/><b>Note(s):</b> <br/>" + noteCount + formattedCurrentNoteList;
                     }
                     if (moodBool == true) {
-                        moodOutput = "<br/> <b>Mood(s):</b> " + currentMoodEvent.getData().toString();
+                        moodOutput = "<br/> <b>Mood(s):</b> <br/>" + currentMoodEvent.getData().toString();
                     }
                     if (symptomBool == true) {
-                        symptomOutput = "<br/><b>Symptom(s):</b> " + currentSymptomEvent.getData().toString();
+                        symptomOutput = "<br/><b>Symptom(s):</b> <br/>" + currentSymptomEvent.getData().toString();
                     }
                     if (medBool == true) {
-                        medOutput = "<br/><b>Med(s):</b> " + medCount + formattedCurrentMedList;
+                        medOutput = "<br/><b>Med(s):</b> <br/>" + medCount + formattedCurrentMedList;
                     }
                     //displaying strings created to user
                     displayDataTv.setText(Html.fromHtml("<br/><b>Diary Entry for " + formatedDate + "</b> " + panicOutput + noteOutput + moodOutput + symptomOutput + medOutput));
