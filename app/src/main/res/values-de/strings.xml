@@ -125,6 +125,13 @@
     <string name="statsDisplayTv">Keine Daten zum Anzeigen</string>
     <string name="post_delete_btn">Beitrag entfernen</string>
     <string name="more_info_btn">Informationen</string>
-    <string name="guide_tv">guide to using the app</string>
+    <string name="guide_tv">Anleitung zur Verwendung der App</string>
+    <string name="notes_txt">Anmerkungen</string>
+    <string name="symptoms_txt">Symptome</string>
+    <string name="moods_txt">Stimmungen</string>
+    <string name="med_txt">Medikation</string>
+    <string name ="forum_title">Forum</string>
+    <string name="stats_title">Statistiken</string>
+    <string name="info_title">Information</string>
 
 </resources>

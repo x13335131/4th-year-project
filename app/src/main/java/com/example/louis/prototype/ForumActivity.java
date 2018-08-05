@@ -32,7 +32,7 @@ public class ForumActivity extends AppCompatActivity {
             mainToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.main_toolbar);
             setSupportActionBar(mainToolbar);
 
-            getSupportActionBar().setTitle("Forum");
+            getSupportActionBar().setTitle(getString(R.string.forum_title));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
             mBottomNav = (BottomNavigationView) findViewById(R.id.navigation);

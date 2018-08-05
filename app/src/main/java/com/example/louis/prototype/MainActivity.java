@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             // Stuff that updates the UI
-                            getSupportActionBar().setTitle("My Mental Health");
+                            getSupportActionBar().setTitle(getString(R.string.app_name));
                         }
                     });
                 } catch (Exception e) {

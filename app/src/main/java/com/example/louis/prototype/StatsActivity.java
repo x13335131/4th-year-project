@@ -155,7 +155,7 @@ Thread thread;
 
         mainToolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
-        getSupportActionBar().setTitle("Statistics");
+        getSupportActionBar().setTitle(getString(R.string.stats_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION);

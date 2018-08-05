@@ -128,12 +128,20 @@ public class CalendarActivity extends AppCompatActivity {
                 System.out.println("Date clicked: " + dateClicked);
                 //convert date clicked to string
                 String clickedDateString = dateClicked.toString();
+                DateFormat clickedDateFormatter;
+                if(clickedDateString.contains("GMT+")){
+                  // clickedDateString= clickedDateString.replace("GMT+01:00","IST");
+                    System.out.println("in if");
+                    clickedDateFormatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
 
-                //convert clicked date to correct format
-                DateFormat clickedDateFormatter = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+                }else {
+                    //convert clicked date to correct format
+                    clickedDateFormatter = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy");
+                }
                 Date clickedDate = null;
                 try {
                     clickedDate = (Date) clickedDateFormatter.parse(clickedDateString);
+                    System.out.println("tryyy");
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

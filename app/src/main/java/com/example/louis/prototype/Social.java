@@ -20,7 +20,7 @@ public class Social extends AppCompatActivity {
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Social");
+            getSupportActionBar().setTitle(getString(R.string.textView3));
             Button forumBtn = (Button) findViewById(R.id.forumBtn); //forum button
             Button statsBtn = (Button) findViewById(R.id.statisticsBtn); //stats button
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

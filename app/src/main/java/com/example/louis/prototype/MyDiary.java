@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MyDiary extends AppCompatActivity {
 
     /**
@@ -32,6 +34,8 @@ public class MyDiary extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private FirebaseAuth mAuth;
+
     EditText editTextNote;
     Button buttonSave;
     @Override
@@ -43,6 +47,9 @@ public class MyDiary extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        mAuth = FirebaseAuth.getInstance();
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -86,7 +93,7 @@ public class MyDiary extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_my_diary, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -95,14 +102,42 @@ public class MyDiary extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+       /* int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);*/
+
+        switch (item.getItemId()) {
+            case R.id.more_info_btn:
+                Intent infoIntent = new Intent(MyDiary.this, InformationActivity.class);
+                startActivity(infoIntent);
+                return true;
+
+            case R.id.action_logout_btn:
+                logOut();
+                return true;
+
+            case R.id.action_settings_btn:
+                Intent settingsIntent = new Intent(MyDiary.this, SetupActivity.class);
+                startActivity(settingsIntent);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void logOut() {
+        mAuth.signOut();
+        sendToLogin();
+    }
+    private void sendToLogin() {
+        Intent loginIntent = new Intent(MyDiary.this, LoginActivity.class);
+        startActivity(loginIntent);
+        finish();
     }
     //deleted PlaceholderFragment from here
 
@@ -147,13 +182,13 @@ public class MyDiary extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Notes";
+                    return getString(R.string.notes_txt);
                 case 1:
-                    return "Symptoms";
+                    return getString(R.string.symptoms_txt);
                 case 2:
-                    return "Moods";
+                    return getString(R.string.moods_txt);
                 case 3:
-                    return "Medication";
+                    return getString(R.string.med_txt);
             }
             return null;
         }
