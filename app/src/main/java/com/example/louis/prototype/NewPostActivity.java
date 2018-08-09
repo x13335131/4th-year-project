@@ -10,8 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -27,10 +29,10 @@ public class NewPostActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
 
-    private String userid;
+    private String userid, id;
     private EditText newPostText;
     private Button newPostBtn;
-
+    String postText;
     DatabaseReference databasePost;
 
     @Override
@@ -56,12 +58,19 @@ public class NewPostActivity extends AppCompatActivity {
             newPostBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String postText = newPostText.getText().toString();
+
+                     postText = newPostText.getText().toString();
 
                     if (!TextUtils.isEmpty(postText)) {
-                        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                        String currentuser = currentFirebaseUser.getUid();
-                        Date todayDate = Calendar.getInstance().getTime();
+
+
+
+                        ///
+
+
+                                        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                                        String currentuser = currentFirebaseUser.getUid();
+                                        Date todayDate = Calendar.getInstance().getTime();
                        /* SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                         String todayString = formatter.format(todayDate);
                         Date date1;
@@ -71,20 +80,25 @@ public class NewPostActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }*/
 
-                        String id = databasePost.push().getKey();
-                        Map<String, Object> userMap = new HashMap<>();
-                        userMap.put("post", postText);
-                        userMap.put("userID", currentuser);
-                        userMap.put("timestamp", todayDate);
-                        databasePost.child(id).setValue(userMap);
+                                        id = databasePost.push().getKey();
+                                        Map<String, Object> userMap = new HashMap<>();
+                                        userMap.put("post", postText);
+                                        userMap.put("userID", currentuser);
+                                        userMap.put("timestamp", todayDate);
+                                        databasePost.child(id).setValue(userMap);
 
-                        Toast.makeText(NewPostActivity.this, "post added", Toast.LENGTH_LONG).show();
-                        Intent forumIntent = new Intent(getApplicationContext(), ForumActivity.class);
-                        startActivity(forumIntent);
+                                        Toast.makeText(NewPostActivity.this, "post added", Toast.LENGTH_LONG).show();
+                                        Intent forumIntent = new Intent(getApplicationContext(), ForumActivity.class);
+                                        startActivity(forumIntent);
+                                    }
+
+
+                        ////
+
                     }
 
-                }
-            });
+                });
+            };
          /*   newPostToolbar.Toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -92,7 +106,7 @@ public class NewPostActivity extends AppCompatActivity {
                 }
             });*/
 
-        }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

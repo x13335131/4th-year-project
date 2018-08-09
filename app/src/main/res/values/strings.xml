@@ -138,5 +138,7 @@
     <string name ="forum_title">Forum</string>
     <string name="stats_title">Statistics</string>
     <string name="info_title">Information</string>
+    <string name="menu_home">Feed</string>
+    <string name="menu_notifications">My Posts</string>
 
 </resources>

@@ -47,6 +47,9 @@ public class ForumActivity extends AppCompatActivity {
 
             mAuth = FirebaseAuth.getInstance();
 
+            ///////////
+
+
             addPostBtn = (FloatingActionButton) findViewById(R.id.add_post_btn);
             addPostBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

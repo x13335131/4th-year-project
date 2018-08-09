@@ -865,7 +865,7 @@ System.out.println("odsis string "+odsisString);
 
                     if(todaysPanicCount ==0){
                         System.out.println("in if statement");
-                        panicText="<b><i>Wow! No panic attacks were recorded yet today</i>";
+                        panicText="<b><i>Wow! No panic attacks were recorded yet today</i></b>";
                     }else{
                         System.out.println("in else statement");
                         panicText="There is currently a total of <i>"+ todaysPanicCount +" </i> panic attacks recorded today around the world.";

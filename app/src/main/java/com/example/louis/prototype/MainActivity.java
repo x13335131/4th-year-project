@@ -23,6 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -39,8 +40,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
+
     DatabaseReference OdsisDb, databasePanic;
     TextView secondsTv, locationTv;
     private Toolbar mainToolbar;
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     Geocoder geocoder;
     List<PanicButton> panicList;
     List<Address> addresses;
+    DatabaseReference usersDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +79,9 @@ public class MainActivity extends AppCompatActivity {
         geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
         database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
 
+        currentUser = mAuth.getCurrentUser();
+        usersDb = database.getReference("users");
         /*if user is not logged in, send to splash/login activity*/
         if (currentUser == null) {
             Intent intent = new Intent(getApplicationContext(), SplashScreen.class);
@@ -480,7 +486,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void logOut() {
         mAuth.signOut();
-        sendToLogin();
+
+        Map<String, Object> tokenMapRemove= new HashMap<>();
+        tokenMapRemove.put("token_id","");
+///
+        usersDb.child(currentUser.getUid()).updateChildren(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                sendToLogin();
+            }
+        });
+
+        ///
+
     }
 
     private void sendToLogin() {

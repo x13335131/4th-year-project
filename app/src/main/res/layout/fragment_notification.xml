@@ -2,12 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.louis.prototype.NotificationFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.louis.prototype.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="notification fragment " />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/post_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>

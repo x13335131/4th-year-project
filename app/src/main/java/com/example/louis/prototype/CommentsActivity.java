@@ -135,6 +135,7 @@ public class CommentsActivity extends AppCompatActivity {
 
 // notificationID allows you to update the notification later on.
                                 mNotificationManager.notify(1, mBuilder.build());
+
                                 //
                             }
                         }
