@@ -142,7 +142,7 @@ public class Tab4Medication extends Fragment {
                                 .replace(",", "<br/>\u2022")  //remove commas
                                 .trim();           //remove trailing spaces from partially initialized arrays
 
-                        addedMedsTv.setText(Html.fromHtml("<b> medication already added: </b><br/>" + formattedMedList));
+                        addedMedsTv.setText(Html.fromHtml("<b> medication added today: </b><br/>" + formattedMedList));
                         //medicationList.clear();
                     }
 

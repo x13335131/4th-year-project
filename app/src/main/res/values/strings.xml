@@ -135,10 +135,20 @@
     <string name="symptoms_txt">Symptoms</string>
     <string name="moods_txt">Moods</string>
     <string name="med_txt">Medication</string>
-    <string name ="forum_title">Forum</string>
+    <string name="forum_title">Forum</string>
     <string name="stats_title">Statistics</string>
     <string name="info_title">Information</string>
     <string name="menu_home">Feed</string>
     <string name="menu_notifications">My Posts</string>
+    <string name="forgotPassTv">forgot password?</string>
+    <string name="forgotPassBtn">Reset Password</string>
+    <string name="enterEmailPassEt">Enter email...</string>
+    <string name="app_login">Login</string>
+    <string name="app_reg">Registration</string>
+    <string name="val_email">Please enter valid email address</string>
+    <string name="val_pass"> Please enter a valid password</string>
+    <string name="val_passNum">8 characters</string>
+
+
 
 </resources>

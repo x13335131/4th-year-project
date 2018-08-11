@@ -72,4 +72,10 @@
     <string name="info_title">Information</string>
     <string name="menu_home">Feed</string>
     <string name="menu_notifications">My Posts</string>
+    <string name="forgotPassTv">forgot password?</string>
+    <string name="forgotPassBtn">Reset Password</string>
+    <string name="enterEmailPassEt">Enter email...</string>
+    <string name="app_login">Login</string>
+    <string name="app_reg">Registration</string>
+    <string name="val_email">Please enter valid email address</string>
 </resources>

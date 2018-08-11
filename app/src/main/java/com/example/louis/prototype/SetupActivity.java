@@ -47,23 +47,11 @@ public class SetupActivity extends AppCompatActivity {
             setupName = (EditText) findViewById(R.id.setup_name);
             setupBtn = (Button) findViewById(R.id.setup_btn);
 
-
             final Query userQuery = databaseUsername.orderByChild("userID").equalTo(userid);
 
             userQuery.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-             /*   if(dataSnapshot.exists()){
-                    Toast.makeText(SetupActivity.this, "Data exists", Toast.LENGTH_LONG).show();
-
-                }else{
-
-                    Toast.makeText(SetupActivity.this, "Data doesn't exist", Toast.LENGTH_LONG).show();
-                }*/
-
-               /* for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    String key = child.getKey().toString();
-                    String value = child.getValue().toString();*/
                     if (dataSnapshot.exists()) {
                         String value = dataSnapshot.child("username").getValue().toString();
                         setupName.setText(value);
@@ -72,13 +60,7 @@ public class SetupActivity extends AppCompatActivity {
 
                         Toast.makeText(SetupActivity.this, "Data doesn't exist", Toast.LENGTH_LONG).show();
                     }
-                  /*  if (value.equals(userid)) {
-                        Toast.makeText(SetupActivity.this, "Data exists", Toast.LENGTH_LONG).show();
-                    }*/
-
                 }
-
-                // }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {

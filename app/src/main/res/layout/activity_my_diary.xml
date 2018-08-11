@@ -20,7 +20,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:titleTextColor="@color/textCol">
+            app:titleTextColor="@android:color/background_light">
 
         </android.support.v7.widget.Toolbar>
 
@@ -29,7 +29,7 @@
             style="@style/MyCustomTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabTextColor="@color/textCol" />
+            app:tabTextColor="@android:color/background_light" />
 
     </android.support.design.widget.AppBarLayout>
 

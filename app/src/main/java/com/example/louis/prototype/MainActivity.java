@@ -129,24 +129,20 @@ public class MainActivity extends AppCompatActivity {
         OdsisDb = database.getReference("odsis");
         //set survay btn to visible
         selfReportBtn.setVisibility(View.INVISIBLE);
-        Query lastQuery = OdsisDb.orderByChild("user").equalTo(userID).limitToLast(1); //finding most recent self report for user
-        System.out.println("................last query "+lastQuery);
+        Query selfReportQuery = OdsisDb.orderByChild("user").equalTo(userID).limitToLast(1); //finding most recent self report for user
+        System.out.println("................last query "+selfReportQuery);
 
         //lastQuery= lastQuery..limitToLast(1);
 
-        lastQuery.addValueEventListener(new ValueEventListener() {
+        selfReportQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    System.out.println("EXISTS");
-                    //found results
+                    System.out.println("EXISTS");//found results
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
 
                         String key = child.getKey().toString();
                         value = child.getValue().toString();
-                        System.out.println("key; " + key);
-                        System.out.println("value; " + value);
-
                         if (key.equals("todaysDate")) {
                             SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
                             String dateBeforeString = value;
@@ -166,13 +162,12 @@ public class MainActivity extends AppCompatActivity {
                                 selfReportBtn.setVisibility(View.VISIBLE);
                             }
                         }
-
                     }
                 }
                 else {
                     //not found
                     System.out.println("DOES NOT EXIST");
-                    selfReportBtn.setVisibility(View.VISIBLE);
+                    selfReportBtn.setVisibility(View.VISIBLE);//set report button to visible
                 }
 
             }
@@ -183,72 +178,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-      /*  lastQuery.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-
-
-                    // System.out.println("CHILDREN.."+ dataSnapshot.getChildren().toString());
-               /* if(dataSnapshot.child("user")..exists()){
-                System.out.println("SNAPSHOT EXISTS");
-            }else{
-                System.out.println("NO NOT EXISTS");
-            }*/
-           /*     for (DataSnapshot child : dataSnapshot.getChildren()) {
-
-                    String key = child.getKey().toString();
-                    value = child.getValue().toString();
-                    System.out.println("key; " + key);
-                    System.out.println("value; " + value);
-
-                    if (key.equals("todaysDate")) {
-                        SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-                        String dateBeforeString = value;
-                        String dateAfterString = new SimpleDateFormat("dd/MM/yy HH:mm:ss").format(new Date());
-                        try {
-                            Date dateBefore = myFormat.parse(dateBeforeString);
-                            Date dateAfter = myFormat.parse(dateAfterString);
-                            long difference = dateAfter.getTime() - dateBefore.getTime();
-                            daysBetween = (difference / (1000 * 60 * 60 * 24));
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        if (daysBetween < 7.0) { //it has been less than 7 days since user took odsis selfReportBtn then set button to invisible
-                            selfReportBtn.setVisibility(View.INVISIBLE);
-                        } else { //it has been more than 7 days than they may take selfReportBtn
-                            selfReportBtn.setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
         panicButton.setOnClickListener(new View.OnClickListener() {
             boolean pressed = true;
-
             @Override
             public void onClick(View v) {//if clicked
                 locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -268,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                     pressed = true;
                 }
             }
-
+            //grabbing location of panic attack
             private void getLocation() {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -291,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                     } else if (location1 != null) {
                         latti = location1.getLatitude();
                         longi = location1.getLongitude();
@@ -324,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-
+            //alert if no gps
             protected void buildAlertMessageNoGps() {
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -343,10 +273,8 @@ public class MainActivity extends AppCompatActivity {
                 final AlertDialog alert = builder.create();
                 alert.show();
             }
-
             //start timer
             public void start() {
-
                 secondsTv.setVisibility(View.VISIBLE);
                 locationTv.setVisibility(View.VISIBLE);
                 thread = new Thread() {
@@ -374,7 +302,6 @@ public class MainActivity extends AppCompatActivity {
                 };
                 thread.start();
             }
-
             //end timer
             public void end() {
                 addPanicToDiary();
@@ -382,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
                 myTimer.cancel();
                 secondsTv.setText("Timer Stopped " + secondsCaptured);
             }
-
+            //adding to diary
             public void addPanicToDiary() {
                 secondsCaptured = secondsPassed;
                 location = address;
@@ -486,19 +413,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void logOut() {
         mAuth.signOut();
-
         Map<String, Object> tokenMapRemove= new HashMap<>();
         tokenMapRemove.put("token_id","");
-///
         usersDb.child(currentUser.getUid()).updateChildren(tokenMapRemove).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 sendToLogin();
             }
         });
-
-        ///
-
     }
 
     private void sendToLogin() {

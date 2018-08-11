@@ -133,7 +133,12 @@
     <string name ="forum_title">Forum</string>
     <string name="stats_title">Statistiken</string>
     <string name="info_title">Information</string>
-    <string name="menu_home">Feed</string>
-    <string name="menu_notifications">My Posts</string>
+    <string name="menu_home">Futter</string>
+    <string name="menu_notifications">Meine Posts</string>
+    <string name="forgotPassTv">Passwort vergessen?</string>
+    <string name="forgotPassBtn">Passwort zurücksetzen</string>
+    <string name="enterEmailPassEt">Email eingeben...</string>
+    <string name="app_login">Anmeldung</string>
+    <string name="app_reg">Anmeldung</string>
 
 </resources>
